@@ -1,0 +1,80 @@
+{
+  "submit_place_table": {
+    "name": "submit_place_table",
+    "description": "행사 목록의 개최 장소 추정을 제출한다. 목록의 모든 event_id를 한 번씩 넣는다.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "places"
+      ],
+      "properties": {
+        "places": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "event_id",
+              "place",
+              "spot",
+              "kind",
+              "confidence",
+              "reason"
+            ],
+            "properties": {
+              "event_id": {
+                "type": "string"
+              },
+              "place": {
+                "type": "string",
+                "enum": [
+                  "한림읍",
+                  "애월읍",
+                  "구좌읍",
+                  "조천읍",
+                  "한경면",
+                  "추자면",
+                  "우도면",
+                  "대정읍",
+                  "남원읍",
+                  "성산읍",
+                  "안덕면",
+                  "표선면",
+                  "동 지역",
+                  "여러 곳",
+                  "도 전역",
+                  "모름"
+                ]
+              },
+              "spot": {
+                "type": "string"
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "축제",
+                  "공연·전시",
+                  "상시·장기 운영",
+                  "기타"
+                ]
+              },
+              "confidence": {
+                "type": "string",
+                "enum": [
+                  "높음",
+                  "중간",
+                  "낮음"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

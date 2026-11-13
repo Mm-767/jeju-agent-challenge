@@ -23,7 +23,8 @@ def load_events(path=None):
     path = path or DATA / "events.csv"
     with path.open(encoding="utf-8", newline="") as f:
         return [
-            {"event_id": r["event_id"], "name": r["콘텐츠명"], "start": _date(r["시작일"]), "end": _date(r["종료일"])}
+            {"event_id": r["event_id"], "name": r["콘텐츠명"], "start": _date(r["시작일"]), "end": _date(r["종료일"]),
+             "host": " / ".join(v for v in (r["주관"], r["주최"]) if v)}
             for r in csv.DictReader(f)
         ]
 
