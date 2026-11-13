@@ -1,0 +1,336 @@
+
+## 1-01 내국인 카드 이용 현황 | 기간: 2016년 9월부터 2018년 12월까지 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 지역, 업종, 성별, 연령대별 내국인 카드 이용 현황을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,province,city,emd,area_type,market_type,user_type,age_group,gender,user_count,usage_count,usage_cost
+  keys: city=전체, 제주시, 서귀포시 ; emd=43개 행정동 ; area_type=전체, 도시, 읍면
+
+## 1-02 내국인 카드 이용 금액(관광업종) | 기간: 2016년 9월부터 2017년 11월까지 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 주요 관광업종 내국인 인당 이용 금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,province,market_type,user_type,amount_per_person,amount_per_case
+
+## 1-03 내국인 카드 이용 금액(관광테마) | 기간: 2016년 9월부터 2018년 12월까지 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 주요 관광테마별 내국인 건당, 인당 이용 금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,province,market_theme,user_type,amount_per_person,amount_per_case
+
+## 1-04 중국인 카드 이용 현황 | 기간: 2016년 9월부터 2018년 12월까지 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 지역, 업종별 중국인 카드 이용 현황을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,province,city,emd,area_type,market_type,user_type,user_count,usage_count,usage_amount
+  keys: city=전체, 제주시, 서귀포시 ; emd=43개 행정동 ; area_type=전체, 도심, 읍면
+
+## 1-05 중국인 카드 이용 금액(관광업종) | 기간: 2016년 9월부터 2017년 11월까지 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 관광업종 중국인 인용 이용 금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,province,market_type,user_type,amount_per_person,amount_per_case
+
+## 1-06 중국인 카드 이용 금액(관광테마) | 기간: 2016년 9월부터 2018년 12월까지 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 지역, 업종별 중국인 카드 이용 현황을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,province,market_theme,user_type,amount_per_person,amount_per_case
+
+## 1-07 카드 이용 현황(읍면동)_v01 | 기간: 2017년 1월 ~ 2025년 6월까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 읍면동별 42개 업종별 월별 이용건수 및 이용금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,city,area_type,bjd,biz_cd,biz_nm,user_type,tour_type,age,sex,user_cnt,use_cnt,use_amt
+  keys: city=제주시, 서귀포시 ; area_type=도심, 읍면 ; bjd=73개 법정동
+
+## 1-08 카드 이용 현황(읍면동)_v02 | 기간: 2023년 8월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 읍면동별 42개 업종별 월별 이용건수 및 이용금액을 제공합니다. - v01과 v02의 차이(변경된점): 지역구분 컬럼 추가 - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,dstrct_se,city,area_type,bjd,biz_cd,biz_nm,user_type,tour_type,age,sex,user_cnt,use_cnt,use_amt
+  keys: dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; city=제주시, 서귀포시 ; area_type=도심, 읍면 ; bjd=73개 법정동
+
+## 1-09 카드 이용 현황(1km격자) | 기간: 2017년 1월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 1km 격자단위 42개 업종별 월별 이용건수 및 이용금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,city,area_type,bjd,grid_1km,biz_cd,biz_nm,user_type,age,sex,user_cnt,use_cnt,use_amt
+  keys: city=제주시, 서귀포시 ; area_type=도심, 읍면 ; bjd=73개 법정동 ; grid_1km=1km 격자코드
+
+## 1-10 카드 이용 현황(500m격자) | 기간: 2017년 1월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 500m격자단위 42개 업종별 월별 이용건수 및 이용금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,city,area_type,bjd,grid_500m,biz_cd,biz_nm,user_type,age,sex,user_cnt,use_cnt,use_amt
+  keys: city=제주시, 서귀포시 ; area_type=도심, 읍면 ; bjd=73개 법정동 ; grid_500m=500m 격자코드
+
+## 1-11 카드 이용 현황(요일별)_v01 | 기간: 2017년 1월 ~ 2025년 6월까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 42개 업종별, 요일별 이용건수 및 이용금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,area_type,biz_cd,biz_nm,user_type,tour_type,week,age,sex,user_cnt,use_cnt,use_amt
+  keys: area_type=제주시, 제주시 동부, 제주시 서부, 서귀포시, 서귀포시 동부, 서귀포시 서부 ; week=월~일요일, 공휴일
+
+## 1-12 카드 이용 현황(요일별)_v02 | 기간: 2023년 8월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 42개 업종별, 요일별 이용건수 및 이용금액을 제공합니다. - v01과 v02의 차이(변경된점): 법정동 컬럼 추가, 지역구분 데이터 변경(기존 6개에서 7개) - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,dstrct_se,bjd,biz_cd,biz_nm,user_type,tour_type,week,age,sex,user_cnt,use_cnt,use_amt
+  keys: dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; bjd=73개 법정동 ; week=월~일요일, 공휴일
+
+## 1-13 카드 이용 현황(시간대)_v01 | 기간: 2017년 1월 ~ 2025년 6월까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 42개 업종별, 시간대별 이용건수 및 이용금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,area_type,biz_cd,biz_nm,user_type,tour_type,time,age,sex,user_cnt,use_cnt,use_amt
+  keys: area_type=제주시, 제주시 동부, 제주시 서부, 서귀포시, 서귀포시 동부, 서귀포시 서부 ; time=오전, 점심, 오후, 저녁, 밤
+
+## 1-14 카드 이용 현황(시간대)_v02 | 기간: 2023년 8월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 42개 업종별, 시간대별 이용건수 및 이용금액을 제공합니다. - v01과 v02의 차이(변경된점): 법정동 컬럼 추가, 지역구분 데이터 변경(기존 6개에서 7개) - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,dstrct_se,bjd,biz_cd,biz_nm,user_type,tour_type,time,age,sex,user_cnt,use_cnt,use_amt
+  keys: dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; bjd=73개 법정동 ; time=오전, 점심, 오후, 저녁, 밤
+
+## 1-15 카드 이용 현황(골프장)_v01 | 기간: 2017년 1월 ~ 2025년 6월까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 권역별 골프장 이용건수 및 이용금액을 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: pt_year,pt_month,base_year_month,area_type,biz_cd,biz_nm,user_type,tour_type,week,time,age,sex,user_cnt,use_cnt,use_amt
+  keys: area_type=제주시, 제주시 동부, 제주시 서부, 서귀포시, 서귀포시 동부, 서귀포시 서부 ; week=월~일요일, 공휴일 ; time=오전, 점심, 오후, 저녁, 밤
+
+## 1-16 카드 이용 현황(골프장)_v02 | 기간: 2023년 8월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 권역별 골프장 이용건수 및 이용금액을 제공합니다. - v01과 v02의 차이(변경된점): 법정동 컬럼 추가, 지역구분 데이터 변경(기존 6개에서 7개) - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: pt_year,pt_month,base_year_month,dstrct_se,bjd,biz_cd,biz_nm,user_type,tour_type,week,time,age,sex,user_cnt,use_cnt,use_amt
+  keys: dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; bjd=73개 법정동 ; week=월~일요일, 공휴일 ; time=오전, 점심, 오후, 저녁, 밤
+
+## 1-17 제주도 내 업종별 매장 수 | 기간: 2017년 1월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 비씨카드의 제주도 내 42개 업종별 매장 수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_year_month,pt_year,pt_month,city,owner_gb,biz_cd,biz_nm,store_cnt
+  keys: city=제주시, 서귀포시
+
+## 1-18 외식업 포스 이용 현황 | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 제주도전지역 POS 음식업종별 월별 총매출액, 표본수, 총이용건수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-19 외식업 포스 이용 현황(읍면동) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 읍면동별 POS 음식업종별 월별 총매출액, 표본수, 총이용건수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-20 외식업 포스 이용 현황(500m격자) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 500m격자단위 POS 음식업종별 월별 총매출액, 표본수, 총이용건수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-21 외식업 포스 고객 이용 현황 | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 제주도전지역 POS 음식업종별 월별 성별, 연령대별, 요일별, 시간대별 이용건수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-22 외식업 포스 고객 이용 현황(읍면동) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 읍면동별 POS 음식업종별 월별 성별, 연령대별, 요일별, 시간대별 이용건수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-23 외식업 포스 고객 이용 현황(500m격자) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 500m격자단위 POS 음식업종별 월별 성별, 연령대별, 요일별, 시간대별 이용건수를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-24 외식업 포스 메뉴 이용 현황(읍면동) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 읍면동별 POS 음식메뉴별 월별 점포당판매액, 점포당판매건수, 판매단가를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-25 외식업 포스 메뉴 이용 현황(500m격자) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 500m 격자단위 POS 음식메뉴별 월별 점포당판매액, 점포당판매건수, 판매단가를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-26 외식업 포스 메뉴 매출(대분류) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 제주도전지역 POS 음식 대분류 메뉴별 월별 총매출액, 표본수, 총이용건수, 판매단가를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-27 외식업 포스 메뉴 매출(중분류) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 제주도전지역 POS 음식 중분류 메뉴별 월별 총매출액, 표본수, 총이용건수, 판매단가를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-28 외식업 포스 메뉴 매출(소분류) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 제주도전지역 POS 음식 소분류 메뉴별 월별 총매출액, 표본수, 총이용건수, 판매단가를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-29 외식업 포스 메뉴 매출(세분류) | 기간: 2018년 11월 ~ 현재까지 월 기준 누적 업데이트 | 등록/반출: 2020-09-16 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(나이스지니데이터)
+  설명: - 제주도전지역 POS 음식 세분류 메뉴별 월별 총매출액, 표본수, 총이용건수, 판매단가를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-30 온라인 카드 이용 현황(제주도민) | 기간: ? | 등록/반출: 2021-04-21 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 제주특별자치도의 온라인 카드 이용 현황(제주도민)을 제공합니다. - 본 데이터는 2020년 1월부터 월별 기준으로 누적 업데이트 됩니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-31 온라인 카드 이용 현황(제주기업) | 기간: ? | 등록/반출: 2021-04-21 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(비씨카드)
+  설명: - 제주특별자치도의 온라인 카드 이용 현황(제주기업)을 제공합니다. - 본 데이터는 2020년 1월부터 월별 기준으로 누적 업데이트 됩니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 1-32 탐나는전 이용 현황 | 기간: ? | 등록/반출: 2021-04-21 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(탐나는전)
+  설명: - 제주특별자치도의 탐나는전 이용 현황을 제공합니다. - 본 데이터는 2023년 1월 4일부터 월별 기준으로 비정기적으로 누적 업데이트 됩니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## (참고표1) 업종코드표 | 기간: ? | 등록/반출: 
+  설명: 
+  cols: 
+
+## (참고표2) 메뉴코드표 | 기간: ? | 등록/반출: 
+  설명: 
+  cols: 
+
+## 2-01 거래처정보_구매 | 기간: 2019년 12월 31일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 구매 거래처 정보 현황 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-02 거래처정보_판매 | 기간: 2019년 12월 31일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 판매 거래처 정보 현황 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-03 기업정보 | 기간: 2020년 7월 31일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 기업 정보 현황 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-04 신용정보 | 기간: 2020년 10월 7일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 기업 신용 정보 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-05 재무정보_결산 | 기간: 2019년 12월 31일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 기업 결산 재무 정보 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-06 재무정보_분기 | 기간: 2019년 12월 31일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 기업 분기별 재무 정보 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-07 재무정보_직원수 | 기간: 2020년 7월 31일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 기업 직원 수 현황 자료를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 2-08 휴폐업 | 기간: 2021년 5월 07일 기준 | 등록/반출: 반출 데이터 반출 불가능 제공처 제주특별자치도(한국기업데이터)
+  설명: - 한국기업데이터의 기업 휴폐업 정보를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: 
+
+## 3-01 버스 노선 정보 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(티머니)
+  설명: - 제주특별자치도 버스 노선 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트되어 변경이력을 확인할 수 있습니다.
+  cols: serial_number,base_date,pt_year,pt_month,bus_route_id,bus_route_number,bus_route_name,start_date,bus_station_count,bus_route_length,bus_transferability
+  keys: base_date=수집일자 (YYYYMMDD) ; bus_route_id=버스 노선 아이디 (8자리) ; bus_route_number=버스 노선 번호 ; bus_route_name=버스 노선 한글명 ; start_date=버스 노선 운행 시작일자 (YYYYMMDD) ; bus_station_count=버스 노선에 속하는 정류소 수 ; bus_route_length=운행 거리 기준 (m)
+
+## 3-02 버스 노선별 이용 현황 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(티머니)
+  설명: - 제주특별자치도 버스 노선별 이용 현황을 시간단위로 제공합니다. - (주)티머니 수집 데이터로 티머니카드 태그 기반의 이용 현황입니다. - 본 데이터는 일일 기준으로 누적 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,day_of_week,base_hour,bus_route_id,bus_route_name,get_on_off_type,user_category,pay_type,user_count
+  keys: base_date=수집일자 (YYYYMMDD) ; day_of_week=월~일요일 ; base_hour=00 ~ 23 ; bus_route_id=버스 노선 아이디 (8자리) ; bus_route_name=버스 노선 한글명 ; pay_type=카드
+
+## 3-03 버스 정류소 정보 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(티머니)
+  설명: - 제주특별자치도 버스 정류소 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트되어 변경이력을 확인할 수 있습니다.
+  cols: serial_number,base_date,pt_year,pt_month,bus_station_id,bus_station_name,bus_city_type,longitude,latitude
+  keys: base_date=수집일자 (YYYYMMDD) ; bus_station_id=버스 정류소 아이디 (7자리) ; bus_station_name=버스 정류소 한글명 ; bus_city_type=시내, 시외 ; longitude=버스 정류소 경도 ; latitude=버스 정류소 위도
+
+## 3-04 버스 정류소별 이용 현황 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(티머니)
+  설명: - 제주특별자치도 버스 정류소 정보를 제공합니다. - (주)티머니 수집 데이터로 티머니카드 태그 기반의 이용 현황입니다. - 본 데이터는 일일 기준으로 누적 업데이트되어 변경이력을 확인할 수 있습니다.
+  cols: base_date,pt_year,pt_month,day_of_week,base_hour,bus_station_id,bus_station_name,get_on_off_type,user_category,pay_type,user_count
+  keys: base_date=수집일자 (YYYYMMDD) ; day_of_week=월~일요일 ; base_hour=00~23시 ; bus_station_id=버스 정류소 아이디 (7자리) ; bus_station_name=버스 정류소 한글명 ; pay_type=카드
+
+## 3-05 버스 승객별 이용 현황 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(티머니)
+  설명: - 제주특별자치도 버스 승객별 이용 현황을 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트됩니다
+  cols: base_date,pt_year,pt_month,user_id,route_id,route_name,route_no,geton_datetime,geton_station_id,geton_stataion_name,geton_station_longitude,geton_station_latitude,getoff_datetime,getoff_station_id,getoff_station_name,getoff_station_longitude,getoff_station_latitude,user_type,user_count
+  keys: base_date=수집일자 (YYYYMMDD) ; route_id=버스 노선 아이디 (8자리) ; route_name=버스 노선 한글명 ; route_no=버스 노선 번호 ; geton_datetime=승차일시 (YYYYMMDDHHMMSS) ; geton_station_id=승차정류소 아이디 (7자리) ; geton_station_longitude=승차정류소 경도좌표 ; geton_station_latitude=승차정류소 위도좌표 ; getoff_datetime=하차일시 (YYYYMMDDHHMMSS) ; getoff_station_id=하차정류소 아이디 (7자리) ; getoff_station_name=하차정류소 한글명 ; getoff_station_longitude=하차정류소 경도좌표 ; getoff_station_latitude=하차정류소 위도좌표
+
+## 3-06 버스 카드 승하차 정보 | 기간: ? | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(티머니)
+  설명: - 제주특별자치도 버스카드 승하차 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트됩니다
+  cols: pt_year,pt_month,recode_num,user_card_id,base_date,user_trans_id,trans_type_cd,user_transfer_count,bus_route_id,trans_cmp_id,vhc_id,runstart_time,user_geton_datetime,user_geton_station_id,user_getoff_datetime,user_getoff_station_id,user_category_cd_1,user_category_cd_2,user_category_cd_3,user_count_1,user_count_2,user_count_3,user_geton_fare,user_getoff_fare,driver_id,geton_fare_dt,getoff_fare_dt,user_distance,penalty_cd,penalty_fare
+  keys: base_date=승차일 (YYYYMMDD) ; bus_route_id=버스노선 아이디 (8자리) ; runstart_time=운행출발일시 (YYYYMMDDHHMISS) ; user_geton_datetime=승차거래일시 (YYYYMMDDHHMISS) ; user_geton_station_id=승차정류장 아이디 (7자리) ; user_getoff_datetime=하차거래일시 (YYYYMMDDHHMISS) ; user_getoff_station_id=하차정류장 아이디 (7자리) ; user_category_cd_1=어린이, 청소년, 일반, 경로, 장애 일반/동반, 유공 일반/동반, 기타 ; user_category_cd_2=어린이, 청소년, 일반, 경로, 장애 일반/동반, 유공 일반/동반, 기타 ; user_category_cd_3=어린이, 청소년, 일반, 경로, 장애 일반/동반, 유공 일반/동반, 기타 ; penalty_cd=패널티코드 ; penalty_fare=패널티금액
+
+## 3-07 도로 구간 정보 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(교통정보센터)
+  설명: - 제주특별자치도 도로 구간 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트됩니다
+  cols: link_id,start_node_id,end_node_id,road_in_use,lane_count,road_rating,road_name,multi_linked,connect_code,maximum_speed_limit,vehicle_restricted,weight_restricted,height_restricted,road_type
+  keys: link_id=링크 아이디 (10자리) ; start_node_id=시작노드 아이디 (10자리) ; end_node_id=종료노드 아이디 (10자리) ; multi_linked=독립구간 0, 중용구간 1
+
+## 3-08 도로 노드 정보 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(교통정보센터)
+  설명: - 제주특별자치도 도로 노드 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트됩니다
+  cols: node_id,node_name,latitude,longitude,turn_restricted
+  keys: node_id=노드 아이디 (10자리) ; node_name=교차로 한글명칭 ; latitude=위도 ; longitude=경도
+
+## 3-09 일일 교통량 정보 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(교통정보센터)
+  설명: - 제주특별자치도 일일 교통량 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트됩니다
+  cols: base_date,pt_year,pt_month,day_of_week,link_id,average_speed,average_time
+  keys: base_date=수집일자 ; day_of_week=월~일요일 ; link_id=링크 아이디 (10자리) ; average_time=평균 소요 시간 (초)
+
+## 3-10 일,시간대별 교통량 정보 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(교통정보센터)
+  설명: - 제주특별자치도 일/시간대별 교통량 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트됩니다
+  cols: base_date,pt_year,pt_month,day_of_week,base_hour,link_id,average_speed,average_time
+  keys: base_date=수집일자 ; day_of_week=월~일 ; base_hour=00~23 ; link_id=링크 아이디 (10자리) ; average_time=평균 소요 시간 (초)
+
+## 4-01 와이파이 AP 현황(고정형, 최신) | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 와이파이(고정형) AP 현황을 제공합니다. - 본 데이터는 2019. 12. 31 기준으로 등록된 자료로 비정기적으로 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,manage_no,mac_address,ap_group_name,install_location_detail,open_date,category,category_detail,address_dong,address_detail,latitude,longitude
+  keys: base_date=기준일자 (YYYYMMDD) ; ap_group_name=장소명칭 ; open_date=개통일자 (YYYYMMDD) ; category_detail=AP위치별 상세 카테고리 ; address_dong=주소 (동, 리 단위) ; latitude=위도 ; longitude=경도
+
+## 4-02 와이파이 AP 현황(고정형, 과거) | 기간: ? | 등록/반출: 2020-08-19 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 와이파이(고정형) AP 현황을 제공합니다. - 본 데이터는 2019. 12. 31 이전 등록된 자료입니다.
+  cols: base_date,pt_year,pt_month,mac_address,ap_install_place,install_location_detail,open_date,category,address_dong,address_detail,latitude,longitude
+  keys: base_date=기준일자 (YYYYMMDD) ; ap_install_place=장소명칭 ; open_date=개통일자 (YYYYMMDD) ; address_dong=주소 (동, 리 단위) ; latitude=위도 ; longitude=경도
+
+## 4-03 와이파이 AP 현황(이동형) | 기간: ? | 등록/반출: 2020-08-19 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 와이파이(이동형) AP 현황을 제공합니다. - 본 데이터는 2018. 4. 22 기준으로 등록된 자료로 비정기적으로 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,mac_address,company_name,bus_num,open_date
+  keys: base_date=기준일자 (YYYYMMDD) ; company_name=장소명칭 ; open_date=개통일자 (YYYYMMDD)
+
+## 4-04 와이파이 이용 현황 | 기간: 2016. 11. 11 ~ 2020. 09. 30 | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 와이파이 이용 현황을 제공합니다. - age 컬럼은 2017.1.5. 기준으로 이전 데이터는 출생년월, 이후는 연령대로 입력됩니다.
+  cols: base_date,pt_year,pt_month,user_id,mac_address,upload,download,session_time,nationality,province,gender,age,visit_type,ap_type
+  keys: base_date=기준일자 (YYYYMMDD) ; session_time=서비스 사용시간 (초) ; ap_type=고정형, 이동형, 알수없음
+
+## 4-05 와이파이 AP별 이용 현황 | 기간: ? | 등록/반출: 2021-03-03 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 와이파이 이용 현황을 제공합니다. - 본 데이터는 2020. 10. 01 ~ 현재까지 일일기준 누적 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,user_id,mac_address,upload,download,session_time,nationality,province,gender,age,visit_type,ap_type,ap_category,ap_place,ap_place_detail,ap_latitude,ap_longitude,ap_address_detail
+  keys: base_date=기준일자 (YYYYMMDD) ; session_time=서비스 사용시간 (초) ; ap_type=고정형, 이동형, 알수없음 ; ap_category=AP 위치 카테고리 ; ap_place=AP 설치 장소 ; ap_place_detail=AP 설치 상세 장소 ; ap_latitude=AP 설치 위도 ; ap_longitude=AP 설치 경도 ; ap_address_detail=AP 위치 주소
+
+## 4-06 와이파이 일별 이용자 현황 | 기간: ? | 등록/반출: 2019-07-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 와이파이 일별 이용자 현황을 제공합니다. - 본 데이터는 2017. 06. 03 ~ 현재까지 일일기준 누적 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,day_of_week,gender,age,nationality,province,visit_type,user_count
+  keys: base_date=기준일자 (YYYYMMDD) ; day_of_week=월~일요일
+
+## 4-07 내국인 유동인구(50m격자) | 기간: 2017. 01. 01 ~ 2022.06.30  일일기준 누적 업데이트 (KT) | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT, KT)
+  설명: - KT, SKT의 50m 격자단위 일별, 시간대별, 성별, 연령대별 유동인구를 제공합니다. - 2022.07.01 부터 age 컬럼의 데이터 형식이 다름 (제공처가 KT에서 SKT로 변경) - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,sex,age,grid,resd_pop_cnt,work_pop_cnt,visit_pop_cnt,resd
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; grid=50×50 격자코드 (7자리)
+
+## 4-08 장기체류 외국인 유동인구(50m격자) | 기간: 2017. 01. 01 ~ 2022.06.30 일일기준 누적 업데이트 (KT) | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT, KT)
+  설명: - KT, SKT의 50m 격자단위 일별, 유입국가별, 시간대별 장기체류 외국인 유동인구를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,nationality,grid,resd_pop_cnt,work_pop_cnt,visit_pop_cnt,resd
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; grid=50×50 격자코드 (7자리)
+
+## 4-09 단기체류 외국인 유동인구(50m격자) | 기간: 2017. 01. 01 ~ 2022.06.30 일일기준 누적 업데이트 (KT) | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT, KT)
+  설명: - KT, SKT의 50m 격자단위 일별, 유입국가별, 시간대별 단기체류 외국인 유동인구를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,nationality,grid,visit_pop_cnt
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; grid=50×50 격자코드 (7자리)
+
+## 4-10 내국인 유동인구(읍면동)_v01 | 기간: 2017. 01. 01 ~ 2022.06.30 일일기준 누적 업데이트 (KT) | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT, KT)
+  설명: - KT, SKT의 일별, 성별, 연령대별 내국인 유동인구를 제공합니다. - 2022.07.01 부터 age 컬럼의 데이터 형식이 다름 (제공처가 KT에서 SKT로 변경) - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,emd_cd,emd_nm,sex,age,resd_pop_cnt,work_pop_cnt,visit_pop_cnt,resd
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; emd_cd=43개 행정동 코드 (8자리) ; emd_nm=43개 행정동 한글명
+
+## 4-11 내국인 유동인구(읍면동)_v02 | 기간: 2025. 05. 01 ~ 현재까지 일일기준 누적 업데이트 (SKT) | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT)
+  설명: - SKT의 일별, 성별, 연령대별 내국인 유동인구를 제공합니다. - v01과 v02의 차이(변경된점): 지역구분 컬럼 추가 - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,dstrct_se,emd_cd,emd_nm,sex,age,resd_pop_cnt,work_pop_cnt,visit_pop_cnt,resd
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; emd_cd=43개 행정동 코드 (8자리) ; emd_nm=43개 행정동 한글명
+
+## 4-12 장기체류 외국인 유동인구(읍면동)_v01 | 기간: 2018. 01. 01 ~ 2022.06.30 일일기준 누적 업데이트 (KT) | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT, KT)
+  설명: - KT, SKT의 일별, 국가별 장기체류 외국인 유동인구를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,nationality,emd_cd,emd_nm,resd_pop_cnt,work_pop_cnt,visit_pop_cnt,resd
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; emd_cd=43개 행정동 코드 (8자리) ; emd_nm=43개 행정동 한글명
+
+## 4-13 장기체류 외국인 유동인구(읍면동)_v02 | 기간: 2025 .04. 01 ~현재까지 일일기준 누적 업데이트 | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT)
+  설명: - SKT의 일별, 국가별 장기체류 외국인 유동인구를 제공합니다. - v01과 v02의 차이(변경된점): 지역구분 컬럼 추가 - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,dstrct_se,nationality,emd_cd,emd_nm,resd_pop_cnt,work_pop_cnt,visit_pop_cnt,resd
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; emd_cd=43개 행정동 코드 (8자리) ; emd_nm=43개 행정동 한글명
+
+## 4-14 단기체류 외국인 유동인구(읍면동)_v01 | 기간: 2017. 01. 01 ~ 2022.06.30 일일기준 누적 업데이트 (KT) | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT, KT)
+  설명: - KT, SKT의 일별, 국가별 단기체류 외국인 유동인구를 제공합니다. - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,nationality,emd_cd,emd_nm,visit_pop_cnt
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; emd_cd=43개 행정동 코드 (8자리) ; emd_nm=43개 행정동 한글명
+
+## 4-15 단기체류 외국인 유동인구(읍면동)_v02 | 기간: 2025 .04. 01 ~현재까지 일일기준 누적 업데이트 | 등록/반출: 2026-01-28 00:00:00 반출 데이터 반출 불가능 제공처 제주특별자치도(SKT)
+  설명: - SKT의 일별, 국가별 단기체류 외국인 유동인구를 제공합니다. - v01과 v02의 차이(변경된점): 지역구분 컬럼 추가 - 본 데이터는 분석, 시각화 등 가공 형태로만 반출 가능합니다.
+  cols: base_date,pt_year,pt_month,time,dstrct_se,nationality,emd_cd,emd_nm,visit_pop_cnt
+  keys: base_date=기준일자 (YYYYMMDD) ; time=01~24시 ; dstrct_se=7개 권역 (제주시 동부, 제주시 중부(동), 제주시 중부(서), 제주시 서부, 서귀포시 동부, 서귀포시 중부, 서귀포시 서부 ; emd_cd=43개 행정동 코드 (8자리) ; emd_nm=43개 행정동 한글명
+
+## 5-01 날씨 관측소 정보 | 기간: ? | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(농업기술원)
+  설명: - 제주특별자치도 날씨 관측소 정보를 제공합니다. - 본 데이터는 농업기술원의 데이터 입니다.
+  cols: observatory_code,observatory_name,start_date,end_date,management_office,longitude,latitude,legal_dongri_code,sea_level_altitude
+  keys: observatory_code=관측소 코드 (3자리) ; observatory_name=관측소 한글명 ; start_date=관측 시작일 ; end_date=관측 종료일 ; longitude=관측소 경도 ; latitude=관측소 위도 ; legal_dongri_code=관측소 법정동리코드 (10자리)
+
+## 5-02 일일 날씨 정보 | 기간: ? | 등록/반출: 2020-02-01 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 일일 날씨 정보를 제공합니다. - 본 데이터는 일일 기준으로 누적 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,observatory_code,average_temperature,lowest_temperature,lowest_temperature_time,highest_temperature,highest_temperature_time,daily_rainfall,maximum_wind_speed,maximum_wind_speed_time,average_wind_speed,maximum_wind_speed_direction
+  keys: base_date=측정일자 ; observatory_code=관측소 코드 (3자리) ; lowest_temperature_time=최저 기온 시각 (hhmi) ; highest_temperature_time=최고 기온 시각 (hhmi) ; daily_rainfall=일강수량 (mm) ; maximum_wind_speed_time=최대 순간 풍속 시간 (hhmi)
+
+## 5-03 종량제봉투판매실적 | 기간: ? | 등록/반출: 2021-04-21 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도의 종량제 봉투 판매실적 현황을 제공합니다. - 본 데이터는 2012년 1월 1일부터 일일 기준으로 누적 업데이트 됩니다.
+  cols: pt_year,pt_month,base_date,city_name,emd_name,wastebag_type,wastebag_liter,sale_count,sale_amount
+  keys: base_date=판매일자(YYYYMMDD) ; city_name=제주시, 서귀포시 ; emd_name=행정동
+
+## 5-04 대형폐기물 현황_제주시 | 기간: ? | 등록/반출: 2021-04-21 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도
+  설명: - 제주특별자치도 제주시의 대형 폐기물 현황을 제공합니다. - 본 데이터는 2010년 1월 1일부터 일일 기준으로 누적 업데이트 됩니다.
+  cols: base_date,expected_date,emd_name,request_type,pay_type,state,waste_first_type,waste_second_type,waste_third_type,size,fee_amount,count,pt_year,pt_month
+  keys: base_date=배출일자 (YYYYMMDD) ; expected_date=배출예정일자 (YYYYMMDD) ; emd_name=판매지역(읍면동 기준) ; pay_type=카드, 현금, 기타
+
+## 5-05 음식물쓰레기 배출현황_제주시 | 기간: ? | 등록/반출: 2020-03-23 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(환경관리공단)
+  설명: - 제주특별자치도 제주시의 음식물쓰레기 배출현황을 제공합니다. - 본 데이터는 2016년 1월 1일부터 일일 기준으로 누적 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,waster_grp,tag_gno,em_g,discount_yn,em_amt,pay_type,device_no
+  keys: base_date=배출일시 (YYYYMMDD) ; pay_type=선불, 후불
+
+## 5-06 음식물쓰레기 배출현황_서귀포 | 기간: ? | 등록/반출: 2020-03-23 00:00:00 반출 데이터 반출 가능 제공처 제주특별자치도(환경관리공단)
+  설명: - 제주특별자치도 서귀포시의 음식물쓰레기 배출현황을 제공합니다. - 본 데이터는 2016년 1월 1일부터 일일 기준으로 누적 업데이트 됩니다.
+  cols: base_date,pt_year,pt_month,waster_grp,tag_gno,em_g,discount_yn,em_amt,pay_type,device_no
+  keys: base_date=배출일시 (YYYYMMDD) ; pay_type=선불, 후불

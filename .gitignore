@@ -1,0 +1,11 @@
+# 키와 키가 든 묶음
+.env
+build/
+# 실행 결과, 가상 데이터(tools/make_dummy_card.py로 다시 만든다), 파이썬 부산물
+app/out/
+app/data/dummy/
+.venv/
+__pycache__/
+.DS_Store
+# 명세서 원본 등 배포 제한이 있을 수 있는 엑셀
+*.xlsx

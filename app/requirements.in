@@ -1,0 +1,9 @@
+# 실행에 필요한 패키지(직접 쓰는 것만). 잠금 파일은 tools/build_zip.py lock 이 윈도우 기준으로 만든다.
+fastapi==0.162.5
+uvicorn==0.54.0
+matplotlib==3.11.2
+fpdf2==2.9.0
+anthropic==2.8.0
+packaging
+# click이 윈도우에서만 요구한다. 맥에서 윈도우용으로 풀면 pip이 맥 기준으로 표지를 평가해 빠뜨린다.
+colorama
