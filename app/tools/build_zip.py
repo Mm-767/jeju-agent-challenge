@@ -33,7 +33,7 @@ MAX_REL_PATH = 170
 
 # 포함 목록 방식: 여기 없는 파일은 ZIP에 들어가지 않는다(.env는 --env로만)
 INCLUDE = [
-    "*.py", "requirements-lock.txt", "prompts/*", "static/*", "spec/card_v02.json",
+    "*.py", ".env.example", "requirements-lock.txt", "prompts/*", "static/*", "spec/card_v02.json",
     "data/hub/events.csv", "data/hub/places.json", "data/hub/population/*.csv", "data/premade/*.json",
     "data/dummy/card_effect/*.csv", "data/dummy/card_none/*.csv", "data/dummy/card_rehearsal/*.csv",
     "tests/*.py", "tools/*.py",
@@ -230,6 +230,7 @@ def bundle(env_file):
         if not keep:
             raise SystemExit("ANTHROPIC_API_KEY가 없다")
         (app / ".env").write_text("\n".join(keep) + "\n", encoding="utf-8")
+    shutil.copy2(ROOT / "docs" / "README.txt", STAGE / "README.txt")
     for name, lines in (("install.bat", INSTALL_BAT), ("run.bat", RUN_BAT)):
         (STAGE / name).write_bytes(("\r\n".join(lines) + "\r\n").encode("ascii"))
 

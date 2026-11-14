@@ -51,6 +51,11 @@ function renderBand(s) {
   $("b-ai").textContent = s.locked ? "외부 AI 연결: 잠김" : "외부 AI 연결: 열림";
   $("b-ai").className = "pill " + (s.locked ? "warn" : "ok");
   $("b-sent").textContent = "외부 전송 " + s.sent + "건";
+  $("b-delete").textContent = "결과 자동 삭제: " + (s.auto_delete ? "켜짐" : "꺼짐");
+  $("b-delete").dataset.on = s.auto_delete ? "1" : "";
+  $("finish-text").textContent = s.auto_delete
+    ? "작업 기록, 메모리의 센터 집계, 결과 폴더의 그림과 PDF를 지우고 처음 화면으로 돌아갑니다."
+    : "작업 기록과 메모리의 센터 집계를 지웁니다. 결과 자동 삭제가 꺼져 있어 결과 폴더(app\\out\\report)의 그림과 PDF는 남깁니다.";
 }
 
 function renderPlace(s) {
@@ -192,6 +197,7 @@ $("b-sent").onclick = async () => {
   }
   $("d-sent").showModal();
 };
+$("b-delete").onclick = async () => { await api("POST", "/api/settings", { auto_delete: !$("b-delete").dataset.on }); poll(); };
 $("btn-close-sent").onclick = () => $("d-sent").close();
 $("btn-selfcheck").onclick = async () => {
   const ul = $("selfcheck-rows"); ul.textContent = "점검 중…";

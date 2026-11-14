@@ -12,7 +12,7 @@
   <span id="b-example" class="pill warn" hidden>예시(가상 데이터)</span>
   <span id="b-ai" class="pill ok">외부 AI 연결: 열림</span>
   <button id="b-sent" class="pill link" type="button">외부 전송 0건</button>
-  <span class="pill">결과는 이 PC의 결과 폴더에만 저장됩니다</span>
+  <button id="b-delete" class="pill link" type="button">결과 자동 삭제: 켜짐</button>
 </header>
 
 <div class="layout">
@@ -115,7 +115,7 @@
 
 <dialog id="d-finish">
   <h2>끝내기</h2>
-  <p>작업 기록, 메모리의 센터 집계, 결과 폴더의 그림과 PDF를 지우고 처음 화면으로 돌아갑니다.</p>
+  <p id="finish-text">작업 기록, 메모리의 센터 집계, 결과 폴더의 그림과 PDF를 지우고 처음 화면으로 돌아갑니다.</p>
   <div class="row"><button id="btn-finish-ok" class="primary" type="button">지우고 끝내기</button><button id="btn-finish-cancel" type="button">돌아가기</button></div>
 </dialog>
 

@@ -31,13 +31,17 @@ _lock = threading.Lock()
 state = {}
 
 
+settings = {"auto_delete": True}  # 센터 요구: 결과 삭제 기능 켜기·끄기(끄면 결과 그림·PDF를 남긴다)
+
+
 def reset():
-    """끝내기: 메모리의 센터 집계와 결과 파일을 지우고 잠금을 푼다."""
+    """끝내기: 메모리의 센터 집계와 작업 기록을 지우고 잠금을 푼다. 결과 자동 삭제가 켜져 있으면 결과 파일도 지운다."""
     with _lock:
         state.clear()
         state.update({"stage": "start", "busy": False, "log": [], "event": None, "emd": None, "example": None,
                       "bundle": None, "origin": None, "files": [], "summary": None, "error": None})
-    shutil.rmtree(config.OUT / "report", ignore_errors=True)
+    if settings["auto_delete"]:
+        shutil.rmtree(config.OUT / "report", ignore_errors=True)
     (config.OUT / "work" / "transmissions.jsonl").unlink(missing_ok=True)  # 끝내기는 외부 전송 기록도 지운다
     egress.unlock()
 
@@ -208,7 +212,7 @@ def status():
         "example": state["example"], "origin": state["origin"], "error": state["error"],
         "plan": b and {k: b[k] for k in ("judgement", "kept", "plan", "texts", "ranked", "rule_excluded", "visit_summary", "model", "created_at")},
         "files": len(state["files"]), "summary": state["summary"], "checklist": _checklist(b),
-        "sent": sum(1 for e in _transmissions() if e.get("status") == "sent"),
+        "sent": sum(1 for e in _transmissions() if e.get("status") == "sent"), "auto_delete": settings["auto_delete"],
     }
 
 
@@ -250,6 +254,13 @@ def run_selfcheck():
     bundle = state["bundle"] or pipeline.premade(EXAMPLE_EVENT)
     rows = selfcheck.run(bundle)
     return {"rows": [{"item": i, "ok": ok, "detail": d} for i, ok, d in rows]}
+
+
+@app.post("/api/settings")
+async def change_settings(request: Request):
+    body = await request.json()
+    settings["auto_delete"] = bool(body.get("auto_delete", True))
+    return settings
 
 
 @app.post("/api/reset")
