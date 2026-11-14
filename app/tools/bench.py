@@ -129,5 +129,66 @@ def plan(name, emd):
     print(f"계획 제출 {result['submits']}번, 조회 {result['reads']}번, 누적 비용 {spent():.4f}달러")
 
 
+TEST_EVENTS = [("가파도청보리축제", "대정읍"), ("2025 보롬왓 튤립축제", "표선면"), ("마노르블랑 봄에 꽃향기축제", "안덕면"),
+               ("수국과 공연이 꽃피는 혼인지 수국 축제", "성산읍"), ("2024 자청비 와흘메밀문화제", "조천읍")]
+
+
+def measure(runs="3"):
+    """판정용 측정: 시험 행사마다 판단·계획 단계를 runs번 돌려 통과율, 제출·조회 횟수, 일치율, 비용을 남긴다."""
+    import pipeline
+
+    events = hub.load_events()
+    table = rehearsal_table()
+    records = []
+    for name, emd in TEST_EVENTS:
+        event = find_event(events, name)
+        for n in range(int(runs)):
+            egress.unlock()
+            before = spent()
+            log = []
+            origin, bundle, why = pipeline.public_stage(event, emd, metered, lambda k, t: log.append((k, t)), table)
+            rec = {"event": name, "emd": emd, "run": n + 1, "origin": origin, "why": why,
+                   "cost": round(spent() - before, 4), "reads": sum(1 for k, _ in log if k == "조회"),
+                   "rejected": sum(1 for k, _ in log if k == "검사")}
+            if origin == "ai":
+                rec.update({"kept": bundle["kept"], "extra": sorted(x["emd"] for x in bundle["judgement"]["extra_excluded"]),
+                            "biz": sorted(bundle["plan"]["biz_codes"]), "visit": bundle["judgement"]["visit"]["judgement"],
+                            "attempts": bundle["attempts"]})
+            records.append(rec)
+            print(f"{name} {n + 1}: {origin} {why or ''} 조회 {rec['reads']} 돌려보냄 {rec['rejected']} {rec['cost']}달러", flush=True)
+    by_event = {}
+    for r in records:
+        by_event.setdefault(r["event"], []).append(r)
+    summary = {}
+    for name, rs in by_event.items():
+        ai = [r for r in rs if r["origin"] == "ai"]
+        same = lambda key: len(ai) == len(rs) and len({json.dumps(r[key]) for r in ai}) == 1  # noqa: E731
+        summary[name] = {"passed": f"{len(ai)}/{len(rs)}", "kept_same": same("kept"), "extra_same": same("extra"),
+                         "biz_same": same("biz"), "used_tool": sum(1 for r in rs if r["reads"] > 0)}
+    QA.mkdir(parents=True, exist_ok=True)
+    stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    out = {"model": config.MODEL, "runs": records, "summary": summary,
+           "total_cost": round(sum(r["cost"] for r in records), 4), "cost_per_run": round(sum(r["cost"] for r in records) / len(records), 4)}
+    (QA / f"measure_{stamp}.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(json.dumps(summary, ensure_ascii=False, indent=1))
+    print(f"합계 {out['total_cost']}달러, 실행당 {out['cost_per_run']}달러")
+
+
+def answer_key():
+    """사람 정답표 틀: 시험 행사 개최 읍면과 장소 추정표 무작위 30건(고정 씨앗). 사용자가 answer 칸을 채운다."""
+    import random
+
+    places, events = hub.load_places(), {e["event_id"]: e for e in hub.load_events()}
+    sample = random.Random(20261116).sample(sorted(places), 30)
+    key = {
+        "test_events": [{"event": n, "assumed_emd": e, "answer": ""} for n, e in TEST_EVENTS],
+        "place_sample": [{"event_id": i, "name": events[i]["name"], "ai_place": places[i]["place"],
+                          "ai_spot": places[i]["spot"], "answer": ""} for i in sample],
+    }
+    path = APP.parent / "qa" / "answer_key.json"
+    path.write_text(json.dumps(key, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"{path} 시험 행사 {len(key['test_events'])}건, 장소 표본 {len(sample)}건")
+
+
 if __name__ == "__main__":
-    {"places": places, "judge": judge, "plan": plan}[sys.argv[1]](*sys.argv[2:])
+    {"places": places, "judge": judge, "plan": plan, "measure": measure, "answer_key": answer_key}[sys.argv[1]](*sys.argv[2:])
