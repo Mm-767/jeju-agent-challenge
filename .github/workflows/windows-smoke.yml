@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: "3.11"
+      - name: 빌드 도구 준비
+        run: python -m pip install --quiet packaging==26.3
       - name: 가상 카드 데이터 만들기
         run: python -X utf8 app/tools/make_dummy_card.py
       - name: 묶음 빌드(키 없음)
