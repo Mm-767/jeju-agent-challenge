@@ -31,12 +31,13 @@ WIN_TARGET = [
 # 260자 경로 한도에서 압축 풀기 기본 경로(약 90자)를 뺀 값
 MAX_REL_PATH = 170
 
-# 포함 목록 방식: 여기 없는 파일은 ZIP에 들어가지 않는다
+# 포함 목록 방식: 여기 없는 파일은 ZIP에 들어가지 않는다(.env는 --env로만)
 INCLUDE = [
-    "server.py", "egress.py", "calc.py", "card.py", "install_check.py", "requirements-lock.txt",
-    "static/index.html", "spec/card_v02.json", "tests/test_calc.py", "tests/test_card.py",
+    "*.py", "requirements-lock.txt", "prompts/*", "static/*", "spec/card_v02.json",
+    "data/hub/events.csv", "data/hub/places.json", "data/hub/population/*.csv", "data/premade/*.json",
+    "data/dummy/card_effect/*.csv", "data/dummy/card_none/*.csv", "data/dummy/card_rehearsal/*.csv",
+    "tests/*.py", "tools/*.py",
 ]
-SAMPLE_CSV_DIR = "data/dummy/card_effect"
 
 PTH = ["python311.zip", ".", "Lib\\site-packages", "..\\app", "import site"]
 INSTALL_BAT = [
@@ -215,13 +216,14 @@ def bundle(env_file):
     shutil.rmtree(site / "bin", ignore_errors=True)
 
     app = STAGE / "app"
-    for rel in INCLUDE:
-        dst = app / rel
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(APP / rel, dst)
-    sample = sorted((APP / SAMPLE_CSV_DIR).glob("*.csv"))[0]
-    (app / SAMPLE_CSV_DIR).mkdir(parents=True)
-    shutil.copy2(sample, app / SAMPLE_CSV_DIR / sample.name)
+    for pattern in INCLUDE:
+        matches = sorted(APP.glob(pattern))
+        if not matches:
+            raise SystemExit(f"포함 목록 {pattern}에 맞는 파일이 없다")
+        for src in matches:
+            dst = app / src.relative_to(APP)
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
     if env_file:
         # 허브 프로젝트 키는 넣지 않는다. 실행 중 허브를 부르지 않는다.
         keep = [l for l in env_file.read_text(encoding="utf-8").splitlines() if l.startswith("ANTHROPIC_API_KEY=")]
