@@ -19,7 +19,8 @@ ROOT = APP.parent
 BUILD = ROOT / "build"
 DL = BUILD / "dl"
 STAGE = BUILD / "EventEffect"
-PIP = [str(APP / ".venv" / "bin" / "pip")]
+# 맥에서는 app/.venv의 python으로, 윈도우 자동 시험에서는 그 PC의 python으로 실행한다
+PIP = [sys.executable, "-m", "pip"]
 EMBED = "python-3.11.9-embed-amd64.zip"
 EMBED_URL = f"https://www.python.org/ftp/python/3.11.9/{EMBED}"
 # python.org 3.11.9 릴리스 페이지의 MD5(11/13 대조)

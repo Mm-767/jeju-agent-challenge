@@ -1,0 +1,39 @@
+name: windows-smoke
+
+# 제출 묶음을 윈도우에서 실제로 풀고 설치 점검·실행·예시 경로·PDF·자가 점검을 돌린다. API 키는 넣지 않는다.
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["app/**", "docs/*.pdf", "docs/README.txt", ".github/**"]
+
+jobs:
+  smoke:
+    runs-on: windows-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+      - name: 가상 카드 데이터 만들기
+        run: python -X utf8 app/tools/make_dummy_card.py
+      - name: 묶음 빌드(키 없음)
+        run: python -X utf8 app/tools/build_zip.py bundle
+      - name: 짧은 경로에 풀고 점검
+        shell: pwsh
+        run: |
+          Expand-Archive -Path build/EventEffect_test.zip -DestinationPath C:\
+          C:\EventEffect\python\python.exe -X utf8 .github/win_smoke.py C:\EventEffect smoke/short
+      - name: 한글·띄어쓰기 경로에 풀고 점검
+        shell: pwsh
+        run: |
+          $dest = Join-Path $env:USERPROFILE "바탕 화면\행사 효과 시험"
+          New-Item -ItemType Directory -Force -Path $dest | Out-Null
+          Expand-Archive -Path build/EventEffect_test.zip -DestinationPath $dest
+          & (Join-Path $dest "EventEffect\python\python.exe") -X utf8 .github/win_smoke.py (Join-Path $dest "EventEffect") smoke/korean
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: smoke-results
+          path: smoke/
