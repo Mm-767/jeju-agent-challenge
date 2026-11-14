@@ -29,7 +29,7 @@ class ReportTest(unittest.TestCase):
         self.assertNotIn("{", text)
         self.assertIn("한경면", text)
         self.assertIn(report.pct(self.result["E"]), text)
-        self.assertIn("번이었습니다", report.strength(self.result))
+        self.assertIn("번이었다.", report.strength(self.result))
         with self.assertRaises(KeyError):
             report.fill("{{없는_빈칸}}", vals)
 

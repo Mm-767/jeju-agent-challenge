@@ -140,7 +140,8 @@ async def place(request: Request):
     if emd not in hub.EUP_MYEON:
         raise HTTPException(400, "읍면 12곳 가운데 하나를 골라 주세요. 동 지역 행사는 지원하지 않습니다.")
     state.update({"emd": emd, "stage": "thinking"})
-    log("확인", f"이용자가 개최 읍면을 {emd}로 확인했습니다.")
+    # 읍면 12곳 이름은 모두 받침(읍·면)으로 끝나 "으로"
+    log("확인", f"이용자가 개최 읍면을 {emd}으로 확인했습니다.")
     event = state["event"]
 
     def work():

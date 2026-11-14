@@ -25,6 +25,13 @@ MAGNITUDE = re.compile(
 BLANK = re.compile(r"\{\{([^}]*)\}\}")
 
 
+def _q(x):
+    """'x'은/는. 따옴표 안 마지막 글자의 받침에 맞춘다(숫자는 읽는 소리, 영문은 받침 없음으로 본다)."""
+    last = x[-1]
+    final = (ord(last) - 0xAC00) % 28 != 0 if "가" <= last <= "힣" else last in "013678"
+    return f"'{x}'" + ("은" if final else "는")
+
+
 def _sino(text):
     total, current = 0, 0
     for ch in text:
@@ -45,10 +52,10 @@ def check_numbers(text, field, facts):
             problems.append(f"{{{{{key}}}}}는 쓸 수 없는 빈칸입니다.")
     text = BLANK.sub(" ", text)
     for m in APPROX.finditer(text):
-        problems.append(f"어림 표현 '{m.group(0)}'은 쓰지 않습니다.")
+        problems.append(f"어림 표현 {_q(m.group(0))} 쓰지 않습니다.")
     if field in ("reason", "result"):
         for m in MAGNITUDE.finditer(text):
-            problems.append(f"크기·비율 표현 '{m.group(0)}'은 쓰지 않습니다. 크기는 코드가 채웁니다.")
+            problems.append(f"크기·비율 표현 {_q(m.group(0))} 쓰지 않습니다. 크기는 코드가 채웁니다.")
     for name in sorted(facts.get("names", []), key=len, reverse=True):
         if name:
             text = text.replace(name, " ")
@@ -76,33 +83,39 @@ def check_numbers(text, field, facts):
             ok = any(x.year == y and x.month == mo and x.day == int(d) for x in dates)
         else:
             ok = f"{y}{mo:02d}" in months
-        return None if ok else f"'{m.group(0)}'은 입력에 없는 날짜입니다."
+        return None if ok else f"{_q(m.group(0))} 입력에 없는 날짜입니다."
 
     take(r"event_id\s*:?\s*(\d+)", lambda m: None if m.group(1) in facts.get("ids", set())
-         else f"'{m.group(0)}'은 입력 목록에 없는 행사 번호입니다.")
+         else f"{_q(m.group(0))} 입력 목록에 없는 행사 번호입니다.")
     take(r"(?<![\d.])(\d{1,2})/(\d{1,2})(?![\d/])", lambda m: None if any(
-        x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"'{m.group(0)}'은 입력에 없는 날짜입니다.")
+        x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
     take(r"(\d{4})\s*년\s*(\d{1,2})\s*월(?:\s*(\d{1,2})\s*일)?", full_date)
     take(r"(\d{1,2})\s*월\s*(\d{1,2})\s*일", lambda m: None if any(
-        x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"'{m.group(0)}'은 입력에 없는 날짜입니다.")
+        x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
     take(r"(\d{1,2})\s*[~∼-]\s*(\d{1,2})\s*월", lambda m: None if {int(m.group(1)), int(m.group(2))} <= month_numbers
-         else f"'{m.group(0)}'은 입력에 없는 달입니다.")
-    take(r"(\d{1,2})\s*월", lambda m: None if int(m.group(1)) in month_numbers else f"'{m.group(0)}'은 입력에 없는 달입니다.")
-    take(r"(\d{1,2})\s*일", lambda m: None if int(m.group(1)) in days else f"'{m.group(0)}'은 입력에 없는 날입니다.")
+         else f"{_q(m.group(0))} 입력에 없는 달입니다.")
+    take(r"(\d{1,2})\s*월", lambda m: None if int(m.group(1)) in month_numbers else f"{_q(m.group(0))} 입력에 없는 달입니다.")
+    take(r"(\d{1,2})\s*[~∼-]\s*(\d{1,2})\s*일", lambda m: None if {int(m.group(1)), int(m.group(2))} <= days
+         else f"{_q(m.group(0))} 입력에 없는 날입니다.")
+    take(r"(\d{1,2})\s*일", lambda m: None if int(m.group(1)) in days else f"{_q(m.group(0))} 입력에 없는 날입니다.")
     take(r"(\d+)\s*(주|개월)", lambda m: None if (m.group(2), int(m.group(1))) in CONSTANT_SPANS
-         else f"'{m.group(0)}'은 정해진 기간이 아닙니다.")
-    take(r"(\d)\s*순위", lambda m: None if int(m.group(1)) in RANKS else f"'{m.group(0)}'은 없는 순위입니다.")
-    take(rf"(\d+)\s*({COUNT_UNITS})", lambda m: None if int(m.group(1)) in counts else f"'{m.group(0)}'은 입력에 없는 개수입니다.")
+         else f"{_q(m.group(0))} 정해진 기간이 아닙니다.")
+    take(r"(\d)\s*순위", lambda m: None if int(m.group(1)) in RANKS else f"{_q(m.group(0))} 없는 순위입니다.")
+    take(rf"(\d+)\s*({COUNT_UNITS})", lambda m: None if int(m.group(1)) in counts else f"{_q(m.group(0))} 입력에 없는 개수입니다.")
     take(r"(\d{4})-(\d{2})-(\d{2})", lambda m: None if any(
-        x.isoformat() == m.group(0) for x in dates) else f"'{m.group(0)}'은 입력에 없는 날짜입니다.")
-    take(r"(\d{4})-(\d{2})", lambda m: None if m.group(1) + m.group(2) in months else f"'{m.group(0)}'은 입력에 없는 달입니다.")
+        x.isoformat() == m.group(0) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
+    take(r"(\d{4})-(\d{2})", lambda m: None if m.group(1) + m.group(2) in months else f"{_q(m.group(0))} 입력에 없는 달입니다.")
+    take(r"(?<![\d-])(\d{1,2})-(\d{1,2})(?![\d-])", lambda m: None if any(
+        x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
     take(rf"(?<![가-힣])({'|'.join(NATIVE)})\s*({COUNT_UNITS})", lambda m: None if NATIVE[m.group(1)] in counts
-         else f"'{m.group(0)}'은 입력에 없는 개수입니다.")
+         else f"{_q(m.group(0))} 입력에 없는 개수입니다.")
     # "이곳"처럼 한 글자 수사가 붙어 쓰인 말은 수가 아니므로, 한 글자 수사는 띄어 쓴 경우만 본다
-    sino = lambda m: None if _sino(m.group(1)) in counts else f"'{m.group(0)}'은 입력에 없는 개수입니다."  # noqa: E731
+    sino = lambda m: None if _sino(m.group(1)) in counts else f"{_q(m.group(0))} 입력에 없는 개수입니다."  # noqa: E731
     take(rf"(?<![가-힣])([일이삼사오육칠팔구십백천만]{{2,}}|[십백천만])\s*({COUNT_UNITS})", sino)
     take(rf"(?<![가-힣])([일이삼사오육칠팔구])\s+({COUNT_UNITS})", sino)
     for m in re.finditer(r"\d+(?:\.\d+)?", text):
+        if m.group(0) in facts.get("ids", set()):
+            continue
         if not (m.group(0).isdigit() and int(m.group(0)) in counts | CONSTANT_NUMBERS | RANKS):
             problems.append(f"숫자 '{m.group(0)}'의 근거가 입력에 없습니다. 빈칸을 쓰세요.")
     return problems

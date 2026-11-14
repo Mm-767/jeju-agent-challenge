@@ -208,7 +208,7 @@ def visit_series(inp):
         return "한 번에 120일까지 조회할 수 있습니다.", True
     visits = hub.daily_visits(inp["emd"])
     if visits is None:
-        return f"{inp['emd']}는 공개 방문 자료가 없습니다.", True
+        return f"{inp['emd']}은 공개 방문 자료가 없습니다.", True
     rows = []
     for n in range((end - start).days + 1):
         d = start + dt.timedelta(n)
@@ -225,9 +225,9 @@ def validate_judgement(inp, ctx, seen=frozenset()):
     named = [x["emd"] for x in inp["extra_excluded"]] + [x["emd"] for x in inp["kept"]]
     for c in remaining:
         if named.count(c) != 1:
-            problems.append(f"{c}가 kept와 extra_excluded에 한 번씩 들어가야 하는데 {named.count(c)}번 있습니다.")
+            problems.append(f"{c}이 kept와 extra_excluded에 한 번씩 들어가야 하는데 {named.count(c)}번 있습니다.")
     for c in sorted(set(named) - set(remaining)):
-        problems.append(f"{c}는 남은 후보가 아닙니다(규칙으로 이미 뺐거나 행사 읍면입니다).")
+        problems.append(f"{c}은 남은 후보가 아닙니다(규칙으로 이미 뺐거나 행사 읍면입니다).")
     for x in inp["extra_excluded"]:
         if x["event_id"] and x["event_id"] not in other_ids:
             problems.append(f"extra_excluded의 event_id {x['event_id']}는 같은 시기 행사 목록에 없습니다.")
@@ -278,7 +278,9 @@ def run_stage(purpose, messages, tools, submit_name, validate, call, log):
                 submits += 1
                 problems = validate(block["input"], seen)
                 if problems:
-                    log("검사", f"{submits}번째 제출 돌려보냄: {len(problems)}건")
+                    more = f" 외 {len(problems) - 1}건" if len(problems) > 1 else ""
+                    stage = {"judge": "방문 판단", "plan": "계산 계획"}[purpose]
+                    log("검사", f"{stage} {submits}번째 제출을 돌려보냈습니다: {problems[0]}{more}")
                     return " ".join(problems) + f" 고쳐서 다시 제출하세요(남은 제출 기회 {SUBMIT_TRIES - submits}번).", True
                 state["passed"] = block["input"]
                 return "통과", False

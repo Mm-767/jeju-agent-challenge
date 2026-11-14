@@ -59,6 +59,17 @@ class NumbersTest(unittest.TestCase):
         self.assertTrue(check_numbers("event_id 999", "reason", facts))
         self.assertEqual(check_numbers("생태관광 프로그램이 겹친다", "reason", facts), [])
 
+    def test_shortened_dates_and_bare_ids_from_input(self):
+        facts = dict(FACTS, ids={"244"})
+        # 11/15 혼인지 실행에서 판단 단계가 제출 3번을 모두 돌려받은 형식
+        self.assertEqual(check_numbers("다른 행사(2024-04-06~04-28)가 겹친다", "reason", facts), [])
+        self.assertEqual(check_numbers("4월 6~9일 상승", "reason", facts), [])
+        self.assertEqual(check_numbers("신석기 행사(244)가 있다", "reason", facts), [])
+        self.assertTrue(check_numbers("2024-04-06~05-03에 몰렸다", "reason", facts))
+        self.assertTrue(check_numbers("4월 6~30일 상승", "reason", facts))
+        self.assertTrue(check_numbers("244명이 왔다", "reason", facts))
+        self.assertIn("'두어'는", check_numbers("두어 곳", "reason", facts)[0])
+
     def test_method_allows_two_times_rule(self):
         self.assertEqual(check_numbers("평소 흔들림의 2배 안이면 통과", "method", FACTS), [])
 
