@@ -26,7 +26,8 @@ NOT_COMPUTED = {
     "no_comparison": "행사 전 흐름이 나란한 비교 읍면을 찾지 못해",
     "small_cells": "작은 칸을 업종 전체로 묶어도 10 미만이 남아",
     "too_few_candidates": "비교할 수 있는 읍면이 부족해",
-    "few_placebo": "행사가 없던 달이 부족해 평소 흔들림을 잴 수 없어",
+    "few_placebo": "행사가 없던 달이 부족해 평소 흔들림을 계산할 수 없어",
+    "missing_files": "필요한 달의 카드 파일이나 행사 읍면 자료가 없어",
 }
 KOREAN_FONTS = ["Malgun Gothic", "AppleGothic", "NanumGothic"]
 # 윈도우는 맑은 고딕. 맥 개발 PC의 AppleGothic.ttf는 OS/2 표가 없어 fpdf2가 못 읽으므로 Arial Unicode를 쓴다

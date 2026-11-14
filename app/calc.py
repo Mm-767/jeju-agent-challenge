@@ -84,7 +84,7 @@ def months_for(start, end, blocked=frozenset()):
 
 
 def distance_months(start, end):
-    """비교 읍면 거리를 재는 창: 처음 걸친 달 앞 12개월에서 행사가 걸친 달과 달 숫자가 같은 달을 뺀다."""
+    """비교 읍면 거리를 계산하는 창: 처음 걸친 달 앞 12개월에서 행사가 걸친 달과 달 숫자가 같은 달을 뺀다."""
     shares = overlap(start, end)
     first = min(shares)
     numbers = {m[4:] for m in shares}
@@ -100,7 +100,7 @@ def distance(v_t, v_c, months):
 
 
 def rank(v_t, candidates, months, top=3):
-    """candidates: {읍면: 월평균}. 거리가 작은 순으로 최대 top곳, 거리를 못 잰 곳은 이유와 함께 따로."""
+    """candidates: {읍면: 월평균}. 거리가 작은 순으로 최대 top곳, 거리를 계산하지 못한 곳은 이유와 함께 따로."""
     scored = []
     skipped = []
     for emd, v_c in candidates.items():
