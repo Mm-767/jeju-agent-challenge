@@ -62,10 +62,18 @@ def places():
 QA = APP.parent / "qa" / "bench"
 
 
+def find_event(events, name):
+    """같은 이름의 행사가 여러 해에 있으면 카드 수록 기간 안의 것을 고른다."""
+    inside = [e for e in events if e["name"] == name and e["start"] and hub.FIRST_DAY <= e["start"] <= hub.LAST_DAY]
+    if len(inside) != 1:
+        raise SystemExit(f"{name}: 수록 기간 안의 행사 {len(inside)}건")
+    return inside[0]
+
+
 def judge(name, emd):
     events = hub.load_events()
     places = hub.load_places()
-    event = next(e for e in events if e["name"] == name)
+    event = find_event(events, name)
     ctx = agent.judge_context(event, emd, events, places)
     print(f"남은 후보 {[r['emd'] for r in ctx['ranked']]}, 규칙 제외 {[(x['emd'], x['why']) for x in ctx['rule_excluded']]}")
     print(f"방문 요약 {ctx['visit']}, 같은 시기 행사 {len(ctx['other_events'])}건")
@@ -93,7 +101,7 @@ def plan(name, emd):
     import calc
 
     events, places_table = hub.load_events(), hub.load_places()
-    event = next(e for e in events if e["name"] == name)
+    event = find_event(events, name)
     ctx = agent.judge_context(event, emd, events, places_table)
     log = []
     say = lambda kind, text: (log.append((kind, text)), print(f"  [{kind}] {text}"))  # noqa: E731
