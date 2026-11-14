@@ -38,6 +38,7 @@ def reset():
         state.update({"stage": "start", "busy": False, "log": [], "event": None, "emd": None, "example": None,
                       "bundle": None, "origin": None, "files": [], "summary": None, "error": None})
     shutil.rmtree(config.OUT / "report", ignore_errors=True)
+    (config.OUT / "work" / "transmissions.jsonl").unlink(missing_ok=True)  # 끝내기는 외부 전송 기록도 지운다
     egress.unlock()
 
 
@@ -206,8 +207,33 @@ def status():
         "event": state["event"] and {k: str(v) for k, v in state["event"].items()}, "emd": state["emd"],
         "example": state["example"], "origin": state["origin"], "error": state["error"],
         "plan": b and {k: b[k] for k in ("judgement", "kept", "plan", "texts", "ranked", "rule_excluded", "visit_summary", "model", "created_at")},
-        "files": len(state["files"]), "summary": state["summary"],
+        "files": len(state["files"]), "summary": state["summary"], "checklist": _checklist(b),
+        "sent": sum(1 for e in _transmissions() if e.get("status") == "sent"),
     }
+
+
+def _checklist(bundle):
+    if not bundle:
+        return None
+    ev = bundle["event"]
+    months = calc.months_for(dt.date.fromisoformat(ev["start"]), dt.date.fromisoformat(ev["end"]),
+                             set(bundle["festival_months"].get(ev["emd"], [])))
+    need = calc.required_months(months)
+    return {"required": need["required"], "for_sigma": need["for_sigma"], "all": need["all"]}
+
+
+def _transmissions():
+    path = config.OUT / "work" / "transmissions.jsonl"
+    if not path.exists():
+        return []
+    import json
+
+    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+@app.get("/api/transmissions")
+def transmissions():
+    return {"entries": _transmissions()[-30:]}
 
 
 @app.get("/api/report/{name}")

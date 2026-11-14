@@ -1,42 +1,124 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>행사 효과 나란히</title>
-  <style>
-    body {
-      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
-      max-width: 960px;
-      margin: 40px auto;
-      padding: 0 16px;
-      color: #1f2328;
-    }
-    .band {
-      padding: 8px 12px;
-      background: #eef6ee;
-      border-radius: 6px;
-      font-size: 14px;
-    }
-    button {
-      font-size: 18px;
-      padding: 12px 24px;
-      margin-top: 24px;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>행사 효과 나란히</title>
+<link rel="stylesheet" href="/static/app.css">
 </head>
 <body>
-  <div class="band" id="band">공개 데이터 모드: 외부 AI 연결 가능</div>
-  <h1>행사 효과 나란히</h1>
-  <p>읍면에서 열린 축제가 지역 소비를 얼마나 늘렸는지, 행사 전 흐름이 비슷한 읍면과 나란히 놓고 계산합니다.</p>
-  <button id="demo">예시로 해 보기</button>
-  <p id="status"></p>
-  <script>
-    document.getElementById("demo").onclick = async () => {
-      const r = await fetch("/api/health");
-      document.getElementById("status").textContent =
-        r.ok ? "서버 연결됨 (분석 기능은 준비 중)" : "서버 연결 실패";
-    };
-  </script>
+<header class="band">
+  <strong class="brand">행사 효과 나란히</strong>
+  <span id="b-example" class="pill warn" hidden>예시(가상 데이터)</span>
+  <span id="b-ai" class="pill ok">외부 AI 연결: 열림</span>
+  <button id="b-sent" class="pill link" type="button">외부 전송 0건</button>
+  <span class="pill">결과는 이 PC의 결과 폴더에만 저장됩니다</span>
+</header>
+
+<div class="layout">
+<main>
+  <section id="a-start" class="area">
+    <h1>축제가 열린 읍면의 관광객 소비, 비교 읍면과 나란히 보기</h1>
+    <p class="lede">행사를 고르면 AI가 공개 자료로 계산 계획을 세우고, 센터 카드 파일을 넣으면 이 PC 안에서만 계산합니다. 파일을 넣는 순간 외부 연결이 잠깁니다.</p>
+    <div class="row">
+      <button id="btn-example" class="primary" type="button">예시로 해 보기</button>
+      <button id="btn-direct" type="button">직접 분석하기</button>
+    </div>
+    <p><a id="btn-example-none" href="#" class="small">효과를 심지 않은 가상 데이터로 해 보기</a></p>
+    <div id="events-wrap" hidden>
+      <label class="small"><input id="only-ok" type="checkbox" checked> 볼 수 있는 행사만</label>
+      <div class="table-wrap"><table>
+        <thead><tr><th>행사</th><th>기간</th><th>AI 장소 짐작</th><th>볼 수 있나</th><th></th></tr></thead>
+        <tbody id="events"></tbody>
+      </table></div>
+    </div>
+  </section>
+
+  <section id="a-place" class="area" hidden>
+    <h2>장소 확인</h2>
+    <p id="place-event" class="lede"></p>
+    <div class="guess">
+      <div class="small">AI 짐작(행사 이름으로 추정, 틀릴 수 있음)</div>
+      <div id="place-guess" class="big"></div>
+      <div id="place-reason" class="small"></div>
+    </div>
+    <label for="place-emd">실제 개최 읍면</label>
+    <select id="place-emd"></select>
+    <div class="row"><button id="btn-place" class="primary" type="button">장소 확인</button></div>
+  </section>
+
+  <section id="a-plan" class="area" hidden>
+    <h2>방문 판단과 비교 읍면</h2>
+    <p id="plan-wait" class="lede">AI가 공개 유동인구를 조회하며 계획을 세우고 있습니다. 30초에서 1분쯤 걸립니다.</p>
+    <div id="plan-body" hidden>
+      <p><span id="plan-origin" class="pill"></span> <span id="plan-judgement" class="pill ai"></span></p>
+      <p id="plan-reason"></p>
+      <h3>비교 순서(코드가 공개 유동인구 흐름으로 정함)</h3>
+      <ol id="plan-kept"></ol>
+      <h3>뺀 읍면</h3>
+      <ul id="plan-excluded" class="small"></ul>
+      <h3>업종 범위(AI)</h3>
+      <p id="plan-biz" class="small"></p>
+      <div class="row"><button id="btn-to-files" class="primary" type="button">이 계획으로 파일 넣기</button></div>
+    </div>
+    <p id="plan-stopped" class="warn-text" hidden>계산 계획을 세우지 못했습니다. 작업 기록에서 이유를 확인하고 끝내기 뒤 다른 행사를 골라 주세요.</p>
+  </section>
+
+  <section id="a-files" class="area" hidden>
+    <h2>센터 카드 파일 넣기</h2>
+    <p id="check-count" class="lede"></p>
+    <p class="small">센터에서는 한 번에 한 달씩 받습니다. 달이 많으면 운영자에게 한 번에 요청해 받은 파일을 모두 넣어 주세요.</p>
+    <div id="drop" class="drop" tabindex="0">
+      <p>카드 이용 현황(읍면동)_v02 CSV를 여기에 끌어다 놓거나</p>
+      <input id="file-input" type="file" accept=".csv" multiple>
+    </div>
+    <p id="files-count" class="small"></p>
+    <div class="row">
+      <button id="btn-example-files" type="button">동봉한 가상 데이터로 계속(시험용)</button>
+      <button id="btn-calc" class="primary" type="button" disabled>계산 시작</button>
+    </div>
+  </section>
+
+  <section id="a-result" class="area" hidden>
+    <h2>결과</h2>
+    <p id="r-sentence" class="result"></p>
+    <div class="figs"><img id="r-index" alt="행사 읍면과 비교 읍면의 달별 지수"><img id="r-visit" alt="공개 방문 인구 날짜별 지수"></div>
+    <h3>계산 근거</h3>
+    <table class="kv"><tbody id="r-evidence"></tbody></table>
+    <h3>AI가 정한 것과 이유</h3>
+    <table class="kv"><tbody id="r-ai"></tbody></table>
+    <h3>방법</h3>
+    <p id="r-method" class="small"></p>
+    <h3>말할 수 없는 것(한계)</h3>
+    <ul id="r-limits" class="small"></ul>
+    <h3>반출 신청</h3>
+    <p><span class="pill ok">반출 신청 가능(사전 점검 기준)</span> <a id="r-pdf" href="#" target="_blank" rel="noopener">결과 PDF 열어 보기</a></p>
+    <label for="r-usage">활용 사유 문안</label>
+    <textarea id="r-usage" rows="4" readonly></textarea>
+    <div class="row"><button id="btn-copy" type="button">활용 사유 복사</button><button id="btn-finish" type="button">끝내기</button></div>
+  </section>
+</main>
+
+<aside>
+  <h2>작업 기록</h2>
+  <ol id="log" class="log"></ol>
+</aside>
+</div>
+
+<dialog id="d-sent">
+  <h2>외부 전송 기록</h2>
+  <p class="small">이 프로그램이 밖으로 보낸 요청은 공개 자료와 계획뿐이며, 모두 여기에 남습니다.</p>
+  <ol id="sent-list" class="small"></ol>
+  <div class="row"><button id="btn-selfcheck" type="button">자가 점검</button><button id="btn-close-sent" type="button">닫기</button></div>
+  <ul id="selfcheck-rows" class="small"></ul>
+</dialog>
+
+<dialog id="d-finish">
+  <h2>끝내기</h2>
+  <p>작업 기록, 메모리의 센터 집계, 결과 폴더의 그림과 PDF를 지우고 처음 화면으로 돌아갑니다.</p>
+  <div class="row"><button id="btn-finish-ok" class="primary" type="button">지우고 끝내기</button><button id="btn-finish-cancel" type="button">돌아가기</button></div>
+</dialog>
+
+<script src="/static/app.js"></script>
 </body>
 </html>
