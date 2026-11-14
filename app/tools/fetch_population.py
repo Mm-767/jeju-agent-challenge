@@ -1,6 +1,7 @@
 """허브 「읍면동 단위 내국인 유동인구」를 읍면 12곳, 2023-08-01~2026-08-31 일별로 받아 스냅샷 CSV로 저장한다.
 
 중간에 멈춰도 다시 실행하면 읍면별 CSV의 마지막 날짜 다음부터 이어 받는다.
+새 달을 더 받을 때: python tools/fetch_population.py --end 2026-10-31 [읍면 ...]
 """
 import csv
 import datetime as dt
@@ -103,4 +104,8 @@ def main(emds):
 
 if __name__ == "__main__":
     spec = json.loads((APP / "spec" / "card_v02.json").read_text(encoding="utf-8"))
-    main(sys.argv[1:] or spec["eup_myeon"])
+    args = sys.argv[1:]
+    if args[:1] == ["--end"]:
+        END = dt.date.fromisoformat(args[1])
+        args = args[2:]
+    main(args or spec["eup_myeon"])

@@ -1,4 +1,5 @@
 import datetime as dt
+import json
 import shutil
 import sys
 import threading
@@ -31,7 +32,18 @@ _lock = threading.Lock()
 state = {}
 
 
-settings = {"auto_delete": True}  # 센터 요구: 결과 삭제 기능 켜기·끄기(끄면 결과 그림·PDF를 남긴다)
+SETTINGS = config.OUT / "settings.json"
+
+
+def _load_settings():
+    # 다시 켤 때도 지난 선택을 따라야, 끄고 남긴 결과가 시작 때 reset()으로 지워지지 않는다
+    try:
+        return {"auto_delete": bool(json.loads(SETTINGS.read_text(encoding="utf-8")).get("auto_delete", True))}
+    except (OSError, ValueError):
+        return {"auto_delete": True}
+
+
+settings = _load_settings()  # 센터 요구: 결과 삭제 기능 켜기·끄기(끄면 결과 그림·PDF를 남긴다)
 
 
 def reset():
@@ -260,6 +272,7 @@ def run_selfcheck():
 async def change_settings(request: Request):
     body = await request.json()
     settings["auto_delete"] = bool(body.get("auto_delete", True))
+    config.out_path(SETTINGS.name).write_text(json.dumps(settings), encoding="utf-8")
     return settings
 
 

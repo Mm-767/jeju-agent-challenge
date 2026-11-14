@@ -275,6 +275,9 @@ def bundle(env_file):
             raise SystemExit("ANTHROPIC_API_KEY가 없다")
         (app / ".env").write_text("\n".join(keep) + "\n", encoding="utf-8")
     shutil.copy2(ROOT / "docs" / "README.txt", STAGE / "README.txt")
+    (STAGE / "docs").mkdir()
+    for pdf in sorted((ROOT / "docs").glob("*_ko.pdf")):
+        shutil.copy2(pdf, STAGE / "docs" / pdf.name)
     print(f"라이선스 고지 {notices(STAGE)}개 패키지")
     for name, lines in (("install.bat", INSTALL_BAT), ("run.bat", RUN_BAT)):
         (STAGE / name).write_bytes(("\r\n".join(lines) + "\r\n").encode("ascii"))

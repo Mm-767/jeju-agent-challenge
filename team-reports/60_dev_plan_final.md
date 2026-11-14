@@ -667,7 +667,7 @@ p ≤ 0.1이면 |E|보다 작은 Q가 있으므로 E = 0인 경우는 생기지 
 | Prompt | app/prompts/system.txt, judge.txt, plan.txt, places.txt | 11/14~11/16 |
 | Tool/API 연동 | app/prompts/tools.json(도구 정의), app/egress.py | 11/14 |
 | 데이터 처리 | app/card.py, calc.py, report.py, tools/fetch_population.py(공개 데이터 수집기, 운영자용), make_dummy_card.py, build_spec.py | 11/14~11/17 |
-| 모델·라이브러리 정보 | docs/manual_ko.pdf "사용 모델과 라이브러리" 절, requirements-lock.txt, LICENSES/(서드파티 고지, 글꼴 OFL) | 11/18 |
+| 모델·라이브러리 정보 | docs/manual_ko.pdf "사용 모델과 라이브러리" 절, requirements-lock.txt, THIRD_PARTY_NOTICES.txt(11/15 변경: 빌드 때 dist-info에서 34개 생성, 글꼴은 동봉하지 않아 OFL 고지 없음) | 11/18 |
 | README | README.txt(루트, 한국어 UTF-8). 첫머리에 권리 문구, "심사위원께: 3분 확인 순서"(예시로 해 보기, 외부 전송 기록 열기, 계획 준비 뒤 Wi-Fi 끄고 계산, 끝내기, 자가 점검), AI 대기 30초~1분 안내, 재현성 네 줄(2-5절) | 11/18, 11/19 |
 | 설치·실행 절차, 의존성, 사용자 매뉴얼, 오류·제약 | docs/manual_ko.pdf | 11/18, 11/19 |
 | 환경변수 예시 | app/.env.example(빈 키 이름만) | 11/18 |
