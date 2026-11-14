@@ -266,5 +266,110 @@
         }
       }
     }
+  },
+  "submit_plan": {
+    "name": "submit_plan",
+    "description": "계획 단계의 결과를 제출한다. 업종 범위, 경우별 결과 문장 틀 4가지, 방법 문단, 이 행사만의 한계.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "biz_codes",
+        "biz_reason",
+        "result_sentences",
+        "method",
+        "extra_limits"
+      ],
+      "properties": {
+        "biz_codes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "G47119",
+              "G47121",
+              "G47122",
+              "G47129",
+              "G47130",
+              "G47190",
+              "G47212",
+              "G47213",
+              "G47214",
+              "G47215",
+              "G47216",
+              "G47711",
+              "G47712",
+              "G47813",
+              "G47842",
+              "H49212",
+              "H49231",
+              "H50121",
+              "H51100",
+              "I55111",
+              "I55112",
+              "I55113",
+              "I56111",
+              "I56112",
+              "I56113",
+              "I56114",
+              "I56119",
+              "I56192",
+              "I56211",
+              "I56219",
+              "I56220",
+              "L69110",
+              "L69210",
+              "N75211",
+              "N75992",
+              "R91121",
+              "R91139",
+              "R91239",
+              "R91249",
+              "R91299",
+              "S96121",
+              "S96122"
+            ]
+          },
+          "description": "이 행사로 늘었을 관광객 소비 업종. 비우면 42개 전체."
+        },
+        "biz_reason": {
+          "type": "string"
+        },
+        "result_sentences": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "higher",
+            "lower",
+            "no_difference",
+            "not_computed"
+          ],
+          "properties": {
+            "higher": {
+              "type": "string"
+            },
+            "lower": {
+              "type": "string"
+            },
+            "no_difference": {
+              "type": "string"
+            },
+            "not_computed": {
+              "type": "string"
+            }
+          }
+        },
+        "method": {
+          "type": "string"
+        },
+        "extra_limits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
   }
 }

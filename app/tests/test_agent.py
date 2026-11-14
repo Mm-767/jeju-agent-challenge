@@ -72,5 +72,92 @@ class PlacesTest(unittest.TestCase):
         self.assertEqual(len(call.requests), 3)
 
 
+
+import calc  # noqa: E402
+import card  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+REHEARSAL = sorted((Path(__file__).resolve().parent.parent / "data" / "dummy" / "card_rehearsal").glob("*.csv"))
+GAPADO = (dt.date(2024, 4, 6), dt.date(2024, 4, 28))
+
+
+class RehearsalTest(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.table = card.new_table()
+        for f in REHEARSAL:
+            card.ingest(f.read_bytes(), f.name, cls.table)
+        cls.codes = sorted(agent.BIZ_NAMES)
+
+    def test_gapado_rehearsal_runs_and_finds_planted_effect(self):
+        problems, result, widened = calc.rehearse(self.table, "대정읍", ["한경면", "구좌읍"], *GAPADO,
+                                                  ["I56111", "I56220"], self.codes, {})
+        self.assertEqual(problems, [])
+        self.assertEqual(result["outcome"], "higher")
+        self.assertEqual(result["emd"], "한경면")
+
+    def test_no_comparison_is_a_problem(self):
+        problems, result, _ = calc.rehearse(self.table, "대정읍", [], *GAPADO, [], self.codes, {})
+        self.assertTrue(problems)
+        self.assertEqual(result["outcome"], "not_computed")
+
+
+def plan_ctx():
+    return {
+        "event": {"event_id": "363", "name": "가파도청보리축제", "start": "2024-04-06", "end": "2024-04-28", "emd": "대정읍"},
+        "months": calc.months_for(*GAPADO),
+        "ranked": [{"emd": "한경면", "distance": 0.05}, {"emd": "구좌읍", "distance": 0.06}],
+        "rule_excluded": [], "other_events": [], "festival_months": {},
+    }
+
+
+def good_plan():
+    return {
+        "biz_codes": ["I56111"], "biz_reason": "꽃 축제라 음식점 소비를 본다.",
+        "result_sentences": {
+            "higher": "{{행사_이름}} 기간 {{행사_읍면}}의 관광객 카드 소비는 {{비교_읍면}}보다 {{차이}} 더 늘었습니다.",
+            "lower": "{{행사_이름}} 기간 {{행사_읍면}}의 관광객 카드 소비는 {{비교_읍면}}보다 {{차이}} 덜 늘었습니다.",
+            "no_difference": "{{비교_읍면}}과 비교한 차이는 평소에도 생기는 크기였습니다.",
+            "not_computed": "{{계산_못한_이유}} 때문에 계산하지 못했습니다.",
+        },
+        "method": "행사 직전 3개월을 기준으로 행사 달의 증가율을 비교 읍면과 견줬습니다.",
+        "extra_limits": [],
+    }
+
+
+class PlanStageTest(unittest.TestCase):
+    def judgement(self, kept):
+        return {"ok": True, "input": {"kept": [{"emd": k, "reason": ""} for k in kept]}, "pending": []}
+
+    def test_too_few_candidates_stops_without_calling(self):
+        call = FakeCall([])
+        result, _ = agent.plan(plan_ctx(), self.judgement(["한경면"]), [], call, lambda *a: None, lambda i: [])
+        self.assertEqual(result["why"], "too_few_candidates")
+        self.assertEqual(call.requests, [])
+
+    def test_missing_blank_then_fixed(self):
+        bad = good_plan()
+        bad["result_sentences"]["higher"] = "{{행사_읍면}}의 소비가 더 늘었습니다."
+        call = FakeCall([[{"type": "tool_use", "id": "p1", "name": "submit_plan", "input": bad}],
+                         [{"type": "tool_use", "id": "p2", "name": "submit_plan", "input": good_plan()}]])
+        result, kept = agent.plan(plan_ctx(), self.judgement(["한경면", "구좌읍"]), [], call, lambda *a: None, lambda i: [])
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["submits"], 2)
+        self.assertEqual(kept, ["한경면", "구좌읍"])
+        # 마지막은 통과한 응답이고, 그 앞이 첫 제출을 돌려보낸 tool_result다
+        error = call.requests[1]["messages"][-2]["content"][0]["content"]
+        self.assertIn("{{차이}}", error)
+
+    def test_causal_word_blocked(self):
+        bad = good_plan()
+        bad["result_sentences"]["higher"] = "{{비교_읍면}}보다 {{차이}} 늘어 축제 덕분임이 입증되었습니다."
+        problems = agent.validate_plan(bad, plan_ctx(), set(), lambda i: [])
+        self.assertTrue(any("인과" in p for p in problems))
+
+    def test_rehearsal_problem_returned(self):
+        problems = agent.validate_plan(good_plan(), plan_ctx(), set(), lambda i: ["리허설 실패"])
+        self.assertEqual(problems, ["리허설 실패"])
+
+
 if __name__ == "__main__":
     unittest.main()

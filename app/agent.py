@@ -88,6 +88,15 @@ def estimate_places(events, call):
 
 # ---- 판단 단계 -------------------------------------------------------------
 
+
+def conversation_tools():
+    """판단·계획 단계가 같은 대화를 쓰므로 도구 목록도 같아야 한다.
+
+    도구 목록이 바뀌면 앞 단계의 생각 블록이 무효가 되어 API가 400을 낸다(11/14 실제 확인).
+    """
+    return [TOOLS["get_visit_series"], TOOLS["submit_judgement"], TOOLS["submit_plan"]]
+
+
 MAX_READS = 4
 MAX_SERIES_DAYS = 120
 JUDGE_PROMPT = (config.PROMPTS / "judge.txt").read_text(encoding="utf-8")
@@ -147,9 +156,17 @@ def judge_context(event, emd, events, places):
             others.append({"event_id": ev["event_id"], "name": ev["name"], "start": str(ev["start"]), "end": str(ev["end"]),
                            "place": p.get("place", "모름"), "spot": p.get("spot", ""), "kind": p.get("kind", "기타"),
                            "confidence": p.get("confidence", "낮음")})
+    festival_months = {}
+    for ev in events:
+        p = places.get(ev["event_id"])
+        if ev["event_id"] == event["event_id"] or not p or p["kind"] != "축제" or not ev["start"] or not ev["end"]:
+            continue
+        hit = {m for m, s in calc.overlap(ev["start"], ev["end"]).items() if s >= calc.SHORT_SHARE}
+        festival_months.setdefault(p["place"], set()).update(hit)
     return {
         "event": {"event_id": event["event_id"], "name": event["name"], "start": str(start), "end": str(end), "emd": emd},
         "months": months,
+        "festival_months": festival_months,
         "visit": {k: (round(summary[k], 4) if isinstance(summary[k], float) else summary[k]) for k in ("R_T", "R_C", "V", "missing_days")},
         "ranked": [{"emd": c, "distance": round(d, 4)} for c, d in ranked],
         "rule_excluded": rule_excluded,
@@ -281,6 +298,62 @@ def judge(ctx, call, log):
     """판단 단계. 결과와 대화(계획 단계가 이어 쓴다)를 돌려준다."""
     public = {k: ctx[k] for k in ("event", "visit", "ranked", "rule_excluded", "other_events")}
     messages = [{"role": "user", "content": JUDGE_PROMPT + "\n입력(JSON):\n" + json.dumps(public, ensure_ascii=False)}]
-    tools = [TOOLS["get_visit_series"], TOOLS["submit_judgement"]]
-    result = run_stage("judge", messages, tools, "submit_judgement", lambda i, seen: validate_judgement(i, ctx, seen), call, log)
+    result = run_stage("judge", messages, conversation_tools(), "submit_judgement", lambda i, seen: validate_judgement(i, ctx, seen), call, log)
     return result, messages
+
+
+# ---- 계획 단계 -------------------------------------------------------------
+
+PLAN_PROMPT = (config.PROMPTS / "plan.txt").read_text(encoding="utf-8")
+PLAN_BLANKS = {"행사_이름", "행사_읍면", "비교_읍면", "차이", "행사_기간", "기준_기간", "계산_못한_이유"}
+REQUIRED_BLANKS = {"higher": {"차이", "비교_읍면"}, "lower": {"차이", "비교_읍면"},
+                   "no_difference": {"비교_읍면"}, "not_computed": {"계산_못한_이유"}}
+CAUSAL = re.compile(r"입증|증명|덕분|기여했|기여한")
+MAX_LIMITS = 3
+MIN_CANDIDATES = 2  # 남은 비교 후보가 이보다 적으면 계산하지 않는다(계획서 4-1)
+BIZ_NAMES = json.loads((config.APP / "spec" / "card_v02.json").read_text(encoding="utf-8"))["codes"]["biz"]
+
+
+def validate_plan(inp, ctx, seen, rehearse):
+    problems = []
+    codes = inp["biz_codes"]
+    for c in sorted({c for c in codes if codes.count(c) > 1}):
+        problems.append(f"biz_codes에 {c}가 두 번 있습니다.")
+    for case, need in REQUIRED_BLANKS.items():
+        text = inp["result_sentences"][case]
+        missing = [b for b in sorted(need) if "{{" + b + "}}" not in text]
+        if missing:
+            problems.append(f"result_sentences.{case}에 {', '.join('{{' + b + '}}' for b in missing)}가 없습니다.")
+    if len(inp["extra_limits"]) > MAX_LIMITS:
+        problems.append(f"extra_limits가 {len(inp['extra_limits'])}개입니다. 많아야 {MAX_LIMITS}개입니다.")
+    facts = dict(judge_facts(ctx, seen), blanks=PLAN_BLANKS, codes=set(BIZ_NAMES))
+    texts = [(f"result_sentences.{k}", v, "result") for k, v in inp["result_sentences"].items()]
+    texts += [("method", inp["method"], "method"), ("biz_reason", inp["biz_reason"], "reason")]
+    texts += [(f"extra_limits {i + 1}", t, "reason") for i, t in enumerate(inp["extra_limits"])]
+    for where, text, field in texts:
+        if field == "result" and (m := CAUSAL.search(text)):
+            problems.append(f"{where}에 인과를 단정하는 말 '{m.group(0)}'이 있습니다. 결과는 비교 읍면 대비 차이입니다.")
+        problems += [f"{where}: {p}" for p in check_numbers(text, field, facts)]
+    if not problems:
+        problems += rehearse(inp)
+    return problems
+
+
+def plan(ctx, judgement, messages, call, log, rehearse):
+    """계획 단계. 판단 단계 대화를 이어 쓴다. rehearse(제출)는 가상 데이터 리허설의 문제 목록을 돌려준다."""
+    kept = [r["emd"] for r in ctx["ranked"] if r["emd"] in {k["emd"] for k in judgement["input"]["kept"]}]
+    if len(kept) < MIN_CANDIDATES:
+        return {"ok": False, "why": "too_few_candidates", "submits": 0, "reads": 0}, kept
+    m = ctx["months"]
+    data = {
+        "comparisons_in_order": kept,
+        "months": {"event": m["event"], "base": m["base"], "pretrend": m["pretrend"]},
+        "biz": [{"code": c, "name": n} for c, n in sorted(BIZ_NAMES.items())],
+    }
+    text = PLAN_PROMPT + "\n입력(JSON):\n" + json.dumps(data, ensure_ascii=False)
+    messages.append({"role": "user", "content": judgement["pending"] + [{"type": "text", "text": text}]})
+
+    def validate(inp, seen):
+        return validate_plan(inp, ctx, seen, rehearse)
+
+    return run_stage("plan", messages, conversation_tools(), "submit_plan", validate, call, log), kept

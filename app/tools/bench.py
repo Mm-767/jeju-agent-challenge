@@ -79,5 +79,47 @@ def judge(name, emd):
     print(f"제출 {result['submits']}번, 조회 {result['reads']}번, 누적 비용 {spent():.4f}달러")
 
 
+def rehearsal_table():
+    import card
+
+    table = card.new_table()
+    for f in sorted((APP / "data" / "dummy" / "card_rehearsal").glob("*.csv")):
+        card.ingest(f.read_bytes(), f.name, table)
+    return table
+
+
+def plan(name, emd):
+    """판단 단계에 이어 계획 단계까지. 남은 후보가 2곳 미만이어도 개발 확인용으로 계속 간다."""
+    import calc
+
+    events, places_table = hub.load_events(), hub.load_places()
+    event = next(e for e in events if e["name"] == name)
+    ctx = agent.judge_context(event, emd, events, places_table)
+    log = []
+    say = lambda kind, text: (log.append((kind, text)), print(f"  [{kind}] {text}"))  # noqa: E731
+    judgement, messages = agent.judge(ctx, metered, say)
+    if not judgement["ok"]:
+        raise SystemExit(f"판단 단계 실패: {judgement}")
+    table = rehearsal_table()
+    codes = sorted(agent.BIZ_NAMES)
+    seen = {}
+
+    def rehearse(inp):
+        kept = [r["emd"] for r in ctx["ranked"] if r["emd"] in {k["emd"] for k in judgement["input"]["kept"]}]
+        problems, result, widened = calc.rehearse(table, emd, kept, event["start"], event["end"],
+                                                  inp["biz_codes"], codes, ctx["festival_months"])
+        seen["last"] = (result, widened)
+        say("리허설", f"결과 {result and result['outcome']}, 쌍별 업종 범위 크기 {({k: len(v) if v else None for k, v in widened.items()})}")
+        return problems
+
+    result, kept = agent.plan(ctx, judgement, messages, metered, say, rehearse)
+    stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    QA.mkdir(parents=True, exist_ok=True)
+    record = {"event": ctx["event"], "judgement": judgement["input"], "plan": result, "rehearsal": seen.get("last"), "log": log}
+    (QA / f"plan_{stamp}.json").write_text(json.dumps(record, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    print(json.dumps(result.get("input", result), ensure_ascii=False, indent=1))
+    print(f"계획 제출 {result['submits']}번, 조회 {result['reads']}번, 누적 비용 {spent():.4f}달러")
+
+
 if __name__ == "__main__":
-    {"places": places, "judge": judge}[sys.argv[1]](*sys.argv[2:])
+    {"places": places, "judge": judge, "plan": plan}[sys.argv[1]](*sys.argv[2:])

@@ -276,14 +276,19 @@ def pick(candidates):
 
 def analyze(t, comparisons, months):
     """comparisons: [(읍면, 시계열, τ 목록)] 거리 순. 결과 문장 종류까지 정한다."""
+    return analyze_pairs([(emd, t, c, taus) for emd, c, taus in comparisons], months)
+
+
+def analyze_pairs(pairs, months):
+    """pairs: [(비교 읍면, 행사 읍면 시계열, 비교 읍면 시계열, τ 목록)]. 쌍마다 업종 범위가 다를 수 있어 행사 읍면 시계열도 쌍마다 받는다."""
     candidates = [
-        {"emd": emd, "series": c, **pair_stats(t, c, months, taus)}
-        for emd, c, taus in comparisons
+        {"emd": emd, "t": t, "series": c, **pair_stats(t, c, months, taus)}
+        for emd, t, c, taus in pairs
     ]
     chosen, tried = pick(candidates)
     if chosen is None:
         return {"outcome": "not_computed", "reason": "no_comparison", "tried": tried}
-    e, delta = effect(t, chosen["series"], months["event"], months["base"])
+    e, delta = effect(chosen["t"], chosen["series"], months["event"], months["base"])
     p, bigger = pvalue(e, chosen["Q"])
     return {
         "outcome": choose_outcome(e, chosen["Q"]),
@@ -297,3 +302,40 @@ def analyze(t, comparisons, months):
         "n": bigger,
         "tried": tried,
     }
+
+
+def series(table, emd, biz):
+    """읍면의 달별 관광객 이용금액(업종 범위 안)."""
+    out = {}
+    wanted = set(biz)
+    for (e, ym, b), cell in table["cells"].items():
+        if e == emd and b in wanted:
+            out[ym] = out.get(ym, 0) + cell[0]
+    return out
+
+
+def rehearse(table, emd, comparisons, start, end, biz, all_codes, festival_months):
+    """계획을 실제 계산 경로(10 미만 처리, 교체, 이중차분, 가짜 시점)에 돌린다. (문제 목록, 결과, 쌍별 업종 범위).
+
+    comparisons: 비교 순서대로의 읍면. festival_months: {읍면: 다른 축제가 걸친 달}.
+    """
+    months = months_for(start, end, festival_months.get(emd, set()))
+    need = required_months(months)["all"]
+    pairs, widened, problems = [], {}, []
+    for c in comparisons[:3]:
+        step, bad = small_cells(table, [emd, c], need, biz, all_codes)
+        if step is None:
+            widened[c] = None
+            continue
+        widened[c] = step
+        taus = months_for(start, end, festival_months.get(emd, set()) | festival_months.get(c, set()))["placebo"]
+        pairs.append((c, series(table, emd, step), series(table, c, step), taus))
+    if not pairs:
+        problems.append("가상 데이터에서 업종을 42개 전체로 넓혀도 10 미만 칸이 남아 쓸 수 있는 비교 읍면이 없습니다.")
+        return problems, {"outcome": "not_computed", "reason": "small_cells"}, widened
+    try:
+        result = analyze_pairs(pairs, months)
+    except (KeyError, ZeroDivisionError, statistics.StatisticsError):
+        problems.append("가상 데이터로 계산하는 중 필요한 달의 값이 비어 계산을 끝내지 못했습니다.")
+        return problems, None, widened
+    return problems, result, widened
