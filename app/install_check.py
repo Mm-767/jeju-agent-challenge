@@ -149,19 +149,11 @@ def _no_exporter():
         raise AssertionError(f"{mod}를 불러올 수 있음")
 
 
-def read_key():
-    env = APP / ".env"
-    if not env.exists():
-        return None
-    for line in env.read_text(encoding="utf-8").splitlines():
-        if line.startswith("ANTHROPIC_API_KEY="):
-            return line.split("=", 1)[1].strip() or None
-    return None
-
-
 @check("외부 AI 호출(키가 있을 때만)")
 def _api():
-    key = read_key()
+    import config
+
+    key = config.env("ANTHROPIC_API_KEY")
     if not key:
         return "키 없음, 건너뜀"
     import anthropic

@@ -198,6 +198,50 @@ def static_checks(stage):
     return problems, unknown, files, longest
 
 
+def license_of(meta):
+    lines = meta.splitlines()
+    spdx = next((l[20:] for l in lines if l.startswith("License-Expression: ")), "")
+    if spdx:
+        return spdx
+    value = next((l[9:] for l in lines if l.startswith("License: ")), "")
+    if value and len(value) <= 40 and "copyright" not in value.lower() and "=" not in value:
+        return value
+    found = [l.rsplit(" :: ", 1)[1] for l in lines if l.startswith("Classifier: License ::")]
+    return " / ".join(found) or "원문 참고"
+
+
+def notices(stage):
+    site = stage / "python" / "Lib" / "site-packages"
+    rows = []
+    infos = sorted(site.glob("*.dist-info"), key=lambda p: p.name.lower())
+    for info in infos:
+        meta = (info / "METADATA").read_text(encoding="utf-8")
+        name = next(l[6:] for l in meta.splitlines() if l.startswith("Name: "))
+        version = next(l[9:] for l in meta.splitlines() if l.startswith("Version: "))
+        texts = sorted(p.relative_to(stage).as_posix() for p in info.rglob("*")
+                       if p.is_file() and p.name.upper().startswith(("LICENSE", "COPYING", "NOTICE")))
+        if not texts:
+            raise SystemExit(f"{name} 라이선스 원문이 없다")
+        rows += [f"{name} {version}", f"  라이선스: {license_of(meta)}"] + [f"  원문: {t}" for t in texts] + [""]
+    head = [
+        "제3자 소프트웨어 고지",
+        "",
+        "이 묶음은 아래 오픈소스를 고치지 않고 그대로 담았다. 각 라이선스 원문은 적힌 경로에 있다.",
+        "",
+        "Python 3.11.9 (embeddable, python.org)",
+        "  라이선스: PSF-2.0 외",
+        "  원문: python/LICENSE.txt",
+        "",
+    ]
+    tail = [
+        "fpdf2(LGPL-3.0-only)는 수정하지 않은 파이썬 원본(python/Lib/site-packages/fpdf)으로 들어 있어,",
+        "이용자가 같은 폴더를 다른 버전으로 바꿔 넣을 수 있다.",
+        "PDF 글꼴은 동봉하지 않고 윈도우에 깔린 맑은 고딕(C:\\Windows\\Fonts\\malgun.ttf)을 읽기만 한다.",
+    ]
+    (stage / "THIRD_PARTY_NOTICES.txt").write_text("\n".join(head + rows + tail) + "\n", encoding="utf-8")
+    return len(infos)
+
+
 def bundle(env_file):
     if STAGE.exists():
         shutil.rmtree(STAGE)
@@ -231,6 +275,7 @@ def bundle(env_file):
             raise SystemExit("ANTHROPIC_API_KEY가 없다")
         (app / ".env").write_text("\n".join(keep) + "\n", encoding="utf-8")
     shutil.copy2(ROOT / "docs" / "README.txt", STAGE / "README.txt")
+    print(f"라이선스 고지 {notices(STAGE)}개 패키지")
     for name, lines in (("install.bat", INSTALL_BAT), ("run.bat", RUN_BAT)):
         (STAGE / name).write_bytes(("\r\n".join(lines) + "\r\n").encode("ascii"))
 

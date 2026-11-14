@@ -101,4 +101,4 @@
 
 **데이터.** 제주빅데이터센터 카드 이용 현황(읍면동)_v02, 제주데이터허브 읍면동 단위 내국인 유동인구, 제주특별자치도 주요행사정보.
 
-**오픈소스(주요).** FastAPI 0.162.5(MIT), uvicorn 0.54.0(BSD-3-Clause), Starlette 1.10.0(BSD-3-Clause), Pydantic 2.14.3(MIT), matplotlib 3.11.2(PSF 계열), NumPy 2.4.6(BSD-3-Clause 외), Pillow 13.0.0(MIT-CMU), fpdf2 2.9.0(LGPL-3.0-only), fontTools 4.68.0(MIT), anthropic 2.8.0(Apache-2.0). 전체 목록은 requirements-lock.txt와 동봉 라이선스 고지에 있다.
+**오픈소스(주요).** FastAPI 0.162.5(MIT), uvicorn 0.54.0(BSD-3-Clause), Starlette 1.10.0(BSD-3-Clause), Pydantic 2.14.3(MIT), matplotlib 3.11.2(PSF 계열), NumPy 2.4.6(BSD-3-Clause 외), Pillow 13.0.0(MIT-CMU), fpdf2 2.9.0(LGPL-3.0-only), fontTools 4.68.0(MIT), anthropic 2.8.0(Apache-2.0). 전체 34개의 버전·라이선스·원문 위치는 묶음 맨 위 THIRD_PARTY_NOTICES.txt에 있다. 모두 고치지 않고 담았고, LGPL인 fpdf2는 파이썬 원본 그대로라 이용자가 교체할 수 있다. PDF 글꼴은 동봉하지 않고 윈도우의 맑은 고딕을 읽는다.

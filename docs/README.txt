@@ -35,6 +35,8 @@
 ■ 평가용 설정
 
 - app\.env 에 평가용 Anthropic API 키가 들어 있습니다(모델 Claude Haiku 5.5).
+- 센터에서 운영할 때는 담당자가 윈도우 환경변수 ANTHROPIC_API_KEY에 센터 키를 넣으면
+  app\.env보다 그 값을 먼저 씁니다(설정 뒤 run.bat을 새로 실행).
 - 실행 중 접속하는 외부 주소는 https://api.anthropic.com 하나뿐입니다.
 - 키가 없거나, 인터넷이 막혔거나, AI 응답이 검사를 통과하지 못하면
   「미리 만든 계획」(개발 중 같은 프로그램이 실제로 만든 계획)으로 동작하고 화면에 그렇게 표시합니다.
@@ -67,6 +69,7 @@
 ■ 폴더 구성
 
 install.bat, run.bat      설치 점검과 실행
+THIRD_PARTY_NOTICES.txt   동봉한 오픈소스 34개와 Python의 라이선스 고지
 python\                   동봉한 Python 3.11.9와 패키지
 app\                      프로그램(코드, 프롬프트, 화면, 공개 데이터 스냅샷, 가상 데이터)
 app\prompts\              AI에게 주는 지시문과 도구 정의
