@@ -1,6 +1,6 @@
 """LLM이 쓴 글의 숫자 근거 대조(계획서 4-4). 숫자는 그 단계 입력에 같은 종류의 값이 있을 때만 통과한다.
 
-facts: {"dates": {date}, "months": {"YYYYMM"}, "counts": {int}, "names": [str], "codes": {str}, "blanks": {str}}
+facts: {"dates": {date}, "months": {"YYYYMM"}, "counts": {int}, "names": [str], "codes": {str}, "blanks": {str}, "ids": {str}}
 field: "reason"(판단 이유), "result"(결과 문장 틀), "method"(방법 문단). 앞의 둘은 크기·비율 표현을 항상 막는다.
 """
 import re
@@ -18,7 +18,8 @@ COUNT_UNITS = "곳|개|건|명|군데|가지|번"
 
 APPROX = re.compile(r"두어|서너|수십|수백|수천|수만|\d+\s*여\s*(?:곳|개|건|명|일|배)|[일이삼사오육칠팔구십백천만]+여\s*(?:곳|개|건|명|일|배)")
 MAGNITUDE = re.compile(
-    r"곱절|갑절|반으로|반토막|절반|퍼센트|프로|%|급증|급감|대폭|크게|뚜렷하게"
+    r"곱절|갑절|반으로|반토막|절반|%|급증|급감|대폭|크게|뚜렷하게"
+    r"|(?:\d|[일이삼사오육칠팔구십백])\s*(?:퍼센트|프로)(?!그램|젝트|모션)"
     r"|(?:\d|[일이삼사오육칠팔구십백]|I{1,3}|IV|V|두|세|네)\s*(?:배|할)(?![가-힣])"
 )
 BLANK = re.compile(r"\{\{([^}]*)\}\}")
@@ -77,6 +78,10 @@ def check_numbers(text, field, facts):
             ok = f"{y}{mo:02d}" in months
         return None if ok else f"'{m.group(0)}'은 입력에 없는 날짜입니다."
 
+    take(r"event_id\s*:?\s*(\d+)", lambda m: None if m.group(1) in facts.get("ids", set())
+         else f"'{m.group(0)}'은 입력 목록에 없는 행사 번호입니다.")
+    take(r"(?<![\d.])(\d{1,2})/(\d{1,2})(?![\d/])", lambda m: None if any(
+        x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"'{m.group(0)}'은 입력에 없는 날짜입니다.")
     take(r"(\d{4})\s*년\s*(\d{1,2})\s*월(?:\s*(\d{1,2})\s*일)?", full_date)
     take(r"(\d{1,2})\s*월\s*(\d{1,2})\s*일", lambda m: None if any(
         x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"'{m.group(0)}'은 입력에 없는 날짜입니다.")

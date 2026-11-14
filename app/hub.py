@@ -2,9 +2,13 @@
 import calendar
 import csv
 import datetime as dt
+import functools
+import json
 from pathlib import Path
 
 DATA = Path(__file__).parent / "data" / "hub"
+EUP_MYEON = json.loads((Path(__file__).parent / "spec" / "card_v02.json").read_text(encoding="utf-8"))["eup_myeon"]
+ISLANDS = {"우도면", "추자면"}
 FIRST_DAY = dt.date(2023, 8, 1)
 LAST_DAY = dt.date(2026, 8, 31)
 ROWS_PER_DAY = 16  # 성별 2 x 연령대 8
@@ -29,6 +33,12 @@ def load_events(path=None):
         ]
 
 
+def load_places(path=None):
+    path = path or DATA / "places.json"
+    return json.loads(path.read_text(encoding="utf-8"))["places"]
+
+
+@functools.lru_cache(maxsize=None)
 def daily_visits(emd, path=None):
     """그날 16행이 다 있는 날의 visitPop 합. 파일이 없으면 None(공개 방문 자료 없음)."""
     path = path or DATA / "population" / f"{emd}.csv"

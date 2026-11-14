@@ -49,6 +49,16 @@ class NumbersTest(unittest.TestCase):
         self.assertTrue(check_numbers("방문객이 37명 늘었습니다", "reason", FACTS))
         self.assertTrue(check_numbers("2024년 5월 3일에", "reason", FACTS))
 
+    def test_slash_dates_and_event_ids_from_input(self):
+        facts = dict(FACTS, ids={"244"})
+        # 실제 판단 단계 제출에서 오탐이 났던 형식(11/14 와흘 실행)
+        self.assertEqual(check_numbers("증가가 4/6~4/12 주말에 몰렸다", "reason", facts), [])
+        self.assertEqual(check_numbers("선샤인(event_id 244)이 있다", "reason", facts), [])
+        self.assertEqual(check_numbers("다른 행사(3/2~6/29)가 겹친다", "reason", facts), [])
+        self.assertTrue(check_numbers("5/3에 몰렸다", "reason", facts))
+        self.assertTrue(check_numbers("event_id 999", "reason", facts))
+        self.assertEqual(check_numbers("생태관광 프로그램이 겹친다", "reason", facts), [])
+
     def test_method_allows_two_times_rule(self):
         self.assertEqual(check_numbers("평소 흔들림의 2배 안이면 통과", "method", FACTS), [])
 

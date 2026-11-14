@@ -59,5 +59,25 @@ def places():
     print(f"저장 {len(table)}건, 묶음별 제출 횟수 {attempts}, 추정 실패 {unknown}건, 누적 비용 {spent():.4f}달러")
 
 
+QA = APP.parent / "qa" / "bench"
+
+
+def judge(name, emd):
+    events = hub.load_events()
+    places = hub.load_places()
+    event = next(e for e in events if e["name"] == name)
+    ctx = agent.judge_context(event, emd, events, places)
+    print(f"남은 후보 {[r['emd'] for r in ctx['ranked']]}, 규칙 제외 {[(x['emd'], x['why']) for x in ctx['rule_excluded']]}")
+    print(f"방문 요약 {ctx['visit']}, 같은 시기 행사 {len(ctx['other_events'])}건")
+    log = []
+    result, messages = agent.judge(ctx, metered, lambda kind, text: (log.append((kind, text)), print(f"  [{kind}] {text}")))
+    QA.mkdir(parents=True, exist_ok=True)
+    stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+    record = {"event": ctx["event"], "result": result, "log": log, "context": {k: v for k, v in ctx.items() if k != "months"}}
+    (QA / f"judge_{stamp}.json").write_text(json.dumps(record, ensure_ascii=False, indent=1, default=str), encoding="utf-8")
+    print(json.dumps(result.get("input", result), ensure_ascii=False, indent=1))
+    print(f"제출 {result['submits']}번, 조회 {result['reads']}번, 누적 비용 {spent():.4f}달러")
+
+
 if __name__ == "__main__":
-    {"places": places}[sys.argv[1]]()
+    {"places": places, "judge": judge}[sys.argv[1]](*sys.argv[2:])

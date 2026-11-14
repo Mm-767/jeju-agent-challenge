@@ -76,5 +76,195 @@
         }
       }
     }
+  },
+  "get_visit_series": {
+    "name": "get_visit_series",
+    "description": "제주데이터허브 공개 데이터 「읍면동 단위 내국인 유동인구」에서 읍면 하나의 날짜별 방문 인구(visitPop을 성별·연령대에 걸쳐 더한 연인원)를 돌려준다. 이 PC에 저장한 스냅샷에서 읽으며 범위는 2023-08-01부터 2026-08-31까지, 한 번에 최대 120일이다.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "emd",
+        "start_date",
+        "end_date",
+        "why"
+      ],
+      "properties": {
+        "emd": {
+          "type": "string",
+          "enum": [
+            "한림읍",
+            "애월읍",
+            "구좌읍",
+            "조천읍",
+            "한경면",
+            "추자면",
+            "우도면",
+            "대정읍",
+            "남원읍",
+            "성산읍",
+            "안덕면",
+            "표선면"
+          ]
+        },
+        "start_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD"
+        },
+        "end_date": {
+          "type": "string",
+          "description": "YYYY-MM-DD"
+        },
+        "why": {
+          "type": "string",
+          "description": "이 조회가 왜 필요한지 한 문장. 작업 기록에 보인다. 숫자를 쓰지 않는다."
+        }
+      }
+    }
+  },
+  "submit_judgement": {
+    "name": "submit_judgement",
+    "description": "판단 단계의 결과를 한 번에 제출한다. kept와 extra_excluded를 합치면 남은 후보 전부가 한 번씩 들어가야 한다.",
+    "strict": true,
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visit",
+        "extra_excluded",
+        "kept",
+        "treated_month_other_events"
+      ],
+      "properties": {
+        "visit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "judgement",
+            "evidence",
+            "reason",
+            "caution"
+          ],
+          "properties": {
+            "judgement": {
+              "type": "string",
+              "enum": [
+                "증가 뚜렷",
+                "증가 약함",
+                "증가 없음",
+                "판단 불가"
+              ]
+            },
+            "evidence": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "visit.R_T",
+                  "visit.R_C",
+                  "visit.V"
+                ]
+              }
+            },
+            "reason": {
+              "type": "string"
+            },
+            "caution": {
+              "type": "string"
+            }
+          }
+        },
+        "extra_excluded": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "emd",
+              "event_id",
+              "reason"
+            ],
+            "properties": {
+              "emd": {
+                "type": "string",
+                "enum": [
+                  "한림읍",
+                  "애월읍",
+                  "구좌읍",
+                  "조천읍",
+                  "한경면",
+                  "추자면",
+                  "우도면",
+                  "대정읍",
+                  "남원읍",
+                  "성산읍",
+                  "안덕면",
+                  "표선면"
+                ]
+              },
+              "event_id": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "kept": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "emd",
+              "reason"
+            ],
+            "properties": {
+              "emd": {
+                "type": "string",
+                "enum": [
+                  "한림읍",
+                  "애월읍",
+                  "구좌읍",
+                  "조천읍",
+                  "한경면",
+                  "추자면",
+                  "우도면",
+                  "대정읍",
+                  "남원읍",
+                  "성산읍",
+                  "안덕면",
+                  "표선면"
+                ]
+              },
+              "reason": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "treated_month_other_events": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "event_id",
+              "note"
+            ],
+            "properties": {
+              "event_id": {
+                "type": "string"
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
