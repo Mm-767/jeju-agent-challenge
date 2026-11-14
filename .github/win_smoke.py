@@ -8,6 +8,7 @@ import shutil
 import subprocess
 import sys
 import time
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -100,14 +101,20 @@ try:
                 png = fetch(name)
                 check(f"그림 {name}", png.startswith(b"\x89PNG"), f"{len(png)} bytes")
             print("결과 문장:", summary.get("sentence"))
+        again = bat("run.bat", 120)
+        check("두 번째 run.bat은 이미 실행 중 안내", "이미 실행 중" in again, again.strip()[:80])
+        try:
+            call("POST", "/api/selfcheck")
+            check("잠긴 동안 자가 점검 막힘", False)
+        except urllib.error.HTTPError as e:
+            check("잠긴 동안 자가 점검 막힘", e.code == 409)
+        call("POST", "/api/reset")
+        check("끝내기 뒤 잠금 풀림", not call("GET", "/api/status")["locked"])
+        check("끝내기 뒤 결과 폴더 비움(자동 삭제 켜짐)", not any((ROOT / "app" / "out" / "report").glob("*")))
         rows = call("POST", "/api/selfcheck")["rows"]
         for row in rows:
             print(f"  자가 점검 {row['item']}: {row['ok']} {row['detail']}")
         check("자가 점검 7항목", len(rows) == 7 and all(r["ok"] for r in rows))
-        again = bat("run.bat", 120)
-        check("두 번째 run.bat은 이미 실행 중 안내", "이미 실행 중" in again, again.strip()[:80])
-        call("POST", "/api/reset")
-        check("끝내기 뒤 결과 폴더 비움(자동 삭제 켜짐)", not any((ROOT / "app" / "out" / "report").glob("*")))
 finally:
     subprocess.run(["taskkill", "/T", "/F", "/PID", str(server.pid)], capture_output=True)
     log.close()

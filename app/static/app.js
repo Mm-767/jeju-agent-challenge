@@ -201,7 +201,9 @@ $("b-delete").onclick = async () => { await api("POST", "/api/settings", { auto_
 $("btn-close-sent").onclick = () => $("d-sent").close();
 $("btn-selfcheck").onclick = async () => {
   const ul = $("selfcheck-rows"); ul.textContent = "점검 중…";
-  const data = await api("POST", "/api/selfcheck");
+  let data;
+  try { data = await api("POST", "/api/selfcheck"); }
+  catch (e) { ul.textContent = "지금은 점검할 수 없습니다. 계획·계산 중이거나 센터 파일을 넣은 상태라면 「끝내기」 뒤에 눌러 주세요."; return; }
   ul.textContent = "";
   for (const r of data.rows) { const li = document.createElement("li"); li.textContent = (r.ok ? "통과 " : "실패 ") + r.item + ": " + r.detail; ul.append(li); }
 };

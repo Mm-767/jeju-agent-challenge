@@ -263,6 +263,9 @@ def report_file(name: str):
 
 @app.post("/api/selfcheck")
 def run_selfcheck():
+    # 점검은 끝날 때 잠금을 풀므로, 센터 파일이 메모리에 있는 동안에는 돌리지 않는다
+    if egress.is_locked():
+        raise HTTPException(409, "자가 점검은 「끝내기」 뒤에 할 수 있습니다.")
     _guard()
     bundle = state["bundle"] or pipeline.premade(EXAMPLE_EVENT)
     rows = selfcheck.run(bundle)
