@@ -67,3 +67,67 @@ def center_stage(bundle, files, out_dir=None, example=False, target="결과보�
         "usage_reason": report.usage_reason({"name": ev["name"], "start": start, "end": end}, need["all"], target),
         "bundle_file": saved.name if saved else None, "fingerprint": finger,
     }
+
+
+# ---- 공개 단계 -------------------------------------------------------------
+
+PREMADE = config.APP / "data" / "premade"
+
+
+def build_bundle(ctx, judgement, plan_result, kept, origin="ai"):
+    m = ctx["months"]
+    inp = plan_result["input"]
+    return {
+        "bundle_version": 1, "origin": origin, "model": config.MODEL,
+        "created_at": dt.datetime.now().isoformat(timespec="seconds"),
+        "event": ctx["event"],
+        "months": {k: m[k] for k in ("event", "excluded", "base", "pretrend")},
+        "festival_months": {k: sorted(v) for k, v in ctx["festival_months"].items()},
+        "ranked": ctx["ranked"], "rule_excluded": ctx["rule_excluded"], "visit_summary": ctx["visit"],
+        "judgement": judgement["input"], "kept": kept,
+        "plan": {"biz_codes": inp["biz_codes"], "biz_reason": inp["biz_reason"]},
+        "texts": {"result_sentences": inp["result_sentences"], "method": inp["method"], "extra_limits": inp["extra_limits"]},
+        "attempts": {"judge": judgement["submits"], "plan": plan_result["submits"]},
+        "tool_calls": judgement["reads"] + plan_result["reads"],
+    }
+
+
+def premade(event_id):
+    path = PREMADE / f"plan_{event_id}.json"
+    if not path.exists():
+        return None
+    bundle = __import__("json").loads(path.read_text(encoding="utf-8"))
+    bundle["origin"] = "premade"
+    return bundle
+
+
+def public_stage(event, emd, call, log, rehearsal_table):
+    """판단·계획 단계. 성공하면 ("ai", 묶음), AI를 쓸 수 없거나 실패하면 ("premade", 묶음 또는 None, 이유)."""
+    import agent
+
+    events, places = hub.load_events(), hub.load_places()
+    ctx = agent.judge_context(event, emd, events, places)
+    try:
+        judgement, messages = agent.judge(ctx, call, log)
+        if not judgement["ok"]:
+            return "premade", premade(event["event_id"]), judgement["why"]
+
+        def rehearse(inp):
+            problems, _, _ = calc.rehearse(rehearsal_table, emd, kept_now(), event["start"], event["end"],
+                                           inp["biz_codes"], CODES, ctx["festival_months"])
+            return problems
+
+        def kept_now():
+            names = {k["emd"] for k in judgement["input"]["kept"]}
+            return [r["emd"] for r in ctx["ranked"] if r["emd"] in names]
+
+        plan_result, kept = agent.plan(ctx, judgement, messages, call, log, rehearse)
+        if not plan_result["ok"]:
+            return "premade", premade(event["event_id"]), plan_result["why"]
+        return "ai", build_bundle(ctx, judgement, plan_result, kept), None
+    except (egress.Locked, egress.CallLimit, RuntimeError) as e:
+        return "premade", premade(event["event_id"]), type(e).__name__
+    except Exception as e:  # SDK 오류(연결, 인증, 거절 등)는 모두 대체 경로로
+        if type(e).__module__.startswith("anthropic"):
+            return "premade", premade(event["event_id"]), type(e).__name__
+        raise

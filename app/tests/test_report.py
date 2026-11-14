@@ -58,5 +58,15 @@ class ReportTest(unittest.TestCase):
         self.assertTrue(all("원" not in v for _, v in rows))
 
 
+
+class JosaTest(unittest.TestCase):
+    def test_particles_follow_filled_value(self):
+        vals = {"행사_이름": "가파도청보리축제", "행사_읍면": "대정읍", "차이": "+24.9%", "비교_읍면": "성산읍"}
+        self.assertEqual(report.fill("{{행사_이름}}이 열린 {{행사_읍면}}은", vals), "가파도청보리축제가 열린 대정읍은")
+        self.assertEqual(report.fill("{{비교_읍면}}과 비교해 {{차이}}를", vals), "성산읍과 비교해 +24.9%를")
+        self.assertEqual(report.fill("{{행사_이름}}으로", vals), "가파도청보리축제로")
+        self.assertEqual(report.fill("{{행사_읍면}}로", vals), "대정읍으로")
+
+
 if __name__ == "__main__":
     unittest.main()

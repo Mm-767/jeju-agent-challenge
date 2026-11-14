@@ -64,8 +64,31 @@ def values(event, emd, result, months):
     return v
 
 
+JOSA = {"이": ("이", "가"), "가": ("이", "가"), "은": ("은", "는"), "는": ("은", "는"), "을": ("을", "를"),
+        "를": ("을", "를"), "과": ("과", "와"), "와": ("과", "와"), "으로": ("으로", "로"), "로": ("으로", "로")}
+# 숫자는 읽는 소리의 받침으로: 영·일·삼·육·칠·팔은 받침이 있다
+DIGIT_FINAL = {"0": True, "1": True, "2": False, "3": True, "4": False, "5": False, "6": True, "7": True, "8": True, "9": False}
+BLANK_JOSA = re.compile(r"\{\{([^}]*)\}\}(으로|이|가|은|는|을|를|과|와|로)?")
+
+
+def _has_final(text):
+    last = text.rstrip()[-1:] or "가"
+    if "가" <= last <= "힣":
+        return (ord(last) - 0xAC00) % 28 != 0
+    return DIGIT_FINAL.get(last, False)  # %는 '퍼센트'라 받침 없음
+
+
 def fill(template, vals):
-    text = BLANK.sub(lambda m: str(vals[m.group(1)]), template)
+    """빈칸을 채우고, 빈칸 바로 뒤 조사를 채운 값의 받침에 맞춘다(가파도청보리축제가, 성산읍이)."""
+    def sub(m):
+        value = str(vals[m.group(1)])
+        josa = m.group(2)
+        if not josa:
+            return value
+        with_final, without = JOSA[josa]
+        return value + (with_final if _has_final(value) else without)
+
+    text = BLANK_JOSA.sub(sub, template)
     if "{{" in text or "}}" in text:
         raise ValueError("unfilled blank")
     return text
