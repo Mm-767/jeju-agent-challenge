@@ -142,10 +142,12 @@ def index_chart(t, c, months, emd, comp, path, example):
     ax.plot(labels, [c[m] / base_c * 100 for m in shown], color="#7a8288", lw=1.6, marker="o", ms=3, label=f"{comp}(비교 읍면)")
     ax.axhline(100, color="#c9d0d4", lw=1)
     ax.set_ylabel("지수(기준 기간 평균 = 100)")
-    ax.legend(frameon=False, fontsize=8, loc="upper left")
+    # 범례는 그림 테두리 위 왼쪽: 그림 안에 두면 첫 달의 점이나 선을 가린다
+    ax.legend(frameon=False, fontsize=8, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, borderaxespad=0.2)
     ax.spines[["top", "right"]].set_visible(False)
     if example:
-        ax.text(0.99, 0.97, "예시(가상 데이터)", transform=ax.transAxes, ha="right", va="top", fontsize=9, color="#a2421f")
+        # 그림 테두리 위에 두어 어떤 행사의 꺾은선과도 겹치지 않게 한다
+        ax.text(1.0, 1.01, "예시(가상 데이터)", transform=ax.transAxes, ha="right", va="bottom", fontsize=9, color="#a2421f")
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
@@ -169,7 +171,8 @@ def visit_chart(days_t, days_c, start, end, emd, comp, path):
         ax.plot(dates, index(days_c), color="#7a8288", lw=1.4, label=f"{comp}(비교 읍면)")
     ax.axhline(100, color="#c9d0d4", lw=1)
     ax.set_ylabel("방문 지수(직전 4주 평균 = 100)")
-    ax.legend(frameon=False, fontsize=8, loc="upper left")
+    # 범례는 그림 테두리 위 왼쪽: 그림 안에 두면 첫 달의 점이나 선을 가린다
+    ax.legend(frameon=False, fontsize=8, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, borderaxespad=0.2)
     ax.spines[["top", "right"]].set_visible(False)
     import matplotlib.dates as mdates
 
