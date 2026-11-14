@@ -58,6 +58,39 @@ class HubTest(unittest.TestCase):
         self.assertIsNone(hub.daily_visits("없는읍", Path("/nonexistent/x.csv")))
 
 
+class VisitTest(unittest.TestCase):
+    START = dt.date(2024, 4, 6)
+    END = dt.date(2024, 4, 12)
+
+    def days(self, base_weekend, base_weekday, lift):
+        out = {}
+        for n in range(-40, 20):
+            d = self.START + dt.timedelta(n)
+            value = base_weekend if d.weekday() >= 5 else base_weekday
+            out[d] = value * (lift if self.START <= d <= self.END else 1)
+        return out
+
+    def test_weekday_pattern_does_not_bias(self):
+        r, missing = calc.visit_change(self.days(200, 100, 1.2), self.START, self.END)
+        self.assertAlmostEqual(r, 0.2)
+        self.assertEqual(missing, 0)
+
+    def test_summary_relative_to_candidates(self):
+        s = calc.visit_summary(self.days(100, 100, 1.5), {"가": self.days(100, 100, 1.0), "나": None}, self.START, self.END)
+        self.assertAlmostEqual(s["R_T"], 0.5)
+        self.assertAlmostEqual(s["R_C"], 0.0)
+        self.assertAlmostEqual(s["V"], 0.5)
+        self.assertEqual(list(s["candidates"]), ["가"])
+
+    def test_too_many_missing_days(self):
+        days = self.days(100, 100, 1.0)
+        for n in range(1, 6):  # 창 35일 중 5일 결측(14%)
+            days.pop(self.START - dt.timedelta(n))
+        r, missing = calc.visit_change(days, self.START, self.END)
+        self.assertIsNone(r)
+        self.assertEqual(missing, 5)
+
+
 class DistanceTest(unittest.TestCase):
     def test_window_skips_same_month_number(self):
         months = calc.distance_months(dt.date(2024, 4, 6), dt.date(2024, 4, 28))

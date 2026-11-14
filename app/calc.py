@@ -113,6 +113,47 @@ def rank(v_t, candidates, months, top=3):
     return [(emd, d) for d, emd in scored[:top]], skipped
 
 
+BASELINE_DAYS = 28
+VISIT_MISSING_LIMIT = 0.10
+
+
+def visit_change(days, start, end):
+    """행사 기간 일평균 / 직전 4주 같은 요일 평균 - 1. days는 {날짜: 그날 방문 인구}.
+
+    행사 기간과 직전 4주를 합친 창에서 결측일이 10%를 넘으면 None(판단 불가).
+    """
+    event = [start + dt.timedelta(n) for n in range((end - start).days + 1)]
+    base = [start - dt.timedelta(n) for n in range(1, BASELINE_DAYS + 1)]
+    window = event + base
+    missing = sum(1 for d in window if d not in days)
+    if missing > VISIT_MISSING_LIMIT * len(window):
+        return None, missing
+    by_weekday = {}
+    for d in base:
+        if d in days:
+            by_weekday.setdefault(d.weekday(), []).append(days[d])
+    present = [d for d in event if d in days and d.weekday() in by_weekday]
+    if not present:
+        return None, missing
+    actual = statistics.fmean(days[d] for d in present)
+    expected = statistics.fmean(statistics.fmean(by_weekday[d.weekday()]) for d in present)
+    return actual / expected - 1, missing
+
+
+def visit_summary(t_days, candidate_days, start, end):
+    """행사 읍면 변화 R_T, 후보 읍면 변화의 가운데 값 R_C, 상대 비율 V. 판단은 LLM이 하고 카드 계산을 막지 않는다."""
+    r_t, missing = visit_change(t_days, start, end) if t_days else (None, None)
+    changes = {}
+    for emd, days in candidate_days.items():
+        if days:
+            r, _ = visit_change(days, start, end)
+            if r is not None:
+                changes[emd] = r
+    r_c = statistics.median(changes.values()) if changes else None
+    v = (1 + r_t) / (1 + r_c) - 1 if r_t is not None and r_c is not None else None
+    return {"R_T": r_t, "R_C": r_c, "V": v, "candidates": changes, "missing_days": missing}
+
+
 LONG_EVENT_DAYS = 92
 SHORT_SHARE = 0.25
 

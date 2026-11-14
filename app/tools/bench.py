@@ -27,7 +27,7 @@ def spent():
     return json.loads(LEDGER.read_text())["usd"] if LEDGER.exists() else 0.0
 
 
-def metered(purpose, body, timeout=egress.TIMEOUT):
+def metered(purpose, body, timeout=egress.READ_TIMEOUT):
     if spent() + MARGIN_USD > CAP_USD:
         raise SystemExit(f"비용 상한 {CAP_USD}달러에 가까워 멈춘다(누적 {spent():.4f}달러)")
     msg = egress.call_llm(purpose, body, timeout)
