@@ -124,3 +124,35 @@ class IngestTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SmallCellsTest(unittest.TestCase):
+    CODES = ["I56111", "I56114", "I56220", "G47122", "G47711"]
+
+    def table(self, cells):
+        t = card.new_table()
+        t["cells"] = cells
+        return t
+
+    def test_widen_order(self):
+        import calc
+        steps = calc.widen(["I56111"], self.CODES)
+        # 중분류는 코드 앞 세 자리(I56), 대분류는 첫 글자(I). 같은 범위가 되면 건너뛴다
+        self.assertEqual(steps, [["I56111"], ["I56111", "I56114", "I56220"], sorted(self.CODES)])
+
+    def test_small_cell_widens_then_passes(self):
+        import calc
+        cells = {}
+        for emd in ("가", "나"):
+            cells[(emd, "202404", "I56111")] = [1000, 5, 4, 0]   # 10 미만
+            cells[(emd, "202404", "I56114")] = [1000, 8, 12, 0]  # 합치면 건수 13, 인원 최댓값 12
+        biz, bad = calc.small_cells(self.table(cells), ["가", "나"], ["202404"], ["I56111"], self.CODES)
+        self.assertEqual(biz, ["I56111", "I56114", "I56220"])
+        self.assertEqual(bad, [])
+
+    def test_blank_cell_counts_as_small(self):
+        import calc
+        cells = {(e, "202404", c): [1000, 50, 50, 1 if c == "I56111" else 0] for e in ("가", "나") for c in self.CODES}
+        biz, bad = calc.small_cells(self.table(cells), ["가", "나"], ["202404"], ["I56111"], self.CODES)
+        self.assertIsNone(biz)
+        self.assertEqual(bad, [("가", "202404"), ("나", "202404")])

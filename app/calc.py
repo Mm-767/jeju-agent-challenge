@@ -154,6 +154,42 @@ def visit_summary(t_days, candidate_days, start, end):
     return {"R_T": r_t, "R_C": r_c, "V": v, "candidates": changes, "missing_days": missing}
 
 
+SMALL = 10
+
+
+def _cell_small(table, emd, ym, biz):
+    cells = [table["cells"].get((emd, ym, b)) for b in biz]
+    cells = [c for c in cells if c]
+    if not cells:
+        return True
+    # 인원은 업종을 더하면 같은 사람이 겹치므로 업종별 인원 중 가장 큰 값(하한)을 쓴다
+    count = sum(c[1] for c in cells)
+    users = max(c[2] for c in cells)
+    return count < SMALL or users < SMALL or any(c[3] for c in cells)
+
+
+def widen(biz, all_codes):
+    """계획 범위, 중분류(앞 3자리), 대분류(첫 글자), 전체 순으로 넓힌 업종 범위들."""
+    steps = [sorted(biz) if biz else sorted(all_codes)]
+    for key in (lambda c: c[:3], lambda c: c[:1]):
+        keys = {key(c) for c in steps[-1]}
+        wider = sorted(c for c in all_codes if key(c) in keys)
+        if wider != steps[-1]:
+            steps.append(wider)
+    if steps[-1] != sorted(all_codes):
+        steps.append(sorted(all_codes))
+    return steps
+
+
+def small_cells(table, emds, months, biz, all_codes):
+    """두 읍면의 모든 계산 달에서 10 미만 칸이 없는 가장 좁은 업종 범위. 없으면 (None, 10 미만이 남은 (읍면, 달))."""
+    for step in widen(biz, all_codes):
+        bad = [(e, m) for e in emds for m in months if _cell_small(table, e, m, step)]
+        if not bad:
+            return step, []
+    return None, bad
+
+
 LONG_EVENT_DAYS = 92
 SHORT_SHARE = 0.25
 
