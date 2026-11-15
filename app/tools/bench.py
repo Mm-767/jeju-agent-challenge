@@ -6,6 +6,7 @@ import datetime as dt
 import hashlib
 import json
 import sys
+import time
 from pathlib import Path
 
 APP = Path(__file__).resolve().parent.parent
@@ -133,9 +134,15 @@ TEST_EVENTS = [("가파도청보리축제", "대정읍"), ("2025 보롬왓 튤�
                ("수국과 공연이 꽃피는 혼인지 수국 축제", "성산읍"), ("2024 자청비 와흘메밀문화제", "조천읍")]
 
 
-def measure(runs="3"):
-    """판정용 측정: 시험 행사마다 판단·계획 단계를 runs번 돌려 통과율, 제출·조회 횟수, 일치율, 비용을 남긴다."""
+def measure(runs="3", model=None):
+    """판정용 측정: 시험 행사마다 판단·계획 단계를 runs번 돌려 통과율, 제출·조회 횟수, 일치율, 비용, 시간을 남긴다.
+
+    model을 주면 이 측정에서만 그 모델을 쓴다(config.py는 그대로).
+    """
     import pipeline
+
+    if model:
+        config.MODEL = model
 
     events = hub.load_events()
     table = rehearsal_table()
@@ -145,17 +152,22 @@ def measure(runs="3"):
         for n in range(int(runs)):
             egress.unlock()
             before = spent()
+            started = time.time()
             log = []
             origin, bundle, why = pipeline.public_stage(event, emd, metered, lambda k, t: log.append((k, t)), table)
             rec = {"event": name, "emd": emd, "run": n + 1, "origin": origin, "why": why,
-                   "cost": round(spent() - before, 4), "reads": sum(1 for k, _ in log if k == "조회"),
+                   "cost": round(spent() - before, 4), "seconds": round(time.time() - started, 1),
+                   "reads": sum(1 for k, _ in log if k == "조회"),
                    "rejected": sum(1 for k, _ in log if k == "검사")}
             if origin == "ai":
                 rec.update({"kept": bundle["kept"], "extra": sorted(x["emd"] for x in bundle["judgement"]["extra_excluded"]),
                             "biz": sorted(bundle["plan"]["biz_codes"]), "visit": bundle["judgement"]["visit"]["judgement"],
-                            "attempts": bundle["attempts"]})
+                            "attempts": bundle["attempts"], "visit_reason": bundle["judgement"]["visit"]["reason"],
+                            "biz_bundle": bundle["plan"]["biz_bundle"], "biz_reason": bundle["plan"]["biz_reason"],
+                            "extra_reasons": [x["reason"] for x in bundle["judgement"]["extra_excluded"]],
+                            "sentence_higher": bundle["texts"]["result_sentences"]["higher"]})
             records.append(rec)
-            print(f"{name} {n + 1}: {origin} {why or ''} 조회 {rec['reads']} 돌려보냄 {rec['rejected']} {rec['cost']}달러", flush=True)
+            print(f"{name} {n + 1}: {origin} {why or ''} 조회 {rec['reads']} 돌려보냄 {rec['rejected']} {rec['cost']}달러 {rec['seconds']}초", flush=True)
     by_event = {}
     for r in records:
         by_event.setdefault(r["event"], []).append(r)
@@ -169,7 +181,7 @@ def measure(runs="3"):
     stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
     out = {"model": config.MODEL, "runs": records, "summary": summary,
            "total_cost": round(sum(r["cost"] for r in records), 4), "cost_per_run": round(sum(r["cost"] for r in records) / len(records), 4)}
-    (QA / f"measure_{stamp}.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    (QA / f"measure_{stamp}_{config.MODEL}.json").write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=1))
     print(f"합계 {out['total_cost']}달러, 실행당 {out['cost_per_run']}달러")
 
