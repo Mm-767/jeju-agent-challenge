@@ -1,8 +1,10 @@
 """장소 추정 단계를 녹음한 가짜 응답으로 시험한다(외부 호출 없음)."""
 import datetime as dt
+import json
 import unittest
 
 import agent
+import config
 
 EVENTS = [
     {"event_id": str(i), "name": f"행사{i}", "start": dt.date(2024, 4, 1), "end": dt.date(2024, 4, 10), "host": ""}
@@ -113,7 +115,7 @@ def plan_ctx():
 
 def good_plan():
     return {
-        "biz_codes": ["I56111"], "biz_reason": "꽃 축제라 음식점 소비를 본다.",
+        "biz_bundle": "먹거리·음료 중심", "biz_reason": "꽃 축제라 음식점 소비를 본다.",
         "result_sentences": {
             "higher": "{{행사_이름}} 기간 {{행사_읍면}}의 관광객 카드 소비는 {{비교_읍면}}보다 {{차이}} 더 늘었습니다.",
             "lower": "{{행사_이름}} 기간 {{행사_읍면}}의 관광객 카드 소비는 {{비교_읍면}}보다 {{차이}} 덜 늘었습니다.",
@@ -157,6 +159,16 @@ class PlanStageTest(unittest.TestCase):
     def test_rehearsal_problem_returned(self):
         problems = agent.validate_plan(good_plan(), plan_ctx(), set(), lambda i: ["리허설 실패"])
         self.assertEqual(problems, ["리허설 실패"])
+
+
+class BizBundleTest(unittest.TestCase):
+    def test_bundles_use_known_codes_and_match_tool_enum(self):
+        tools = json.loads((config.PROMPTS / "tools.json").read_text(encoding="utf-8"))
+        enum = tools["submit_plan"]["input_schema"]["properties"]["biz_bundle"]["enum"]
+        self.assertEqual(enum, list(agent.BIZ_BUNDLES))
+        for name, codes in agent.BIZ_BUNDLES.items():
+            self.assertEqual(len(codes), len(set(codes)), name)
+            self.assertTrue(set(codes) <= set(agent.BIZ_NAMES), name)
 
 
 if __name__ == "__main__":

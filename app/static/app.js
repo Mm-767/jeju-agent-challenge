@@ -90,7 +90,7 @@ function renderPlan(s) {
   const ex = $("plan-excluded"); ex.textContent = "";
   for (const x of p.judgement.extra_excluded) { const li = document.createElement("li"); li.append(tag("ai", "AI"), document.createTextNode(x.emd + ": " + x.reason)); ex.append(li); }
   for (const x of p.rule_excluded) { const li = document.createElement("li"); li.append(tag("code", "규칙"), document.createTextNode(x.emd + ": " + x.why + (x.name ? "(" + x.name + ")" : ""))); ex.append(li); }
-  $("plan-biz").textContent = (p.plan.biz_codes.length ? p.plan.biz_codes.length + "개 업종. " : "42개 업종 전체. ") + p.plan.biz_reason;
+  $("plan-biz").textContent = (p.plan.biz_bundle || "AI가 고른 업종") + "(" + (p.plan.biz_codes.length || 42) + "개 업종). " + p.plan.biz_reason;
 }
 
 function renderFiles(s) {

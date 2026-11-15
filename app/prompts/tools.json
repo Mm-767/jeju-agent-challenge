@@ -275,63 +275,22 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "biz_codes",
+        "biz_bundle",
         "biz_reason",
         "result_sentences",
         "method",
         "extra_limits"
       ],
       "properties": {
-        "biz_codes": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": [
-              "G47119",
-              "G47121",
-              "G47122",
-              "G47129",
-              "G47130",
-              "G47190",
-              "G47212",
-              "G47213",
-              "G47214",
-              "G47215",
-              "G47216",
-              "G47711",
-              "G47712",
-              "G47813",
-              "G47842",
-              "H49212",
-              "H49231",
-              "H50121",
-              "H51100",
-              "I55111",
-              "I55112",
-              "I55113",
-              "I56111",
-              "I56112",
-              "I56113",
-              "I56114",
-              "I56119",
-              "I56192",
-              "I56211",
-              "I56219",
-              "I56220",
-              "L69110",
-              "L69210",
-              "N75211",
-              "N75992",
-              "R91121",
-              "R91139",
-              "R91239",
-              "R91249",
-              "R91299",
-              "S96121",
-              "S96122"
-            ]
-          },
-          "description": "이 행사로 늘었을 관광객 소비 업종. 비우면 42개 전체."
+        "biz_bundle": {
+          "type": "string",
+          "enum": [
+            "관광 소비 전체",
+            "먹거리·음료 중심",
+            "숙박·체류 중심",
+            "42개 전체"
+          ],
+          "description": "업종 묶음 하나. 묶음별 업종은 입력의 biz_bundles에 있다."
         },
         "biz_reason": {
           "type": "string"

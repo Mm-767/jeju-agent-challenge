@@ -115,7 +115,7 @@ def plan(name, emd):
     def rehearse(inp):
         kept = [r["emd"] for r in ctx["ranked"] if r["emd"] in {k["emd"] for k in judgement["input"]["kept"]}]
         problems, result, widened = calc.rehearse(table, emd, kept, event["start"], event["end"],
-                                                  inp["biz_codes"], codes, ctx["festival_months"])
+                                                  agent.BIZ_BUNDLES[inp["biz_bundle"]], codes, ctx["festival_months"])
         seen["last"] = (result, widened)
         say("리허설", f"결과 {result and result['outcome']}, 쌍별 업종 범위 크기 {({k: len(v) if v else None for k, v in widened.items()})}")
         return problems

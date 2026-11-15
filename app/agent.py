@@ -314,13 +314,21 @@ CAUSAL = re.compile(r"입증|증명|덕분|기여했|기여한")
 MAX_LIMITS = 3
 MIN_CANDIDATES = 2  # 남은 비교 후보가 이보다 적으면 계산하지 않는다(계획서 4-1)
 BIZ_NAMES = json.loads((config.APP / "spec" / "card_v02.json").read_text(encoding="utf-8"))["codes"]["biz"]
+# ADR-167: AI는 업종 코드 대신 이 묶음 가운데 하나를 고른다. 빈 목록은 42개 전체(10 미만 칸 처리와 같은 규칙).
+_MEALS = ["I56111", "I56112", "I56113", "I56114", "I56119", "I56192"]
+_DRINKS = ["I56211", "I56219", "I56220"]
+_STAY = ["I55111", "I55112", "I55113"]
+BIZ_BUNDLES = {
+    "관광 소비 전체": _MEALS + _DRINKS + _STAY + ["G47122", "G47130", "G47215", "G47842", "H49212", "H49231",
+                                                 "H50121", "L69110", "L69210", "N75211", "R91239", "R91299"],
+    "먹거리·음료 중심": _MEALS + _DRINKS + ["G47122", "G47129", "G47213", "G47214", "G47215"],
+    "숙박·체류 중심": _STAY + _MEALS + ["I56220", "H49212", "H49231", "L69110", "N75211"],
+    "42개 전체": [],
+}
 
 
 def validate_plan(inp, ctx, seen, rehearse):
     problems = []
-    codes = inp["biz_codes"]
-    for c in sorted({c for c in codes if codes.count(c) > 1}):
-        problems.append(f"biz_codes에 {c}가 두 번 있습니다.")
     for case, need in REQUIRED_BLANKS.items():
         text = inp["result_sentences"][case]
         missing = [b for b in sorted(need) if "{{" + b + "}}" not in text]
@@ -350,7 +358,7 @@ def plan(ctx, judgement, messages, call, log, rehearse):
     data = {
         "comparisons_in_order": kept,
         "months": {"event": m["event"], "base": m["base"], "pretrend": m["pretrend"]},
-        "biz": [{"code": c, "name": n} for c, n in sorted(BIZ_NAMES.items())],
+        "biz_bundles": {name: [BIZ_NAMES[c] for c in codes] or "42개 업종 전체" for name, codes in BIZ_BUNDLES.items()},
     }
     text = PLAN_PROMPT + "\n입력(JSON):\n" + json.dumps(data, ensure_ascii=False)
     messages.append({"role": "user", "content": judgement["pending"] + [{"type": "text", "text": text}]})

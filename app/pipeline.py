@@ -53,7 +53,9 @@ def center_stage(bundle, files, out_dir=None, example=False, target="결과보�
         report.visit_chart(visits_t["days"], visits_c["days"] if visits_c else None, start, end, emd, comp or "", out_dir / "visit.png")
         images.append(out_dir / "visit.png")
     rows = report.evidence_rows(result, len(widened.get(comp) or []))
-    ai_rows = [("방문 판단", bundle["judgement"]["visit"]["judgement"]), ("업종 범위 이유", bundle["plan"]["biz_reason"])]
+    plan = bundle["plan"]
+    ai_rows = [("방문 판단", bundle["judgement"]["visit"]["judgement"]),
+               ("업종 묶음", plan.get("biz_bundle") or f"{len(plan['biz_codes']) or 42}개 업종"), ("업종 범위 이유", plan["biz_reason"])]
     ai_rows += [(f"추가로 뺀 비교 후보 {x['emd']}", x["reason"]) for x in bundle["judgement"]["extra_excluded"]]
     limits = report.LIMITS + bundle["texts"]["extra_limits"]
     title = f"{ev['name']} 관광객 카드 소비 비교" + (" (예시, 가상 데이터)" if example else "")
@@ -75,6 +77,8 @@ PREMADE = config.APP / "data" / "premade"
 
 
 def build_bundle(ctx, judgement, plan_result, kept, origin="ai"):
+    import agent
+
     m = ctx["months"]
     inp = plan_result["input"]
     return {
@@ -85,7 +89,7 @@ def build_bundle(ctx, judgement, plan_result, kept, origin="ai"):
         "festival_months": {k: sorted(v) for k, v in ctx["festival_months"].items()},
         "ranked": ctx["ranked"], "rule_excluded": ctx["rule_excluded"], "visit_summary": ctx["visit"],
         "judgement": judgement["input"], "kept": kept,
-        "plan": {"biz_codes": inp["biz_codes"], "biz_reason": inp["biz_reason"]},
+        "plan": {"biz_bundle": inp["biz_bundle"], "biz_codes": agent.BIZ_BUNDLES[inp["biz_bundle"]], "biz_reason": inp["biz_reason"]},
         "texts": {"result_sentences": inp["result_sentences"], "method": inp["method"], "extra_limits": inp["extra_limits"]},
         "attempts": {"judge": judgement["submits"], "plan": plan_result["submits"]},
         "tool_calls": judgement["reads"] + plan_result["reads"],
@@ -114,7 +118,7 @@ def public_stage(event, emd, call, log, rehearsal_table):
 
         def rehearse(inp):
             problems, _, _ = calc.rehearse(rehearsal_table, emd, kept_now(), event["start"], event["end"],
-                                           inp["biz_codes"], CODES, ctx["festival_months"])
+                                           agent.BIZ_BUNDLES[inp["biz_bundle"]], CODES, ctx["festival_months"])
             return problems
 
         def kept_now():
