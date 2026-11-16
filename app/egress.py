@@ -5,6 +5,7 @@
 """
 import json
 import socket
+import threading
 import time
 import urllib.request
 
@@ -28,6 +29,33 @@ class Locked(Exception):
 
 class CallLimit(Exception):
     pass
+
+
+class CallTimeout(RuntimeError):
+    """벽시계로 잰 호출 시간이 상한을 넘음. RuntimeError라 공개 단계가 대체 경로로 넘어간다."""
+
+
+def with_deadline(fn, seconds):
+    """fn을 따로 돌려 seconds 안에 안 끝나면 CallTimeout. 멈춘 호출은 데몬 스레드에 두고 버린다.
+
+    httpx 시간 제한은 소켓 단계만 재서 이름 풀이처럼 그 밖에서 멈추면 끊지 못한다(11/16 측정에서 한 번에 510초).
+    """
+    box = {}
+
+    def run():
+        try:
+            box["value"] = fn()
+        except BaseException as e:  # 호출한 쪽에서 그대로 다시 올린다
+            box["error"] = e
+
+    worker = threading.Thread(target=run, daemon=True)
+    worker.start()
+    worker.join(seconds)
+    if worker.is_alive():
+        raise CallTimeout(f"{seconds:.0f}초 안에 응답 없음")
+    if "error" in box:
+        raise box["error"]
+    return box["value"]
 
 
 class PairingDefect(Exception):
@@ -115,8 +143,12 @@ def call_llm(purpose, body, timeout=READ_TIMEOUT):
     for attempt in (1, 2):
         try:
             # None 칸을 빼야 응답 블록을 다음 요청에 그대로 되돌려 보낼 수 있다
-            msg = _client().with_options(timeout=limit).messages.create(**body).model_dump(exclude_none=True)
+            msg = with_deadline(lambda: _client().with_options(timeout=limit).messages.create(**body).model_dump(exclude_none=True),
+                                timeout + CONNECT_TIMEOUT)
             break
+        except CallTimeout:
+            _log({"time": started, "purpose": purpose, "status": "failed CallTimeout", "request": body})
+            raise
         except (anthropic.RateLimitError, anthropic.InternalServerError) as e:
             if attempt == 2:
                 _log({"time": started, "purpose": purpose, "status": f"failed {e.status_code}", "request": body})
