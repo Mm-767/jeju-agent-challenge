@@ -141,7 +141,9 @@ async def run(request: Request):
     reset()
     state.update({"stage": "place", "event": event, "example": example})
     p = hub.load_places().get(event_id, {})
-    log("AI 짐작", f"개최 장소를 {p.get('place', '모름')}({p.get('spot', '')})로 짐작했습니다. 확신도 {p.get('confidence', '낮음')}.")
+    # 장소 값(읍면, 동 지역, 도 전역, 여러 곳, 모름)은 모두 받침으로 끝나 "으로"
+    spot = f"({p['spot']})" if p.get("spot") else ""
+    log("AI 짐작", f"개최 장소를 {p.get('place', '모름')}{spot}으로 짐작했습니다. 확신도 {p.get('confidence', '낮음')}.")
     return {"ok": True}
 
 

@@ -88,7 +88,7 @@ function renderPlan(s) {
   const latest = s.log.filter((e) => ["조회", "검사"].includes(e.kind)).pop();
   $("plan-latest").textContent = latest ? "지금: " + latest.text : "";
   if (!p) return;
-  $("plan-origin").textContent = s.origin === "premade" ? "미리 만든 계획, " + p.model + ", " + p.created_at.slice(0, 10) : "AI가 방금 세운 계획, " + p.model;
+  $("plan-origin").textContent = s.origin === "premade" ? "미리 만든 계획(" + p.created_at.slice(0, 10) + ")" : "AI가 방금 세운 계획";
   $("plan-origin").className = "tag " + (s.origin === "premade" ? "tag--out" : "");
   $("plan-judgement").textContent = "방문 판단 " + p.judgement.visit.judgement;
   $("plan-reason").textContent = p.judgement.visit.reason;
