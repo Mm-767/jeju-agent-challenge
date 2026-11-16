@@ -72,6 +72,24 @@ def wait(stages, limit=600):
     return s
 
 
+BROWSERS = [r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe", r"C:\Program Files\Google\Chrome\Application\chrome.exe"]
+
+
+def shot(name, height=1080):
+    """센터 PC와 같은 윈도우 글꼴(맑은 고딕)로 그린 화면을 남긴다. 판정에는 넣지 않는다."""
+    exe = next((b for b in BROWSERS if Path(b).exists()), None)
+    if exe is None:
+        print("화면 캡처: 브라우저 없음")
+        return
+    import tempfile
+    out = SAVE / f"screen_{name}.png"
+    with tempfile.TemporaryDirectory() as profile:
+        subprocess.run([exe, "--headless=new", "--disable-gpu", "--hide-scrollbars", f"--user-data-dir={profile}",
+                        f"--window-size=1920,{height}", "--virtual-time-budget=5000", f"--screenshot={out}", base + "/"],
+                       capture_output=True, timeout=90)
+    print("화면 캡처", out.name, out.exists())
+
+
 def fetch(name):
     with urllib.request.urlopen(f"{base}/api/report/{name}", timeout=60) as r:
         data = r.read()
@@ -81,16 +99,19 @@ def fetch(name):
 
 try:
     if base:
+        shot("1_start")
         call("POST", "/api/run", {"example": "effect"})
         call("POST", "/api/place", {"emd": "대정읍"})
         s = wait({"ready", "stopped"})
         check("계획 준비(키 없음이라 미리 만든 계획)", s["stage"] == "ready" and s["origin"] == "premade", f"{s['stage']} {s['origin']}")
+        shot("2_plan", 2000)
         call("POST", "/api/files/example")
         check("파일 넣은 뒤 외부 연결 잠김", call("GET", "/api/status")["locked"])
         call("POST", "/api/calculate")
         s = wait({"done"})
         summary = s["summary"] or {}
         check("계산 완료", s["stage"] == "done" and not s["error"], f"결과 {summary.get('outcome')} 오류 {s['error']}")
+        shot("3_result", 4600)
         for line in s["log"]:
             print(f"  {line['time']} {line['kind']} {line['text']}")
         if summary:

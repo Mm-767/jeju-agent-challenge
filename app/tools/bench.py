@@ -217,6 +217,24 @@ def premade(event_id="363", emd="대정읍"):
     print(f"{path.name} {bundle['plan']['biz_bundle']}, 비교 {bundle['kept']}")
 
 
+def premade_all():
+    """계산할 수 있는 읍면 행사마다 대체 계획을 만든다. 시험 행사는 확인한 개최 읍면, 나머지는 장소 추정표 읍면으로."""
+    import calc
+
+    known = {e["event_id"]: emd for name, emd in TEST_EVENTS for e in [find_event(hub.load_events(), name)]}
+    places, made, failed = hub.load_places(), [], []
+    for e in hub.load_events():
+        emd = known.get(e["event_id"]) or places.get(e["event_id"], {}).get("place")
+        if emd not in hub.EUP_MYEON or calc.feasibility(e["start"], e["end"])[0] == "unavailable":
+            continue
+        try:
+            premade(e["event_id"], emd)
+            made.append(e["event_id"])
+        except SystemExit as why:
+            failed.append((e["event_id"], e["name"], str(why)))
+    print(f"만듦 {len(made)}건, 실패 {len(failed)}건 {failed}, 누적 비용 {spent():.4f}달러")
+
+
 if __name__ == "__main__":
     {"places": places, "judge": judge, "plan": plan, "measure": measure, "answer_key": answer_key,
-     "premade": premade}[sys.argv[1]](*sys.argv[2:])
+     "premade": premade, "premade_all": premade_all}[sys.argv[1]](*sys.argv[2:])

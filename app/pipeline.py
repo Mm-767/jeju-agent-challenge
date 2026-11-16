@@ -120,11 +120,14 @@ def build_bundle(ctx, judgement, plan_result, kept, origin="ai"):
     }
 
 
-def premade(event_id):
+def premade(event_id, emd=None):
+    """미리 만든 계획. emd를 주면 그 읍면으로 만든 계획일 때만 돌려준다."""
     path = PREMADE / f"plan_{event_id}.json"
     if not path.exists():
         return None
     bundle = __import__("json").loads(path.read_text(encoding="utf-8"))
+    if emd and bundle["event"]["emd"] != emd:
+        return None
     bundle["origin"] = "premade"
     return bundle
 
@@ -138,7 +141,7 @@ def public_stage(event, emd, call, log, rehearsal_table):
     try:
         judgement, messages = agent.judge(ctx, call, log)
         if not judgement["ok"]:
-            return "premade", premade(event["event_id"]), judgement["why"]
+            return "premade", premade(event["event_id"], emd), judgement["why"]
 
         def rehearse(inp):
             problems, _, _ = calc.rehearse(rehearsal_table, emd, kept_now(), event["start"], event["end"],
@@ -151,11 +154,11 @@ def public_stage(event, emd, call, log, rehearsal_table):
 
         plan_result, kept = agent.plan(ctx, judgement, messages, call, log, rehearse)
         if not plan_result["ok"]:
-            return "premade", premade(event["event_id"]), plan_result["why"]
+            return "premade", premade(event["event_id"], emd), plan_result["why"]
         return "ai", build_bundle(ctx, judgement, plan_result, kept), None
     except (egress.Locked, egress.CallLimit, RuntimeError) as e:
-        return "premade", premade(event["event_id"]), type(e).__name__
+        return "premade", premade(event["event_id"], emd), type(e).__name__
     except Exception as e:  # SDK 오류(연결, 인증, 거절 등)는 모두 대체 경로로
         if type(e).__module__.startswith("anthropic"):
-            return "premade", premade(event["event_id"]), type(e).__name__
+            return "premade", premade(event["event_id"], emd), type(e).__name__
         raise

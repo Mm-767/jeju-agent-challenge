@@ -155,12 +155,12 @@ async def place(request: Request):
 
     def work():
         if not config.env("ANTHROPIC_API_KEY"):
-            origin, bundle, why = "premade", pipeline.premade(event["event_id"]), "no_key"
+            origin, bundle, why = "premade", pipeline.premade(event["event_id"], emd), "no_key"
         else:
             origin, bundle, why = pipeline.public_stage(event, emd, egress.call_llm, log, _rehearsal_table())
         if bundle is None:
             state["stage"] = "stopped"
-            log("멈춤", f"계산 계획을 세우지 못했습니다({why}). 미리 만든 계획도 없는 행사입니다.")
+            log("멈춤", f"계산 계획을 세우지 못했습니다({why}). 이 행사와 읍면으로 미리 만든 계획도 없습니다.")
             return
         if origin == "premade":
             log("대체 경로", f"미리 만든 계획을 씁니다({why}). 모델 {bundle['model']}, 만든 날 {bundle['created_at'][:10]}.")
