@@ -32,16 +32,23 @@ pre { background: #f4f4f4; padding: 6pt 8pt; white-space: pre-wrap; }
 LEAKS = re.compile(r"/Users/|/private/|sk-ant-|mh_02")
 
 
+def print_pdf(page, out):
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+                    f"--print-to-pdf={out}", page.as_uri()], check=True, capture_output=True)
+
+
 def build(md_path):
-    body = markdown.markdown(md_path.read_text(encoding="utf-8"), extensions=["tables", "fenced_code"])
-    title = re.search(r"<h1>(.*?)</h1>", body).group(1)
-    html = f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>{title}</title><style>{CSS}</style></head><body>{body}</body></html>'
     out = md_path.with_suffix(".pdf")
-    with tempfile.TemporaryDirectory() as tmp:
-        page = Path(tmp) / "doc.html"
-        page.write_text(html, encoding="utf-8")
-        subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
-                        f"--print-to-pdf={out}", page.as_uri()], check=True, capture_output=True)
+    if md_path.suffix == ".html":  # 기획서: 쪽 나눔과 그림이 든 HTML을 그대로 인쇄
+        print_pdf(md_path, out)
+    else:
+        body = markdown.markdown(md_path.read_text(encoding="utf-8"), extensions=["tables", "fenced_code"])
+        title = re.search(r"<h1>(.*?)</h1>", body).group(1)
+        html = f'<!doctype html><html lang="ko"><head><meta charset="utf-8"><title>{title}</title><style>{CSS}</style></head><body>{body}</body></html>'
+        with tempfile.TemporaryDirectory() as tmp:
+            page = Path(tmp) / "doc.html"
+            page.write_text(html, encoding="utf-8")
+            print_pdf(page, out)
     text = subprocess.run(["pdftotext", str(out), "-"], check=True, capture_output=True, text=True).stdout
     leaks = sorted(set(LEAKS.findall(text)))
     pages = text.count("\f")
@@ -53,6 +60,6 @@ def build(md_path):
 
 if __name__ == "__main__":
     names = sys.argv[1:]
-    paths = [DOCS / f"{n}.md" for n in names] if names else sorted(DOCS.glob("*_ko.md"))
+    paths = [DOCS / n if n.endswith(".html") else DOCS / f"{n}.md" for n in names] if names else sorted(DOCS.glob("*_ko.md"))
     for path in paths:
         build(path)
