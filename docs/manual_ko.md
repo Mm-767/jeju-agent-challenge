@@ -251,6 +251,7 @@ python\python.exe -X utf8 -m unittest discover -s app\tests
 |---|---|
 | AI 모델 | Anthropic Claude Haiku 5.5(claude-haiku-5-5), API로 호출 |
 | AI 활용 범위 | 계획 단계만. 방문 판단, 추가 제외, 업종 범위, 결과 문장 틀, 개발 때 행사 224건의 장소 짐작. 숫자 계산과 센터 데이터 처리에는 쓰지 않는다 |
+| 개발 도구 | Claude Code(Anthropic). 개발 중 코드 작성 보조, 설계 검토, 문서 초안에 썼다. 센터 실제 데이터는 갖고 있지 않아 쓰지 않았다 |
 | 외부 API | Anthropic Messages API(https://api.anthropic.com). 개발 때만 제주데이터허브 API |
 | 외부 데이터 | 제주데이터허브 「읍면동 단위 내국인 유동인구」, 「제주특별자치도 주요행사정보」(공개, 스냅샷 동봉) |
 | 센터 데이터 | 제주빅데이터센터 「카드 이용 현황(읍면동)_v02」(동봉하지 않음, 같은 형식의 가상 데이터만 동봉) |
