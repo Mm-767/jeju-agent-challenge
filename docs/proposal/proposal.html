@@ -9,7 +9,7 @@
   @bottom-right { content: counter(page); font: 8pt "Pretendard", "Apple SD Gothic Neo", sans-serif; color: #6d7079; } }
 :root { --ink: #15161a; --ink2: #24262b; --muted: #6d7079; --rule: #dfe1e6; --accent: #b85a0e; --accent-light: #f0c59b; }
 * { box-sizing: border-box; }
-html { counter-reset: page -1; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { margin: 0; font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 9.2pt; line-height: 1.6; color: var(--ink2); background: #fff; word-break: keep-all; overflow-wrap: break-word; }
 .page { break-after: page; }
 .page:last-child { break-after: auto; }
@@ -67,24 +67,6 @@ svg text { font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sa
 </style>
 </head>
 <body>
-
-<!-- 표지 -->
-<section class="page cover">
-  <p class="cover-kicker">제주 AI·빅데이터 활용 AI Agent 개발 챌린지</p>
-  <h1 class="cover-title">행사 효과<br>나란히</h1>
-  <p class="cover-def">축제가 열린 읍면의 관광객 카드 소비가<br>비교 읍면보다 더 늘었는지 계산하는 AI Agent</p>
-  <svg class="cover-lines" viewBox="0 0 1000 420" preserveAspectRatio="none" aria-hidden="true">
-    <rect x="800" y="0" width="140" height="420" fill="#fff" opacity=".12"/>
-    <path d="M0 300 L140 268 L280 318 L420 286 L560 256 L700 278 L870 246" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="20 15" vector-effect="non-scaling-stroke"/>
-    <path d="M0 276 L140 244 L280 292 L420 262 L560 230 L700 252 L870 60" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke"/>
-  </svg>
-  <dl class="cover-facts">
-    <dt>문서</dt><dd>AI Agent 기획서</dd>
-    <dt>활용 데이터</dt><dd>제주빅데이터센터 카드 이용 현황, 제주데이터허브 유동인구와 주요행사정보</dd>
-    <dt>AI 모델</dt><dd>Anthropic Claude Haiku 5.5</dd>
-    <dt>제출</dt><dd>2026년 11월</dd>
-  </dl>
-</section>
 
 <!-- 1 요약 -->
 <section class="page">
@@ -187,7 +169,7 @@ svg text { font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sa
       <li>AI는 개최 장소를 "대정읍, 가파도"로 짐작했습니다. 가파도는 대정읍 가파리에 속한 섬이라 카드와 유동인구가 대정읍으로 집계됩니다. 그래서 섬 지역인 우도면과 추자면을 비교에서 빼는 규칙과 부딪히지 않습니다.</li>
       <li>AI가 대정읍과 1순위 후보 성산읍의 날짜별 방문 곡선을 행사 기간과 기준 기간에 걸쳐 조회했습니다. 조회할 때마다 왜 보는지가 작업 기록에 남습니다.</li>
       <li>코드가 AI의 두 제출에 든 숫자를 입력과 하나씩 대조했습니다. 이번 실행은 방문 판단과 계산 계획 모두 첫 제출에 통과했습니다. 측정에서 정상 실행 13회 가운데 8회가 이렇게 바로 통과했고, 5회는 크기 표현이나 빠진 빈칸 때문에 한 번 돌려보낸 뒤 통과했습니다.</li>
-      <li>AI는 방문을 "증가 약함"으로 판단했습니다. 대정읍이 +20.7% 늘었지만 후보들도 +13.6% 늘어 상대 비율은 +6.2%였습니다. 한경면은 행사 마지막 날인 4월 28일에만 고산리 유적에서 열린 선사 축제 때문에 비교에서 뺐고, 업종은 "관광 소비 전체" 묶음을 골랐습니다.</li>
+      <li>AI는 방문을 "증가 약함"으로 판단했습니다. 대정읍이 +20.7% 늘었지만 후보들도 +13.6% 늘어 상대 비율은 +6.2%였습니다. 한경면은 4월 28일 하루 고산리 유적에서 선사 축제가 열렸지만 행사 마지막 날에만 겹쳐, 빼지 않고 주의하며 남겼습니다. 업종은 "관광 소비 전체" 묶음을 골랐습니다.</li>
       <li>센터 파일 대신 동봉한 가상 데이터 37개월을 넣자 외부 연결이 잠기고 몇 초 만에 결과가 나왔습니다. "대정읍의 관광 소비가 성산읍보다 20.5% 더 늘었다", p값 0.062, 행사가 없던 15개 달 가운데 이번보다 큰 차이는 0번입니다.</li>
     </ol>
     <div>
