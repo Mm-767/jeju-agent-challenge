@@ -79,6 +79,15 @@ class NumbersTest(unittest.TestCase):
         self.assertTrue(check_numbers("202405에 늘었다", "method", facts))
         self.assertTrue(check_numbers("2019년에 늘었다", "method", facts))
 
+    def test_dates_survive_names_that_start_with_a_year(self):
+        # 11/16 가파도 실행: 같은 시기 행사 「2024 JEJU MUSIC WEEKEND」의 조각 '2024'가 날짜를 깨뜨렸다
+        from agent import name_variants
+        facts = dict(FACTS, names=FACTS["names"] + name_variants("2024 JEJU MUSIC WEEKEND") + name_variants("9.81파크 축제"))
+        self.assertEqual(check_numbers("축제가 2024-04-28 하루 열렸다", "reason", facts), [])
+        self.assertEqual(check_numbers("행사 기간(2024-04-06~2024-04-28)", "reason", facts), [])
+        self.assertEqual(check_numbers("2024 JEJU MUSIC WEEKEND는 장기 행사다", "reason", facts), [])
+        self.assertEqual(check_numbers("9.81파크에서 열렸다", "reason", facts), [])
+
     def test_method_allows_two_times_rule(self):
         self.assertEqual(check_numbers("평소 흔들림의 2배 안이면 통과", "method", FACTS), [])
 

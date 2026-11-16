@@ -105,9 +105,12 @@ WEEKDAYS = "월화수목금토일"
 
 
 def name_variants(name):
-    """행사 이름 원문, 꺾쇠·괄호를 뺀 형태, 숫자가 든 조각(예: 9.81파크)."""
+    """행사 이름 원문, 꺾쇠·괄호를 뺀 형태, 숫자가 든 조각(예: 9.81파크).
+
+    숫자만 있는 조각(2024)은 넣지 않는다: 근거 검사가 이름을 먼저 지우므로 날짜 2024-04-28이 깨진다.
+    """
     plain = re.sub(r"[<>()\[\]「」『』]", " ", name)
-    pieces = [p for p in plain.split() if re.search(r"\d", p)]
+    pieces = [p for p in plain.split() if re.search(r"\d", p) and not p.isdigit()]
     return [name, " ".join(plain.split())] + pieces
 
 
