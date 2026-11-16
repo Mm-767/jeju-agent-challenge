@@ -239,7 +239,7 @@ python\python.exe -X utf8 app\tools\fetch_population.py --end 2026-10-31
 python\python.exe -X utf8 app\tools\import_events.py 내려받은파일.csv
 ```
 
-**자동 시험.** 계산, 파일 검사, 결과물 점검을 포함한 자동 시험 65개를 돌립니다.
+**자동 시험.** 계산, 파일 검사, 결과물 점검을 포함한 자동 시험 67개를 돌립니다.
 
 ```
 python\python.exe -X utf8 -m unittest discover -s app\tests
