@@ -31,7 +31,9 @@ table { width: calc(100% - 3px); border-collapse: collapse; margin: 1.5mm 0 3mm 
 th, td { border: 1px solid #9aa0a8; padding: 1.3mm 1.8mm; vertical-align: top; text-align: left; }
 th { font-weight: 700; color: var(--ink); background: #eef0f2; text-align: center; vertical-align: middle; }
 td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.shot { display: block; width: 100%; border: 1px solid var(--rule); }
+/* 쪽 오른쪽 끝에 닿는 테두리가 잘리지 않게 본문 폭을 2px 안쪽으로 */
+.page:not(.cover) { padding-right: 2px; }
+.shot { display: block; width: 100%; border: 1px solid #b9bec6; }
 img[src$="index.png"], img[src$="visit.png"] { border: 0; }
 .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
