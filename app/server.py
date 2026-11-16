@@ -219,7 +219,7 @@ def calculate():
         summary = pipeline.center_stage(state["bundle"], state["files"], example=bool(state["example"]))
         state["files"] = []  # 메모리의 원본 파일 바이트는 계산 뒤 바로 버린다
         state.update({"summary": summary, "stage": "done"})
-        log("계산", f"이 PC 안에서 계산을 마쳤습니다. 결과: {summary['outcome']}.")
+        log("계산", f"이 PC 안에서 계산을 마쳤습니다. 결과: {summary['report']['headline']}.")
 
     _background(work)
     return {"ok": True}

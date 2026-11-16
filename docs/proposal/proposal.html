@@ -5,9 +5,9 @@
 <title>행사 효과 나란히 기획서</title>
 <style>
 @page { size: A4; margin: 14mm 15mm 15mm;
-  @bottom-left { content: "행사 효과 나란히"; font: 7.5pt "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #525252; }
-  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #525252; } }
-:root { --ink: #0d0d0d; --ink2: #292929; --muted: #525252; --rule: #dbdbd8; --paper2: #f6f5f2; --paper3: #ecebe7; --accent: #00746d; --soft: #c3f3ef; --softink: #022d2b; }
+  @bottom-left { content: "행사 효과 나란히"; font: 7.5pt "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #5e666d; }
+  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #5e666d; } }
+:root { --ink: #2f353b; --ink2: #3e454c; --muted: #5e666d; --rule: #dde0e3; --paper2: #f4f5f6; --paper3: #e9ebed; --accent: #b85a0e; --event: #ee7f1b; --soft: #fdebdb; --softink: #7a3a06; }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { margin: 0; font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 9.2pt; line-height: 1.58; color: var(--ink2); background: #fff; word-break: keep-all; overflow-wrap: break-word; }
@@ -38,7 +38,7 @@ td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: t
 .figs b { display: block; font-size: 13pt; color: var(--ink); line-height: 1.25; }
 .figs span { font-size: 7.6pt; color: var(--muted); }
 .band { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 4mm; }
-.band div { border-top: 3px solid var(--accent); padding-top: 2mm; }
+.band div { border-top: 3px solid var(--event); padding-top: 2mm; }
 .band b { display: block; font-size: 12.5pt; color: var(--ink); margin-bottom: 1mm; }
 .well { background: var(--paper2); padding: 2.5mm 3.5mm; margin: 2mm 0 3mm; }
 .formula { font-family: "Apple SD Gothic Neo", sans-serif; background: var(--paper2); padding: 2mm 3.5mm; margin: 1.5mm 0 2.5mm; color: var(--ink); }
@@ -134,7 +134,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
   </table>
   <h3>핵심 기능</h3>
   <div class="grid3">
-    <figure class="thumb"><img class="shot" src="img/t1.png" alt=""><figcaption><b>1 행사 고르기.</b> 분석 기간 행사 213건마다 계산할 수 있는지와 이유를 표시하고 이름으로 찾는다.</figcaption></figure>
+    <figure class="thumb"><img class="shot" src="img/t1.png" alt=""><figcaption><b>1 행사 고르기.</b> 첫 화면에서 예시나 직접 분석을 고른다. 분석 기간 행사 213건마다 계산할 수 있는지와 이유를 보이고 이름으로 찾는다.</figcaption></figure>
     <figure class="thumb"><img class="shot" src="img/t2.png" alt=""><figcaption><b>2 장소 확인.</b> 행사 파일에 장소 열이 없어 AI가 짐작한 개최 읍면을 보여 주고, 사람이 확정한다.</figcaption></figure>
     <figure class="thumb"><img class="shot" src="img/t3.png" alt=""><figcaption><b>3 AI 계산 계획.</b> 방문 판단, 비교 순서, 뺀 읍면과 이유, 업종 묶음을 한 화면에 보인다.</figcaption></figure>
     <figure class="thumb"><img class="shot" src="img/t4.png" alt=""><figcaption><b>4 센터 파일.</b> 받을 달을 필수 7개월, 평소 흔들림용 26개월로 나눠 알려 준다. 첫 파일에서 외부 연결이 잠긴다.</figcaption></figure>
@@ -161,18 +161,18 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 <section class="page">
   <p class="eyebrow">2. 서비스 제안 · 사용 장면</p>
   <h2>예시: 가파도청보리축제(2024년 4월 6일~28일)</h2>
-  <p>2026년 11월 16일 오전에 실제 AI로 실행한 기록입니다. 장소를 확인한 뒤 계획이 나오기까지 1분 남짓 걸렸습니다.</p>
+  <p>2026년 11월 16일 오후에 실제 AI로 실행한 기록입니다. 장소를 확인한 뒤 계획이 나오기까지 1분이 걸리지 않았습니다.</p>
   <div class="side">
     <ol class="steps">
       <li><strong>장소.</strong> AI 짐작은 "대정읍, 가파도"였습니다. 가파도는 대정읍 가파리에 속한 섬이라 카드와 유동인구가 대정읍으로 집계됩니다. 그래서 섬 지역(우도면·추자면)을 비교에서 빼는 규칙과 부딪히지 않습니다.</li>
-      <li><strong>조회.</strong> AI가 대정읍, 1순위 후보 성산읍, 2순위 후보 한경면의 날짜별 방문 곡선을 차례로 조회했습니다. 조회할 때마다 왜 보는지가 작업 기록에 남습니다.</li>
-      <li><strong>검사.</strong> 방문 판단 첫 제출은 입력에 없는 숫자 13을 써서 돌려보내졌고 두 번째에 통과했습니다. 계산 계획은 "세 곳"(입력에 없는 개수)과 "크게"(크기 표현)로 두 번 돌려보내진 뒤 세 번째에 통과했습니다.</li>
-      <li><strong>판단.</strong> 방문은 "증가 약함"입니다. 대정읍이 +20.7% 늘었지만 후보들도 +13.6% 늘어 상대 비율은 +6.2%였습니다. 한경면은 행사 마지막 날 고산리 유적에서 열린 선사 축제 때문에 비교에서 뺐고, 업종은 "관광 소비 전체" 묶음을 골랐습니다.</li>
+      <li><strong>조회.</strong> AI가 대정읍과 1순위 후보 성산읍의 날짜별 방문 곡선을 행사 기간과 기준 기간에 걸쳐 조회했습니다. 조회할 때마다 왜 보는지가 작업 기록에 남습니다.</li>
+      <li><strong>검사.</strong> 코드가 두 제출의 숫자를 입력과 하나씩 대조했습니다. 이번 실행은 방문 판단과 계산 계획 모두 첫 제출에 통과했습니다. 측정한 15회 가운데 3회가 이렇게 바로 통과했고, 나머지는 1~2번 돌려보낸 뒤 통과했습니다.</li>
+      <li><strong>판단.</strong> 방문은 "증가 약함"입니다. 대정읍이 +20.7% 늘었지만 후보들도 +13.6% 늘어 상대 비율은 +6.2%였습니다. 한경면은 행사 마지막 날(4월 28일)에만 고산리 유적에서 열린 선사 축제 때문에 비교에서 뺐고, 업종은 "관광 소비 전체" 묶음을 골랐습니다.</li>
       <li><strong>계산.</strong> 센터 파일 대신 동봉한 가상 데이터 33개월을 넣자 외부 연결이 잠기고 몇 초 만에 결과가 나왔습니다. "대정읍의 관광 소비가 성산읍보다 20.5% 더 늘었다", p값 0.062, 행사가 없던 15개 달 가운데 이번보다 큰 차이는 0번입니다.</li>
     </ol>
     <div>
       <img class="shot" src="img/p4-log.png" alt="작업 기록">
-      <p class="cap">작업 기록. 아래부터 위로 짐작, 확인, 조회 3번, 검사가 돌려보낸 제출 3번이 쌓였다.</p>
+      <p class="cap">작업 기록. 아래부터 위로 AI 짐작, 사람의 확인, AI의 조회 2번이 쌓였다.</p>
     </div>
   </div>
   <div class="grid2">
@@ -293,24 +293,24 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
   <h2>센터 데이터를 볼 수 없는 상태에서 계획하는 AI</h2>
   <p class="lead">이 Agent의 AI는 센터 카드 값을 한 번도 보지 않습니다. 공개 정보로 계산 계획을 세우고, 코드가 그 계획을 검사한 뒤, 잠긴 PC 안에서 코드만 계산합니다. "AI가 쓴 결과 숫자 0개"와 "센터 값 외부 전송 0건"은 같은 구조에서 나옵니다.</p>
   <svg viewBox="0 0 680 252" width="100%" role="img" aria-label="AI 줄과 코드 줄, 잠금 선">
-    <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#292929"/></marker></defs>
-    <text x="60" y="14" font-size="10" font-weight="700" fill="#00746d">공개 단계 · 외부 연결 열림</text>
-    <text x="452" y="14" font-size="10" font-weight="700" fill="#00746d">센터 단계 · 외부 연결 잠김</text>
-    <text x="4" y="72" font-size="11" font-weight="800" fill="#0d0d0d">AI</text>
-    <text x="4" y="186" font-size="11" font-weight="800" fill="#0d0d0d">코드</text>
-    <line x1="0" y1="124" x2="680" y2="124" stroke="#dbdbd8"/>
-    <g font-size="9.5" fill="#0d0d0d">
-      <rect x="60" y="40" width="112" height="52" fill="#f6f5f2"/><text x="68" y="60">공개 유동인구 조회</text><text x="68" y="76" fill="#525252" font-size="8.5">get_visit_series</text>
-      <rect x="186" y="40" width="112" height="52" fill="#f6f5f2"/><text x="194" y="60">방문 판단·추가 제외</text><text x="194" y="76" fill="#525252" font-size="8.5">submit_judgement</text>
-      <rect x="312" y="40" width="112" height="52" fill="#f6f5f2"/><text x="320" y="60">업종 묶음·문장 틀</text><text x="320" y="76" fill="#525252" font-size="8.5">submit_plan</text>
-      <rect x="60" y="156" width="112" height="56" fill="#fff" stroke="#0d0d0d"/><text x="68" y="176">규칙 제외</text><text x="68" y="192">거리 순위</text>
-      <rect x="186" y="156" width="112" height="56" fill="#fff" stroke="#0d0d0d"/><text x="194" y="176">근거 대조 검사</text><text x="194" y="192" fill="#525252" font-size="8.5">돌려보냄 최대 3번</text>
-      <rect x="312" y="156" width="112" height="56" fill="#fff" stroke="#0d0d0d"/><text x="320" y="176">가상 데이터</text><text x="320" y="192">리허설</text>
-      <rect x="452" y="156" width="104" height="56" fill="#fff" stroke="#0d0d0d"/><text x="460" y="176">카드 파일 검사</text><text x="460" y="192">10 미만 묶기</text>
-      <rect x="570" y="156" width="110" height="56" fill="#fff" stroke="#0d0d0d"/><text x="578" y="176">비교 계산·확인</text><text x="578" y="192">보고서·PDF</text>
-      <text x="458" y="64" fill="#525252">AI 호출은 보내지 않고 막는다</text>
+    <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3e454c"/></marker></defs>
+    <text x="60" y="14" font-size="10" font-weight="700" fill="#b85a0e">공개 단계 · 외부 연결 열림</text>
+    <text x="452" y="14" font-size="10" font-weight="700" fill="#b85a0e">센터 단계 · 외부 연결 잠김</text>
+    <text x="4" y="72" font-size="11" font-weight="800" fill="#2f353b">AI</text>
+    <text x="4" y="186" font-size="11" font-weight="800" fill="#2f353b">코드</text>
+    <line x1="0" y1="124" x2="680" y2="124" stroke="#dde0e3"/>
+    <g font-size="9.5" fill="#2f353b">
+      <rect x="60" y="40" width="112" height="52" fill="#f4f5f6"/><text x="68" y="60">공개 유동인구 조회</text><text x="68" y="76" fill="#5e666d" font-size="8.5">get_visit_series</text>
+      <rect x="186" y="40" width="112" height="52" fill="#f4f5f6"/><text x="194" y="60">방문 판단·추가 제외</text><text x="194" y="76" fill="#5e666d" font-size="8.5">submit_judgement</text>
+      <rect x="312" y="40" width="112" height="52" fill="#f4f5f6"/><text x="320" y="60">업종 묶음·문장 틀</text><text x="320" y="76" fill="#5e666d" font-size="8.5">submit_plan</text>
+      <rect x="60" y="156" width="112" height="56" fill="#fff" stroke="#2f353b"/><text x="68" y="176">규칙 제외</text><text x="68" y="192">거리 순위</text>
+      <rect x="186" y="156" width="112" height="56" fill="#fff" stroke="#2f353b"/><text x="194" y="176">근거 대조 검사</text><text x="194" y="192" fill="#5e666d" font-size="8.5">돌려보냄 최대 3번</text>
+      <rect x="312" y="156" width="112" height="56" fill="#fff" stroke="#2f353b"/><text x="320" y="176">가상 데이터</text><text x="320" y="192">리허설</text>
+      <rect x="452" y="156" width="104" height="56" fill="#fff" stroke="#2f353b"/><text x="460" y="176">카드 파일 검사</text><text x="460" y="192">10 미만 묶기</text>
+      <rect x="570" y="156" width="110" height="56" fill="#fff" stroke="#2f353b"/><text x="578" y="176">비교 계산·확인</text><text x="578" y="192">보고서·PDF</text>
+      <text x="458" y="64" fill="#5e666d">AI 호출은 보내지 않고 막는다</text>
     </g>
-    <g stroke="#292929" stroke-width="1.2" fill="none">
+    <g stroke="#3e454c" stroke-width="1.2" fill="none">
       <path d="M116 156 V96" marker-end="url(#ar)"/>
       <path d="M172 66 H182" marker-end="url(#ar)"/>
       <path d="M298 66 H308" marker-end="url(#ar)"/>
@@ -319,11 +319,11 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
       <path d="M424 184 H448" marker-end="url(#ar)"/>
       <path d="M556 184 H566" marker-end="url(#ar)"/>
     </g>
-    <line x1="438" y1="24" x2="438" y2="244" stroke="#00746d" stroke-width="2.2" stroke-dasharray="6 4"/>
+    <line x1="438" y1="24" x2="438" y2="244" stroke="#ee7f1b" stroke-width="2.2" stroke-dasharray="6 4"/>
     <rect x="444" y="112" width="112" height="16" fill="#fff"/>
-    <text x="446" y="124" font-size="9" font-weight="700" fill="#00746d">잠금: 첫 센터 파일 직전</text>
-    <text x="60" y="230" font-size="8.5" fill="#525252">위로: 후보와 요약값을 AI에 준다. 아래로: 제출을 검사해 통과시키거나 이유와 함께 돌려보낸다.</text>
-    <text x="60" y="243" font-size="8.5" fill="#525252">잠금 너머로는 계획 묶음만 넘긴다. 계획 묶음에는 센터 값이 없다.</text>
+    <text x="446" y="124" font-size="9" font-weight="700" fill="#b85a0e">잠금: 첫 센터 파일 직전</text>
+    <text x="60" y="230" font-size="8.5" fill="#5e666d">위로: 후보와 요약값을 AI에 준다. 아래로: 제출을 검사해 통과시키거나 이유와 함께 돌려보낸다.</text>
+    <text x="60" y="243" font-size="8.5" fill="#5e666d">잠금 너머로는 계획 묶음만 넘긴다. 계획 묶음에는 센터 값이 없다.</text>
   </svg>
   <h3>역할과 목표</h3>
   <table>
@@ -406,7 +406,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
         <li>원격 측정을 내보내는 부품은 묶음에 넣지 않았습니다. 자가 점검이 이것도 확인합니다.</li>
       </ul>
     </div>
-    <figure><img class="shot" src="img/p10-sent.png" alt="외부 전송 기록 창"><p class="cap">외부 전송 기록. 잠금 뒤 자가 점검이 일부러 보낸 호출은 "잠겨서 막음"으로 남는다.</p></figure>
+    <figure><img class="shot" src="img/p10-sent.png" alt="외부 전송 기록 창"><p class="cap">외부 전송 기록. 보낸 요청마다 시각, 단계, 결과가 남고 보낸 본문을 펼쳐 볼 수 있다. 잠긴 뒤의 호출은 "잠겨서 막음"으로 남는다.</p></figure>
   </div>
   <h3>자가 점검 (버튼 하나)</h3>
   <p>실행마다 무작위 9자리 표시값을 심은 센터 형식 가상 CSV로 끝까지 돌린 뒤 7개 항목을 판정합니다.</p>
@@ -497,7 +497,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
   </table>
   <h3>설치·자동 시험</h3>
   <ul>
-    <li>자동 시험 67개: 계산, 센터 CSV의 이상 형식, 10 미만 처리, 숫자 근거 대조, 계획 검사, 리허설, 자가 점검, 결과 삭제.</li>
+    <li>자동 시험 69개: 계산, 센터 CSV의 이상 형식, 10 미만 처리, 숫자 근거 대조, 계획 검사, 리허설, 자가 점검, 결과 삭제.</li>
     <li>윈도우 자동 시험: 제출할 묶음을 그대로 만들어 윈도우 서버에서 설치부터 결과 삭제까지 44항목을 돌립니다. C 드라이브 바로 아래와, 한글과 공백이 든 바탕 화면 폴더 두 곳에서 모두 통과했습니다. PDF에는 맑은 고딕이 들어갑니다.</li>
   </ul>
   <h3>남은 한계</h3>
@@ -526,7 +526,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     </tbody>
   </table>
   <h3>UI</h3>
-  <p>위쪽 띠에 예시 여부, 외부 AI 연결 상태, 외부 전송 건수, 결과 자동 삭제 상태를 늘 보입니다. 그 아래 다섯 단계 표시가 지금 위치를 알려 주고, 오른쪽 작업 기록이 진행을 보여 줍니다. 대기 중에는 최근 조회나 검사 한 줄을 보여 주고, 버튼은 누를 수 없는 상태와 진행 중 상태를 구분합니다. 좁은 화면에서는 작업 기록이 본문 아래로 내려갑니다.</p>
+  <p>행사 읍면은 주황 실선, 비교 읍면은 회색 점선, 행사 달은 노란 띠로 화면, 결과 그림, PDF가 같은 색을 씁니다. 첫 화면에는 두 선이 행사 달에 벌어지는 그림을 두었습니다. 위쪽 띠에는 예시 여부, 외부 AI 연결 상태, 외부 전송 건수, 결과 자동 삭제 상태를 늘 보이고, 그 아래 진행 띠가 지금 단계를 주황으로 표시합니다. 작업 기록은 시작한 뒤 오른쪽에 쌓입니다. 창 크기에 따라 글씨와 버튼이 함께 커지고 작아지며, 좁은 화면에서는 작업 기록이 본문 아래로 내려갑니다.</p>
   <h3>설치 점검 8항목 (install.bat)</h3>
   <table>
     <thead><tr><th>항목</th><th>항목</th></tr></thead>
