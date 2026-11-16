@@ -89,6 +89,14 @@ def check_numbers(text, field, facts):
 
     take(r"event_id\s*:?\s*(\d+)", lambda m: None if m.group(1) in facts.get("ids", set())
          else f"{_q(m.group(0))} 입력 목록에 없는 행사 번호입니다.")
+
+    def short_range(m):
+        """2024-04-13~14, 4/13~14, 04-13~14: 끝 날만 줄여 쓴 기간. 시작 날짜와 같은 달의 끝 날 둘 다 입력에 있어야 한다."""
+        y, mo, d1, d2 = (int(m.group(1)) if m.group(1) else None), int(m.group(2)), int(m.group(3)), int(m.group(4))
+        ok = all(any(x.month == mo and x.day == d and (y is None or x.year == y) for x in dates) for d in (d1, d2))
+        return None if ok else f"{_q(m.group(0))} 입력에 없는 날짜입니다."
+
+    take(r"(?:(\d{4})-)?(\d{1,2})[-/](\d{1,2})\s*[~∼]\s*(\d{1,2})(?![\d/\-.])", short_range)
     take(r"(?<![\d.])(\d{1,2})/(\d{1,2})(?![\d/])", lambda m: None if any(
         x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
     take(r"(\d{4})\s*년\s*(\d{1,2})\s*월(?:\s*(\d{1,2})\s*일)?", full_date)

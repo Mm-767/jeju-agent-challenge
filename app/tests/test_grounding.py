@@ -88,6 +88,14 @@ class NumbersTest(unittest.TestCase):
         self.assertEqual(check_numbers("2024 JEJU MUSIC WEEKEND는 장기 행사다", "reason", facts), [])
         self.assertEqual(check_numbers("9.81파크에서 열렸다", "reason", facts), [])
 
+    def test_date_ranges_with_shortened_end_day(self):
+        # 11/16 가파도 실행: 같은 시기 행사를 「2024-04-13~14」로 써서 '14'가 걸렸다
+        self.assertEqual(check_numbers("고사리축제(2024-04-13~14)가 열렸다", "reason", FACTS), [])
+        self.assertEqual(check_numbers("4/13~14에 열렸다", "reason", FACTS), [])
+        self.assertEqual(check_numbers("04-13~14에 열렸다", "reason", FACTS), [])
+        self.assertTrue(check_numbers("2024-04-13~30에 열렸다", "reason", FACTS))
+        self.assertTrue(check_numbers("4/13~30에 열렸다", "reason", FACTS))
+
     def test_method_allows_two_times_rule(self):
         self.assertEqual(check_numbers("평소 흔들림의 2배 안이면 통과", "method", FACTS), [])
 
