@@ -233,6 +233,9 @@ def validate_judgement(inp, ctx, seen=frozenset()):
             problems.append(f"{c}이 kept와 extra_excluded에 한 번씩 들어가야 하는데 {named.count(c)}번 있습니다.")
     for c in sorted(set(named) - set(remaining)):
         problems.append(f"{c}은 남은 후보가 아닙니다(규칙으로 이미 뺐거나 행사 읍면입니다).")
+    if len(remaining) >= MIN_CANDIDATES and len(inp["kept"]) < MIN_CANDIDATES:
+        problems.append(f"kept가 {len(inp['kept'])}곳입니다. 비교 후보가 {MIN_CANDIDATES}곳 미만이면 계산할 수 없으니, "
+                        "꼭 빼야 할 곳만 빼고 애매한 곳은 남겨 kept 이유에 주의를 적으세요.")
     for x in inp["extra_excluded"]:
         if x["event_id"] and x["event_id"] not in other_ids:
             problems.append(f"extra_excluded의 event_id {x['event_id']}는 같은 시기 행사 목록에 없습니다.")

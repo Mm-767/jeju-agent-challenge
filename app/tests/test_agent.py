@@ -189,6 +189,20 @@ class PlanStageTest(unittest.TestCase):
         self.assertEqual(problems, ["리허설 실패"])
 
 
+class JudgeValidationTest(unittest.TestCase):
+    def judgement(self, kept, extra):
+        return {"visit": {"judgement": "증가 약함", "evidence": ["R_T"], "reason": "행사 기간에 늘었다.", "caution": ""},
+                "kept": [{"emd": k, "reason": "흐름이 비슷하다."} for k in kept],
+                "extra_excluded": [{"emd": e, "event_id": "", "reason": "같은 기간에 따로 열린 행사가 있다."} for e in extra],
+                "treated_month_other_events": []}
+
+    def test_cannot_leave_fewer_than_two_candidates(self):
+        # 11/16 측정: 와흘(후보 2곳)에서 AI가 한 곳을 빼 계획이 멈췄다
+        problems = agent.validate_judgement(self.judgement(["한경면"], ["구좌읍"]), plan_ctx())
+        self.assertTrue(any("2곳" in p for p in problems), problems)
+        self.assertEqual(agent.validate_judgement(self.judgement(["한경면", "구좌읍"], []), plan_ctx()), [])
+
+
 class BizBundleTest(unittest.TestCase):
     def test_bundles_use_known_codes_and_match_tool_enum(self):
         tools = json.loads((config.PROMPTS / "tools.json").read_text(encoding="utf-8"))

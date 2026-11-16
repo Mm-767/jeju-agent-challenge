@@ -117,6 +117,7 @@ def check_numbers(text, field, facts):
     take(r"(?<!\d)(20\d{2})(0[1-9]|1[0-2])(?!\d)", lambda m: None if m.group(0) in months else f"{_q(m.group(0))} 입력에 없는 달입니다.")
     take(r"(20\d{2})\s*년", lambda m: None if int(m.group(1)) in years else f"{_q(m.group(0))} 입력에 없는 해입니다.")
     take(r"(\d{4})-(\d{2})", lambda m: None if m.group(1) + m.group(2) in months else f"{_q(m.group(0))} 입력에 없는 달입니다.")
+    take(r"(?<![\d.\-/])(20\d{2})(?![\d.\-/])", lambda m: None if int(m.group(1)) in years else f"{_q(m.group(0))} 입력에 없는 해입니다.")
     take(r"(?<![\d-])(\d{1,2})-(\d{1,2})(?![\d-])", lambda m: None if any(
         x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
     take(rf"(?<![가-힣])({'|'.join(NATIVE)})\s*({COUNT_UNITS})", lambda m: None if NATIVE[m.group(1)] in counts
