@@ -35,7 +35,31 @@ function logItem(time, kind, text) {
   return li;
 }
 
-function alertLine(text) { $("log").prepend(logItem("지금", "안내", text)); }
+function alertLine(text) { $("log").prepend(logItem("지금", "안내", text)); toast(text); }
+
+let toastTimer = 0;
+function toast(text) {
+  const t = $("toast");
+  t.textContent = text; t.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.hidden = true; }, 3500);
+}
+
+const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 결과 숫자(+20.5% 같은 비율)를 0에서 0.7초 동안 올린다
+function countUp(node) {
+  const m = /^([+-]?)(\d+(?:\.\d+)?)(%)$/.exec(node.textContent);
+  if (!m || calm) return;
+  const end = Number(m[2]), digits = (m[2].split(".")[1] || "").length, t0 = performance.now();
+  const tick = (now) => {
+    const k = Math.min(1, (now - t0) / 700);
+    node.textContent = m[1] + (end * (1 - Math.pow(1 - k, 3))).toFixed(digits) + m[3];
+    if (k < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+  const final = node.textContent;
+  setTimeout(() => { node.textContent = final; }, 900);
+}
 
 
 function setStep(n) {
@@ -139,12 +163,13 @@ function renderResult(s) {
   const r = s.summary;
   const rep = r.report;
   const t = Date.now();
-  $("r-title").textContent = s.event.name + " 관광객 카드 소비 비교" + (s.example ? " (예시, 가상 데이터)" : "");
+  $("r-title").textContent = s.event.name + " 관광객 카드 소비 비교" + (s.example ? " (연습용 가상 데이터)" : "");
   $("r-verdict").textContent = rep.label;
   $("r-verdict").className = "tag " + ({ higher: "tag--in", lower: "tag--in", not_computed: "tag--out" }[rep.outcome] || "");
   $("r-headline").textContent = rep.headline;
   $("r-sentence").textContent = rep.sentence;
   pairs($("r-figures"), rep.figures);
+  for (const dd of $("r-figures").querySelectorAll("dd")) countUp(dd);
   $("r-figures").hidden = !rep.figures.length;
   pairs($("r-situation"), rep.situation);
   pairs($("r-task"), rep.task);
@@ -236,6 +261,14 @@ async function sendFiles(list) {
 
 $("btn-example").onclick = async () => { await loadEvents(); await api("POST", "/api/run", { example: "effect" }); poll(); };
 $("btn-direct").onclick = async () => { $("events-wrap").hidden = false; await loadEvents(); $("ev-q").focus(); };
+const HERO_CAP = { on: "축제 달에 축제 읍면만 크게 올랐습니다. 이렇게 벌어진 만큼을 축제 효과로 봅니다.", off: "축제가 없으면 두 읍면은 평소처럼 나란히 움직입니다. 벌어진 만큼이 없으니 효과도 없습니다." };
+for (const b of document.querySelectorAll(".hero-fig .seg button")) b.onclick = () => {
+  const mode = b.dataset.mode;
+  b.closest(".hero-fig").dataset.mode = mode;
+  for (const x of document.querySelectorAll(".hero-fig .seg button")) x.setAttribute("aria-pressed", x === b ? "true" : "false");
+  $("hero-cap").textContent = HERO_CAP[mode];
+};
+$("btn-direct").addEventListener("click", () => setTimeout(() => $("events-wrap").scrollIntoView({ behavior: calm ? "auto" : "smooth", block: "start" }), 150));
 $("only-ok").onchange = drawEvents;
 $("ev-q").oninput = drawEvents;
 $("btn-place").onclick = async () => { await api("POST", "/api/place", { emd: $("place-emd").value }); poll(); };
@@ -254,7 +287,7 @@ drop.ondragleave = () => drop.classList.remove("over");
 drop.ondrop = (ev) => { ev.preventDefault(); drop.classList.remove("over"); sendFiles(ev.dataTransfer.files); };
 $("btn-calc").onclick = async () => { await api("POST", "/api/calculate"); poll(); };
 $("btn-copy").onclick = async () => {
-  try { await navigator.clipboard.writeText($("r-usage").value); $("btn-copy").textContent = "복사했습니다"; }
+  try { await navigator.clipboard.writeText($("r-usage").value); toast("활용 사유를 복사했습니다."); }
   catch (e) { $("r-usage").select(); }
 };
 $("btn-finish").onclick = () => $("d-finish").showModal();

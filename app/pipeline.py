@@ -59,7 +59,7 @@ def center_stage(bundle, files, out_dir=None, example=False, target="결과보�
                ("업종 묶음", plan.get("biz_bundle") or f"{len(plan['biz_codes']) or 42}개 업종"), ("업종 범위 이유", plan["biz_reason"])]
     ai_rows += [(f"추가로 뺀 비교 후보 {x['emd']}", x["reason"]) for x in bundle["judgement"]["extra_excluded"]]
     limits = report.LIMITS + bundle["texts"]["extra_limits"]
-    title = f"{ev['name']} 관광객 카드 소비 비교" + (" (예시, 가상 데이터)" if example else "")
+    title = f"{ev['name']} 관광객 카드 소비 비교" + (" (연습용 가상 데이터)" if example else "")
     event = {"name": ev["name"], "start": start, "end": end}
     rep = report.build_report(event, emd, result, months, bundle, sentence, rows, ai_rows, len(widened.get(comp) or []))
     usage = report.usage_reason(event, need["all"], target)
