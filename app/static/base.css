@@ -1,7 +1,8 @@
 /* Hallmark · base · the Floor's resets for this app */
 *, *::before, *::after { box-sizing: border-box; }
 html, body { overflow-x: clip; }
-html { -webkit-text-size-adjust: 100%; color-scheme: light; }
+/* 창 너비에 맞춰 rem으로 적은 글씨·간격·버튼이 함께 커지고 작아진다: 1440px 창에서 16px, 13~20px 사이 */
+html { -webkit-text-size-adjust: 100%; color-scheme: light; font-size: clamp(0.8125rem, 0.25rem + 0.833vw, 1.25rem); }
 body {
   margin: 0;
   background: var(--color-paper);
