@@ -235,7 +235,7 @@ def headline(emd, result):
 def key_figures(result):
     if result["outcome"] == "not_computed":
         return []
-    return [("상대 효과", pct(result["E"])), ("p값", f"{result['p']:.3f}"),
+    return [("비교 읍면보다 더 늘어난 정도", pct(result["E"])), ("우연히 이만큼 차이 날 확률(p값)", f"{result['p']:.3f}"),
             ("행사 없던 달 가운데 이번보다 큰 차이", f"{result['n']}번 / {result['J']}개 달")]
 
 

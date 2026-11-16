@@ -102,7 +102,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
   await sleep(4500);
   await page.click("#btn-example-files");
   await sleep(1500);
-  await caption("위쪽 띠가 「외부 AI 연결 잠김」으로 바뀌었습니다. 계산은 이 PC 안에서만 합니다");
+  await caption("위쪽 띠가 「AI 연결 끊김」으로 바뀌었습니다. 계산은 이 PC 안에서만 합니다");
   await sleep(4000);
   await page.click("#btn-calc");
   await waitStage(["done"], 60);

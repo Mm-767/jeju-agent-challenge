@@ -16,10 +16,10 @@
   <div class="bar-in">
     <strong class="brand"><svg viewBox="0 0 28 20" aria-hidden="true"><path d="M2 15 L10 13 L18 14 L26 12" fill="none" stroke="#8a939a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12 L10 10 L18 11 L26 3" fill="none" stroke="#ee7f1b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>행사 효과 나란히</strong>
     <div class="bar-state">
-      <span id="b-example" class="tag tag--out" hidden>예시, 가상 데이터</span>
-      <span id="b-ai" class="tag tag--in">외부 AI 연결 열림</span>
-      <button id="b-sent" class="btn btn--s" type="button">외부 전송 0건</button>
-      <button id="b-delete" class="btn btn--s" type="button" aria-pressed="true">결과 자동 삭제 켜짐</button>
+      <span id="b-example" class="tag tag--out" hidden>연습용 가상 데이터</span>
+      <span id="b-ai" class="tag tag--in">AI 연결 켜짐</span>
+      <button id="b-sent" class="btn btn--s" type="button">AI에 보낸 내용 0건</button>
+      <button id="b-delete" class="btn btn--s" type="button" aria-pressed="true">끝낼 때 결과 지우기 켜짐</button>
     </div>
   </div>
 </header>
@@ -27,8 +27,8 @@
   <ol id="steps">
     <li data-step="1"><span class="num">1</span><span>행사 고르기</span></li>
     <li data-step="2"><span class="num">2</span><span>장소 확인</span></li>
-    <li data-step="3"><span class="num">3</span><span>AI 계산 계획</span></li>
-    <li data-step="4"><span class="num">4</span><span>센터 파일</span></li>
+    <li data-step="3"><span class="num">3</span><span>AI 비교 계획</span></li>
+    <li data-step="4"><span class="num">4</span><span>카드 파일</span></li>
     <li data-step="5"><span class="num">5</span><span>보고서</span></li>
   </ol>
 </nav>
@@ -78,7 +78,7 @@
     </div>
     <div class="well">
       <strong>카드 파일은 이 컴퓨터 밖으로 나가지 않습니다</strong>
-      <p>AI에게는 축제 이름과 날짜, 누구나 볼 수 있는 공개 방문객 통계만 보냅니다. 카드 파일을 넣는 순간 AI와의 연결을 끊고, 계산은 이 컴퓨터 안에서만 합니다. AI에게 보낸 내용은 위쪽 「외부 전송」을 누르면 그대로 볼 수 있습니다.</p>
+      <p>AI에게는 축제 이름과 날짜, 누구나 볼 수 있는 공개 방문객 통계만 보냅니다. 카드 파일을 넣는 순간 AI와의 연결을 끊고, 계산은 이 컴퓨터 안에서만 합니다. AI에게 보낸 내용은 위쪽 「AI에 보낸 내용」을 누르면 그대로 볼 수 있습니다.</p>
     </div>
     <div id="events-wrap" class="block" hidden>
       <h2>행사 고르기</h2>
@@ -101,36 +101,36 @@
       <span class="tag">AI 짐작</span>
       <p id="place-guess" class="big"></p>
       <p id="place-reason"></p>
-      <p class="small">행사 파일에 장소가 없어 행사 이름과 주최를 보고 짐작한 읍면입니다. 틀릴 수 있으니 실제 개최 읍면을 골라 주세요.</p>
+      <p class="small">행사 목록에 장소가 적혀 있지 않아 AI가 행사 이름을 보고 짐작한 곳입니다. 틀릴 수 있으니 실제로 열린 읍면을 아래에서 골라 주세요.</p>
     </div>
-    <div class="field"><label for="place-emd">실제 개최 읍면</label><select id="place-emd" name="emd"></select></div>
-    <div class="row"><button id="btn-place" class="btn btn--primary" type="button">장소 확인</button></div>
+    <div class="field"><label for="place-emd">행사가 실제로 열린 읍면</label><select id="place-emd" name="emd"></select></div>
+    <div class="row"><button id="btn-place" class="btn btn--primary" type="button">이 읍면이 맞습니다</button></div>
   </section>
 
   <section id="a-plan" class="area" hidden>
-    <h2>AI 계산 계획</h2>
+    <h2>AI가 세운 비교 계획</h2>
     <div id="plan-wait" class="loading">
-      <p class="lede">AI가 공개 유동인구를 살펴보며 계획을 세우는 중입니다. 30초~1분쯤 걸립니다.</p>
+      <p class="lede">AI가 공개 방문객 통계를 보며 비교할 읍면을 찾고 있습니다. 30초~1분쯤 걸립니다.</p>
       <p id="plan-latest" class="small" aria-live="polite"></p>
       <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
     <div id="plan-body" class="area" hidden>
       <div class="row"><span id="plan-origin" class="tag"></span><span id="plan-judgement" class="tag tag--on"></span></div>
-      <div class="block"><h3>방문 판단</h3><p id="plan-reason"></p></div>
-      <div class="block"><h3>비교 순서</h3><p class="small">행사 전 12개월 동안 유동인구 흐름이 행사 읍면과 비슷했던 순서입니다.</p><ol id="plan-kept" class="ruled"></ol></div>
-      <div class="block"><h3>뺀 읍면</h3><ul id="plan-excluded" class="ruled"></ul></div>
-      <div class="block"><h3>업종 묶음</h3><p id="plan-biz"></p></div>
-      <div class="row"><button id="btn-to-files" class="btn btn--primary" type="button">이 계획으로 센터 파일 넣기</button></div>
+      <div class="block"><h3>행사 때 방문객이 늘었나</h3><p id="plan-reason"></p></div>
+      <div class="block"><h3>비교할 읍면</h3><p class="small">행사 전 1년 동안 방문객 흐름이 행사 읍면과 비슷했던 순서입니다.</p><ol id="plan-kept" class="ruled"></ol></div>
+      <div class="block"><h3>비교에서 뺀 읍면</h3><ul id="plan-excluded" class="ruled"></ul></div>
+      <div class="block"><h3>비교할 업종</h3><p id="plan-biz"></p></div>
+      <div class="row"><button id="btn-to-files" class="btn btn--primary" type="button">이 계획으로 카드 파일 넣기</button></div>
     </div>
     <div id="plan-stopped" class="notice" hidden>
-      <h3>계산 계획을 세우지 못했습니다</h3>
-      <p>오른쪽 작업 기록에서 이유를 보고, 「끝내기」를 누른 뒤 다른 행사를 골라 주세요.</p>
+      <h3>비교 계획을 세우지 못했습니다</h3>
+      <p>이유는 오른쪽 작업 기록에 있습니다. 위쪽 「장소 다시 고르기」로 읍면을 바꾸거나, 「끝내기」를 누른 뒤 다른 행사를 골라 주세요.</p>
       <div class="row"><button id="btn-stop-finish" class="btn" type="button">끝내기</button></div>
     </div>
   </section>
 
   <section id="a-files" class="area" hidden>
-    <h2>센터 카드 파일 넣기</h2>
+    <h2>카드 파일 넣기</h2>
     <dl id="check-count" class="figs"></dl>
     <p>제주빅데이터센터 운영자에게 「카드 이용 현황(읍면동)」 파일을 요청해 주세요. 한 달에 CSV 파일 하나입니다. <strong id="files-months"></strong> 받은 파일을 모두 아래에 넣으면 됩니다.</p>
     <p class="small">첫 파일을 넣는 순간 AI와의 연결을 끊습니다. 그 뒤 계산은 이 컴퓨터 안에서만 합니다.</p>
@@ -190,10 +190,10 @@
       <div class="block"><h4>이 행사에서 주의할 점</h4><ul id="r-limits" class="bullets"></ul></div>
       <details><summary>모든 결과에 공통인 한계</summary><ul id="r-limits-common" class="bullets"></ul></details>
       <div class="block">
-        <h4>반출 신청</h4>
-        <p><span class="tag tag--in">반출 신청 가능(사전 점검 기준)</span></p>
-        <p class="small">결과물에는 증가율, 상대 효과, 지수만 들어 있고 금액·건수·인원은 없습니다. 반출 승인은 센터가 합니다.</p>
-        <label for="r-usage">활용 사유 문안</label>
+        <h4>센터 밖으로 가져가기(반출 신청)</h4>
+        <p><span class="tag tag--in">반출 신청할 수 있음(프로그램이 미리 점검)</span></p>
+        <p class="small">이 보고서에는 비율과 지수만 있고 금액·건수·인원수는 없습니다. 그래서 센터에 반출을 신청할 수 있습니다. 승인은 센터가 합니다.</p>
+        <label for="r-usage">신청서에 쓸 활용 사유</label>
         <textarea id="r-usage" rows="4" readonly></textarea>
         <div class="row">
           <a id="r-pdf" class="btn btn--primary" href="#" target="_blank" rel="noopener">보고서 PDF 열기</a>
@@ -208,14 +208,14 @@
 
 <aside class="log-wrap" aria-labelledby="h-log">
   <h2 id="h-log">작업 기록</h2>
-  <p class="small">AI가 조회한 것, 코드가 검사하고 계산한 것이 최근 순으로 쌓입니다.</p>
+  <p class="small">AI와 프로그램이 한 일이 최근 순으로 쌓입니다.</p>
   <ol id="log" class="log ruled"></ol>
 </aside>
 </div>
 
 <dialog id="d-sent" aria-labelledby="h-sent">
-  <h2 id="h-sent">외부 전송 기록</h2>
-  <p class="small">밖으로 보낸 요청은 모두 여기에 남습니다. 공개 자료와 계산 계획만 보냅니다.</p>
+  <h2 id="h-sent">AI에 보낸 내용</h2>
+  <p class="small">AI에게 보낸 내용은 모두 여기에 남습니다. 행사 정보와 공개 방문객 통계만 보냅니다.</p>
   <ol id="sent-list" class="sent ruled small"></ol>
   <div class="row"><button id="btn-selfcheck" class="btn" type="button">자가 점검</button><button id="btn-close-sent" class="btn btn--primary" type="button">닫기</button></div>
   <ul id="selfcheck-rows" class="ruled small"></ul>
@@ -223,7 +223,7 @@
 
 <dialog id="d-finish" aria-labelledby="h-finish">
   <h2 id="h-finish">끝내기</h2>
-  <p id="finish-text">작업 기록, 메모리에 있는 센터 집계, 결과 그림과 PDF를 지우고 처음으로 돌아갑니다.</p>
+  <p id="finish-text">작업 기록, 넣은 카드 파일에서 계산한 내용, 결과 그림과 PDF를 지우고 처음으로 돌아갑니다.</p>
   <div class="row"><button id="btn-finish-ok" class="btn btn--primary" type="button">지우고 끝내기</button><button id="btn-finish-cancel" class="btn" type="button">돌아가기</button></div>
 </dialog>
 

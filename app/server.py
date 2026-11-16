@@ -26,7 +26,7 @@ EXAMPLE_EVENT = "363"  # 가파도청보리축제(대정읍), 미리 만든 계�
 EXAMPLE_EMD = "대정읍"
 # 대체 경로로 간 이유(그 밖의 값은 SDK 오류 이름이라 "AI에 연결하지 못해"로 보인다)
 WHY_TEXT = {"no_key": "AI 키가 없어", "checks_failed": "AI 답이 검사를 세 번 통과하지 못해", "no_submit": "AI가 계획을 제출하지 않아",
-            "too_few_candidates": "비교할 읍면이 2곳보다 적어", "max_tokens": "AI 답이 너무 길어 끊겨", "Locked": "외부 연결이 잠겨",
+            "too_few_candidates": "비교할 읍면이 2곳보다 적어", "max_tokens": "AI 답이 너무 길어 끊겨", "Locked": "AI와의 연결이 끊겨 있어",
             "CallLimit": "AI 호출 한도를 넘어", "CallTimeout": "AI 응답이 늦어"}
 
 app = FastAPI(title="행사 효과 나란히")
@@ -96,7 +96,7 @@ def _guard(locked_ok=False):
     if state["busy"]:
         raise HTTPException(409, "앞의 작업이 끝나지 않았습니다.")
     if not locked_ok and egress.is_locked():
-        raise HTTPException(409, "센터 파일을 넣은 뒤에는 AI 단계로 돌아갈 수 없습니다. 끝내기 뒤 다시 시작해 주세요.")
+        raise HTTPException(409, "카드 파일을 넣은 뒤에는 AI 단계로 돌아갈 수 없습니다. 끝내기 뒤 다시 시작해 주세요.")
 
 
 def _background(target):
@@ -167,7 +167,7 @@ async def place(request: Request):
         reason = WHY_TEXT.get(why, "AI에 연결하지 못해")
         if bundle is None:
             state["stage"] = "stopped"
-            log("멈춤", f"{reason} 계산 계획을 세우지 못했습니다. 이 행사와 읍면으로 미리 만든 계획도 없습니다.")
+            log("멈춤", f"{reason} 비교 계획을 세우지 못했습니다. 이 행사와 읍면으로 미리 만든 계획도 없습니다.")
             return
         if origin == "premade":
             log("대체 경로", f"{reason} 미리 만든 계획({bundle['created_at'][:10]})을 씁니다.")
@@ -193,11 +193,11 @@ def _rehearsal_table():
 async def put_file(name: str, request: Request):
     _guard(locked_ok=True)
     if state["stage"] not in ("ready", "files"):
-        raise HTTPException(409, "계산 계획이 준비된 뒤에 파일을 넣을 수 있습니다.")
+        raise HTTPException(409, "비교 계획이 준비된 뒤에 파일을 넣을 수 있습니다.")
     egress.lock()  # 센터 형식 파일을 받기 직전에 잠근다
     state["files"].append((name, await request.body()))
     state["stage"] = "files"
-    log("잠금", "센터 파일을 받아 외부 연결을 잠갔습니다.")
+    log("잠금", "카드 파일을 받아 AI와의 연결을 끊었습니다.")
     return {"ok": True, "count": len(state["files"])}
 
 
@@ -205,12 +205,12 @@ async def put_file(name: str, request: Request):
 def example_files():
     _guard(locked_ok=True)
     if state["stage"] not in ("ready", "files"):
-        raise HTTPException(409, "계산 계획이 준비된 뒤에 파일을 넣을 수 있습니다.")
+        raise HTTPException(409, "비교 계획이 준비된 뒤에 파일을 넣을 수 있습니다.")
     egress.lock()
     state["files"] = [(f.name, f.read_bytes()) for f in sorted((BASE / "data" / "dummy" / "card_effect").glob("*.csv"))]
     state["example"] = state["example"] or "effect"
     state["stage"] = "files"
-    log("잠금", f"동봉한 가상 데이터 {len(state['files'])}개월을 넣고 외부 연결을 잠갔습니다.")
+    log("잠금", f"연습용 가상 데이터 {len(state['files'])}개월을 넣고 AI와의 연결을 끊었습니다.")
     return {"ok": True, "count": len(state["files"])}
 
 
@@ -218,7 +218,7 @@ def example_files():
 def calculate():
     _guard(locked_ok=True)
     if state["stage"] != "files":
-        raise HTTPException(409, "센터 파일을 먼저 넣어 주세요.")
+        raise HTTPException(409, "카드 파일을 먼저 넣어 주세요.")
     state["stage"] = "computing"
 
     def work():

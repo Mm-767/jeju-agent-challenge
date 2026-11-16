@@ -55,15 +55,15 @@ function renderLog(log) {
 
 function renderBand(s) {
   $("b-example").hidden = !s.example;
-  $("b-ai").textContent = s.locked ? "외부 AI 연결 잠김" : "외부 AI 연결 열림";
+  $("b-ai").textContent = s.locked ? "AI 연결 끊김" : "AI 연결 켜짐";
   $("b-ai").className = "tag " + (s.locked ? "tag--on" : "");
-  $("b-sent").textContent = "외부 전송 " + s.sent + "건";
-  $("b-delete").textContent = "결과 자동 삭제 " + (s.auto_delete ? "켜짐" : "꺼짐");
+  $("b-sent").textContent = "AI에 보낸 내용 " + s.sent + "건";
+  $("b-delete").textContent = "끝낼 때 결과 지우기 " + (s.auto_delete ? "켜짐" : "꺼짐");
   $("b-delete").dataset.on = s.auto_delete ? "1" : "";
   $("b-delete").setAttribute("aria-pressed", s.auto_delete ? "true" : "false");
   $("finish-text").textContent = s.auto_delete
-    ? "작업 기록, 메모리에 있는 센터 집계, 결과 그림과 PDF를 지우고 처음으로 돌아갑니다."
-    : "작업 기록과 메모리에 있는 센터 집계를 지웁니다. 결과 자동 삭제가 꺼져 있어 결과 그림과 PDF(app\\out\\report)는 남겨 둡니다.";
+    ? "작업 기록, 넣은 카드 파일에서 계산한 내용, 결과 그림과 PDF를 지우고 처음으로 돌아갑니다."
+    : "작업 기록과 넣은 카드 파일에서 계산한 내용을 지웁니다. 「끝낼 때 결과 지우기」가 꺼져 있어 결과 그림과 PDF(app\\out\\report)는 남겨 둡니다.";
 }
 
 function renderPlace(s) {
@@ -91,7 +91,7 @@ function renderPlan(s) {
   if (!p) return;
   $("plan-origin").textContent = s.origin === "premade" ? "미리 만든 계획(" + p.created_at.slice(0, 10) + ")" : "AI가 방금 세운 계획";
   $("plan-origin").className = "tag " + (s.origin === "premade" ? "tag--out" : "");
-  $("plan-judgement").textContent = "방문 판단 " + p.judgement.visit.judgement;
+  $("plan-judgement").textContent = "방문객 " + p.judgement.visit.judgement;
   $("plan-reason").textContent = p.judgement.visit.reason;
   const kept = $("plan-kept"); kept.textContent = "";
   p.kept.forEach((k, i) => {
@@ -174,7 +174,7 @@ function viewOf(s) {
 }
 
 // 센터 파일을 넣은 뒤(잠김)에는 계획 화면에서 장소 확인으로 돌아가지 않는다
-const BACK = { place: "행사 다시 고르기", plan: "장소 다시 고르기", files: "계산 계획 다시 보기", result: "센터 파일 다시 넣기" };
+const BACK = { place: "행사 다시 고르기", plan: "장소 다시 고르기", files: "비교 계획 다시 보기", result: "카드 파일 다시 넣기" };
 
 function render(s) {
   document.body.dataset.stage = s.stage;
@@ -266,7 +266,7 @@ $("b-sent").onclick = async () => {
   const ol = $("sent-list"); ol.textContent = "";
   for (const e of data.entries) {
     const li = el("li");
-    const purpose = { judge: "방문 판단", plan: "계산 계획", selfcheck: "자가 점검의 잠금 확인 호출" }[e.purpose] || e.purpose;
+    const purpose = { judge: "방문객 판단", plan: "비교 계획", selfcheck: "자가 점검의 잠금 확인 호출" }[e.purpose] || e.purpose;
     const status = e.status === "sent" ? "보냄" : e.status === "blocked" ? "잠겨서 막음" : e.status.replace("failed", "실패");
     const head = el("span"); head.append(document.createTextNode(new Date(e.time * 1000).toLocaleTimeString() + " " + purpose + " "), tag(e.status === "sent" ? "" : "tag--out", status));
     li.append(head);
@@ -276,7 +276,7 @@ $("b-sent").onclick = async () => {
     }
     ol.append(li);
   }
-  if (!data.entries.length) ol.append(el("li", "", "아직 밖으로 보낸 요청이 없습니다."));
+  if (!data.entries.length) ol.append(el("li", "", "아직 AI에게 보낸 내용이 없습니다."));
   $("d-sent").showModal();
 };
 $("b-delete").onclick = async () => { await api("POST", "/api/settings", { auto_delete: !$("b-delete").dataset.on }); poll(); };
