@@ -48,34 +48,44 @@ img[src$="index.png"], img[src$="visit.png"] { border: 0; }
 .thumb figcaption { font-size: 7.8pt; line-height: 1.45; margin-top: 1mm; }
 .thumb figcaption b { color: var(--ink); }
 figure { margin: 0; }
-.cover-title { font-size: 40pt; font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; color: var(--ink); margin: 3mm 0 3mm; }
-.cover-def { font-size: 12.5pt; font-weight: 700; letter-spacing: -0.02em; line-height: 1.5; color: var(--accent); margin: 0 0 5mm; }
-.kicker { font-size: 9.5pt; color: var(--muted); margin: 0; }
+@page cover { size: A4; margin: 0; @bottom-right { content: none; } }
+.cover { page: cover; height: 297mm; overflow: hidden; }
+.cover-top { background: var(--accent); color: #fff; padding: 26mm 20mm 12mm; }
+.cover-kicker { font-size: 11pt; font-weight: 700; opacity: .8; margin: 0; }
+.cover-title { font-size: 46pt; font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; color: #fff; margin: 4mm 0 5mm; }
+.cover-def { font-size: 13.5pt; font-weight: 700; letter-spacing: -0.02em; line-height: 1.5; color: #fff; max-width: 150mm; margin: 0 0 10mm; }
+.cover-facts { display: grid; grid-template-columns: 26mm 1fr; row-gap: 2.6mm; font-size: 9.6pt; line-height: 1.5; margin: 0; }
+.cover-facts dt { opacity: .75; }
+.cover-facts dd { margin: 0; font-weight: 600; }
+.cover-bottom { padding: 8mm 20mm 0; }
+.cover-bottom > .shot { width: 74%; }
 svg text { font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 </style>
 </head>
 <body>
 
 <!-- 1 -->
-<section class="page">
-  <p class="kicker">제주 AI·빅데이터 활용 AI Agent 개발 챌린지, AI Agent 기획서</p>
-  <h1 class="cover-title">행사 효과 나란히</h1>
-  <p class="cover-def">축제가 열린 읍면의 관광객 카드 소비가 비교 읍면보다 더 늘었는지 나란히 계산하고, 센터 반출 신청까지 할 수 있는 보고서로 만드는 AI Agent입니다.</p>
-  <img class="shot" src="img/p1-result.png" alt="예시 행사 결과 화면의 결론 부분">
-  <p class="cap">예시 행사 「가파도청보리축제」의 결과 화면. 카드 숫자는 센터 명세서 구조를 따른 가상 데이터로 계산했다.</p>
-  <div class="grid2" style="margin-top:3mm">
-    <figure><img class="shot" src="img/index.png" alt="달별 관광 소비 지수"><p class="cap">가상 데이터로 그린 달별 관광 소비 지수. 대정읍과 비교 읍면 성산읍이 행사 전에는 나란히 움직이다 행사 달에 벌어진다.</p></figure>
-    <figure><img class="shot" src="img/visit.png" alt="날짜별 공개 방문 인구 지수"><p class="cap">실제 공개 데이터로 그린 날짜별 방문 인구 지수. 행사 기간 대정읍 방문은 직전 4주 같은 요일보다 +20.7%, 비교 후보 가운데 값은 +13.6%였다.</p></figure>
+<section class="page cover">
+  <div class="cover-top">
+    <p class="cover-kicker">제주 AI·빅데이터 활용 AI Agent 개발 챌린지 기획서</p>
+    <h1 class="cover-title">행사 효과 나란히</h1>
+    <p class="cover-def">축제가 열린 읍면의 관광객 카드 소비가 비교 읍면보다 더 늘었는지 나란히 계산하고, 센터 반출 신청까지 할 수 있는 보고서로 만드는 AI Agent</p>
+    <dl class="cover-facts">
+      <dt>다루는 범위</dt><dd>읍면 12곳. 카드와 유동인구가 같은 이름으로 맞는 범위</dd>
+      <dt>걸리는 시간</dt><dd>AI 계산 계획 약 40초, 실행 1회 약 0.01달러</dd>
+      <dt>설치</dt><dd>압축을 풀고 install.bat, run.bat 두 단계</dd>
+      <dt>외부 연결</dt><dd>api.anthropic.com 한 곳, 계획 단계에서만</dd>
+      <dt>결과 숫자</dt><dd>AI는 센터 카드 값을 보지 않고 계획만 세운다. 숫자는 모두 이 PC 안에서 코드가 계산한다</dd>
+      <dt>센터 값</dt><dd>센터 파일을 넣는 순간 외부 연결을 잠근다. 밖으로 나간 요청이 없는지 자가 점검 버튼으로 확인한다</dd>
+    </dl>
   </div>
-  <div class="figs">
-    <div><b>읍면 12곳</b><span>카드와 유동인구가 같은 이름으로 맞는 범위</span></div>
-    <div><b>약 40초</b><span>AI 계산 계획, 실행 1회 약 0.01달러</span></div>
-    <div><b>두 단계</b><span>압축을 풀고 install.bat, run.bat</span></div>
-    <div><b>외부 주소 1개</b><span>api.anthropic.com, 계획 단계에서만</span></div>
-  </div>
-  <div class="band">
-    <div><b>결과 숫자는 코드가 계산한다</b>AI는 센터 카드 값을 보지 않고 계산 계획만 세운다. 보고서에 들어가는 숫자는 모두 이 PC 안에서 코드가 계산한다.</div>
-    <div><b>센터 값은 밖으로 나가지 않는다</b>센터 파일을 넣는 순간 외부 연결을 잠근다. 잠근 뒤 밖으로 나간 요청이 없는지는 자가 점검 버튼으로 확인한다.</div>
+  <div class="cover-bottom">
+    <img class="shot" src="img/p1-result.png" alt="예시 행사 결과 화면의 결론 부분">
+    <p class="cap">예시 행사 「가파도청보리축제」의 결과 화면. 카드 숫자는 센터 명세서 구조를 따른 가상 데이터로 계산했다.</p>
+    <div class="grid2" style="margin-top:3mm">
+      <figure><img class="shot" src="img/index.png" alt="달별 관광 소비 지수"><p class="cap">가상 데이터로 그린 달별 관광 소비 지수. 대정읍과 비교 읍면 성산읍이 행사 전에는 나란히 움직이다 행사 달에 벌어진다.</p></figure>
+      <figure><img class="shot" src="img/visit.png" alt="날짜별 공개 방문 인구 지수"><p class="cap">실제 공개 데이터로 그린 날짜별 방문 인구 지수. 행사 기간 대정읍 방문은 직전 4주 같은 요일보다 +20.7%, 비교 후보 가운데 값은 +13.6%였다.</p></figure>
+    </div>
   </div>
 </section>
 
