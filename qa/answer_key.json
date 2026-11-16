@@ -3,27 +3,32 @@
   {
    "event": "가파도청보리축제",
    "assumed_emd": "대정읍",
-   "answer": ""
+   "answer": "대정읍",
+   "basis": "가파도는 대정읍 가파리"
   },
   {
    "event": "2025 보롬왓 튤립축제",
    "assumed_emd": "표선면",
-   "answer": ""
+   "answer": "표선면",
+   "basis": "보롬왓은 표선면 성읍리"
   },
   {
    "event": "마노르블랑 봄에 꽃향기축제",
    "assumed_emd": "안덕면",
-   "answer": ""
+   "answer": "안덕면",
+   "basis": "마노르블랑은 안덕면 덕수리"
   },
   {
    "event": "수국과 공연이 꽃피는 혼인지 수국 축제",
    "assumed_emd": "성산읍",
-   "answer": ""
+   "answer": "성산읍",
+   "basis": "혼인지는 성산읍 온평리"
   },
   {
    "event": "2024 자청비 와흘메밀문화제",
    "assumed_emd": "조천읍",
-   "answer": ""
+   "answer": "조천읍",
+   "basis": "와흘은 조천읍 와흘리"
   }
  ],
  "place_sample": [
@@ -32,210 +37,279 @@
    "name": "하영올레 걷기축제 · 웰컴투해피니스 콘서트",
    "ai_place": "동 지역",
    "ai_spot": "하영올레 (서홍동 일대)",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "하영올레는 서귀포 원도심 걷기길(서울신문 2024-01-04 '서귀포는 하영올레… 원도심')",
+   "grade": "맞음"
   },
   {
    "event_id": "181",
    "name": "2024 제주 크리스마스 선물전 <산타왔수다>",
    "ai_place": "동 지역",
    "ai_spot": "ICC JEJU (제주국제컨벤션센터)",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "ICC JEJU는 서귀포시 중문동(중문관광단지)",
+   "grade": "맞음"
   },
   {
    "event_id": "298",
    "name": "추자도 참굴비 대축제",
    "ai_place": "추자면",
    "ai_spot": "추자도",
-   "answer": ""
+   "answer": "추자면",
+   "basis": "추자도",
+   "grade": "맞음"
   },
   {
    "event_id": "228",
    "name": "제주 동백마을 Retire & Retreat 프로그램",
    "ai_place": "동 지역",
    "ai_spot": "동백마을",
-   "answer": ""
+   "answer": "남원읍",
+   "basis": "제주 동백마을은 남원읍 신흥2리(서울신문 2023-08-28 '남원 동백마을')",
+   "grade": "틀림"
   },
   {
    "event_id": "72",
    "name": "2024 컬러풀 산지(Colorful SANJI) 페스티벌",
    "ai_place": "동 지역",
    "ai_spot": "산지천 일대",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "산지천은 제주시 건입동·일도동 일대",
+   "grade": "맞음"
   },
   {
    "event_id": "210",
    "name": "3월 여행가는 달, 제주 로컬상품 프로모션",
    "ai_place": "도 전역",
    "ai_spot": "",
-   "answer": ""
+   "answer": "도 전역",
+   "basis": "도 전역 판촉 프로모션",
+   "grade": "맞음"
   },
   {
    "event_id": "254",
    "name": "2023 제주성주풀이 : 새집지어오람구나",
    "ai_place": "동 지역",
    "ai_spot": "",
-   "answer": ""
+   "answer": "확인 불가",
+   "basis": "2023년 공연 장소를 공개 자료에서 찾지 못함",
+   "grade": "제외"
   },
   {
    "event_id": "303",
    "name": "사려니숲 에코힐링 체험",
    "ai_place": "남원읍",
    "ai_spot": "사려니숲길",
-   "answer": ""
+   "answer": "조천읍",
+   "basis": "사려니숲 에코힐링은 제주시 조천읍 교래리 사려니숲길 일원(2026년 같은 행사 보도 기준, 2024년 장소는 직접 확인 못 함)",
+   "grade": "틀림"
   },
   {
    "event_id": "207",
    "name": "2024 중문데이",
    "ai_place": "동 지역",
    "ai_spot": "중문관광단지",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "중문관광단지는 서귀포시 중문동",
+   "grade": "맞음"
   },
   {
    "event_id": "270",
    "name": "성산 조개 바당 측제",
    "ai_place": "성산읍",
    "ai_spot": "성산 바닷가",
-   "answer": ""
+   "answer": "성산읍",
+   "basis": "행사 파일 주최가 서귀포시 성산읍(축제 안내는 공개 자료에서 찾지 못함)",
+   "grade": "맞음"
   },
   {
    "event_id": "109",
    "name": "제21회 예래생태한가위축제",
    "ai_place": "동 지역",
    "ai_spot": "예래생태공원",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "예래생태공원은 서귀포시 예래동",
+   "grade": "맞음"
   },
   {
    "event_id": "67",
    "name": "9.81파크 <구팔일 억새바당>",
    "ai_place": "애월읍",
    "ai_spot": "9.81파크",
-   "answer": ""
+   "answer": "애월읍",
+   "basis": "9.81파크는 애월읍",
+   "grade": "맞음"
   },
   {
    "event_id": "176",
    "name": "2024 국립한글박물관 개관 10주년 기념 <찾아가는 사투리 이야기 콘서트>",
    "ai_place": "모름",
    "ai_spot": "",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "탐라문화제(제주시 탐라문화광장) 현장과 함께 열림(헤이팝 보도)",
+   "grade": "AI 모름"
   },
   {
    "event_id": "368",
    "name": "제주 고산리 유적의 날 선사 축제",
    "ai_place": "한경면",
    "ai_spot": "고산리 유적",
-   "answer": ""
+   "answer": "한경면",
+   "basis": "고산리 유적은 한경면 고산리",
+   "grade": "맞음"
   },
   {
    "event_id": "101",
    "name": "제20회 쇠소깍 축제",
    "ai_place": "동 지역",
    "ai_spot": "쇠소깍",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "쇠소깍은 서귀포시 하효동",
+   "grade": "맞음"
   },
   {
    "event_id": "473",
    "name": "2023 하영올레 걷기축제 & 걷기주간",
    "ai_place": "여러 곳",
    "ai_spot": "하영올레길",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "서귀포시청과 하영올레 3개 코스(파이낸셜뉴스 2023-08-23)",
+   "grade": "틀림"
   },
   {
    "event_id": "258",
    "name": "제6회 농촌융복합산업 제주국제박람회(푸파페 제주)",
    "ai_place": "모름",
    "ai_spot": "",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "제주국제컨벤션센터, 서귀포시 중문관광단지(아이뉴스24·KPI뉴스)",
+   "grade": "AI 모름"
   },
   {
    "event_id": "253",
    "name": "제2회 화북, 포구문화제",
    "ai_place": "동 지역",
    "ai_spot": "화북포구",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "화북포구는 제주시 화북동",
+   "grade": "맞음"
   },
   {
    "event_id": "296",
    "name": "제63회 탐라문화제",
    "ai_place": "동 지역",
    "ai_spot": "탐라문화광장",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "탐라문화광장은 제주시 일도동 일대",
+   "grade": "맞음"
   },
   {
    "event_id": "55",
    "name": "한림공원 튤립축제",
    "ai_place": "한림읍",
    "ai_spot": "한림공원",
-   "answer": ""
+   "answer": "한림읍",
+   "basis": "한림공원은 한림읍 협재리",
+   "grade": "맞음"
   },
   {
    "event_id": "217",
    "name": "문화도시 서귀포 로컬브랜드마켓 8월 놀멍장",
    "ai_place": "동 지역",
    "ai_spot": "서귀포 시내",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "놀멍장은 서귀포 칠십리공원에서 매월 열림(서울신문 2024-05-17, 8월 장소는 직접 확인 못 함)",
+   "grade": "맞음"
   },
   {
    "event_id": "502",
    "name": "플리마켓 <신화愛퐁당>",
    "ai_place": "안덕면",
    "ai_spot": "신화역사공원",
-   "answer": ""
+   "answer": "안덕면",
+   "basis": "신화역사공원은 안덕면 서광리",
+   "grade": "맞음"
   },
   {
    "event_id": "189",
    "name": "2023 제주 임산물 홍보대전",
    "ai_place": "모름",
    "ai_spot": "",
-   "answer": ""
+   "answer": "확인 불가",
+   "basis": "2023년 장소를 공개 자료에서 찾지 못함",
+   "grade": "제외"
   },
   {
    "event_id": "268",
    "name": "제58회 제주특별자치도민 체육대회",
    "ai_place": "여러 곳",
    "ai_spot": "서귀포시 일원",
-   "answer": ""
+   "answer": "여러 곳",
+   "basis": "제58회 도민체전은 서귀포시 일원 여러 경기장",
+   "grade": "맞음"
   },
   {
    "event_id": "507",
    "name": "2023 풋귤축제",
    "ai_place": "모름",
    "ai_spot": "",
-   "answer": ""
+   "answer": "확인 불가",
+   "basis": "2023년 장소를 공개 자료에서 찾지 못함(2026년은 서귀포농업기술센터)",
+   "grade": "제외"
   },
   {
    "event_id": "236",
    "name": "제주 무형유산 대전",
    "ai_place": "동 지역",
    "ai_spot": "",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "제주민속자연사박물관(제주시 삼성로 40)",
+   "grade": "맞음"
   },
   {
    "event_id": "267",
    "name": "2023 서귀포과학문화축전",
    "ai_place": "동 지역",
    "ai_spot": "",
-   "answer": ""
+   "answer": "확인 불가",
+   "basis": "2023년 장소를 공개 자료에서 찾지 못함",
+   "grade": "제외"
   },
   {
    "event_id": "215",
    "name": "제15회 주민과 함께하는 시와 음악의 밤",
    "ai_place": "동 지역",
    "ai_spot": "정방동주민센터 일대",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "정방동주민센터 일대",
+   "grade": "맞음"
   },
   {
    "event_id": "266",
    "name": "서귀포예술의전당 기획전시 <시선의 기억:감각의 재구성>",
    "ai_place": "동 지역",
    "ai_spot": "서귀포예술의전당",
-   "answer": ""
+   "answer": "동 지역",
+   "basis": "서귀포예술의전당은 서귀포시 서홍동",
+   "grade": "맞음"
   },
   {
    "event_id": "192",
    "name": "한란단란 피크닉",
    "ai_place": "모름",
    "ai_spot": "",
-   "answer": ""
+   "answer": "확인 불가",
+   "basis": "행사 안내를 공개 자료에서 찾지 못함",
+   "grade": "제외"
   }
- ]
+ ],
+ "checked": {
+  "date": "2026-11-16",
+  "method": "행사 안내·보도로 개최 장소를 확인하고, 장소가 이름에 드러난 행사는 그 장소의 행정구역으로 판정. 공개 자료로 그해 장소를 찾지 못한 행사는 제외",
+  "graded": 25,
+  "right": 20,
+  "wrong": 3,
+  "ai_unknown": 2,
+  "excluded": 5
+ }
 }
