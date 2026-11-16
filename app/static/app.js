@@ -9,6 +9,7 @@ const KIND = { "AI 짐작": "", "조회": "", "검사": "tag--out", "계산": "t
   "대체 경로": "tag--on", "멈춤": "tag--on", "오류": "tag--on", "안내": "tag--on" };
 let last = null;
 let wantFiles = false;
+let view = "start";
 let events = [];
 
 async function api(method, path, body, raw) {
@@ -160,17 +161,31 @@ function renderResult(s) {
   $("btn-copy").textContent = "활용 사유 복사";
 }
 
+function viewOf(s) {
+  if (s.stage === "start") return "start";
+  if (s.stage === "place") return "place";
+  if (s.stage === "done") return "result";
+  if (s.stage === "computing" || (["ready", "files"].includes(s.stage) && wantFiles)) return "files";
+  return "plan";
+}
+
+// 센터 파일을 넣은 뒤(잠김)에는 계획 화면에서 장소 확인으로 돌아가지 않는다
+const BACK = { place: "행사 다시 고르기", plan: "장소 다시 고르기", files: "계산 계획 다시 보기", result: "센터 파일 다시 넣기" };
+
 function render(s) {
   document.body.dataset.stage = s.stage;
   renderBand(s); renderLog(s.log);
+  view = viewOf(s);
+  $("btn-back").hidden = view === "start" || s.busy || (view === "plan" && s.locked);
+  $("btn-back").textContent = "‹ " + (BACK[view] || "");
   const key = s.stage + "|" + s.files + "|" + (s.summary ? 1 : 0) + "|" + (s.plan ? 1 : 0) + "|" + s.busy + "|" + s.log.length + "|" + wantFiles;
   if (last === key) return;
   last = key;
-  if (s.stage === "start") { show("a-start"); setStep(1); wantFiles = false; }
-  else if (s.stage === "place") { show("a-place"); setStep(2); renderPlace(s); }
-  else if (["thinking", "stopped"].includes(s.stage) || (s.stage === "ready" && !wantFiles)) { show("a-plan"); setStep(3); renderPlan(s); }
-  else if (["ready", "files", "computing"].includes(s.stage)) { show("a-files"); setStep(4); renderFiles(s); }
-  else if (s.stage === "done") { show("a-result"); setStep(5); renderResult(s); }
+  if (view === "start") { show("a-start"); setStep(1); wantFiles = false; }
+  else if (view === "place") { show("a-place"); setStep(2); renderPlace(s); }
+  else if (view === "plan") { show("a-plan"); setStep(3); renderPlan(s); }
+  else if (view === "files") { show("a-files"); setStep(4); renderFiles(s); }
+  else { show("a-result"); setStep(5); renderResult(s); }
 }
 
 async function poll() {
@@ -222,6 +237,12 @@ $("only-ok").onchange = drawEvents;
 $("ev-q").oninput = drawEvents;
 $("btn-place").onclick = async () => { await api("POST", "/api/place", { emd: $("place-emd").value }); poll(); };
 $("btn-to-files").onclick = () => { wantFiles = true; last = null; poll(); };
+$("btn-back").onclick = async () => {
+  const from = view;
+  if (from !== "files") await api("POST", "/api/back");
+  wantFiles = from === "result";
+  last = null; poll();
+};
 $("btn-example-files").onclick = async () => { await api("POST", "/api/files/example"); poll(); };
 $("file-input").onchange = (ev) => sendFiles(ev.target.files);
 const drop = $("drop");

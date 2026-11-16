@@ -101,10 +101,17 @@ try:
     if base:
         shot("1_start")
         call("POST", "/api/run", {"example": "effect"})
+        call("POST", "/api/back")
+        check("장소 확인에서 뒤로: 처음", call("GET", "/api/status")["stage"] == "start")
+        call("POST", "/api/run", {"example": "effect"})
         call("POST", "/api/place", {"emd": "대정읍"})
         s = wait({"ready", "stopped"})
         check("계획 준비(키 없음이라 미리 만든 계획)", s["stage"] == "ready" and s["origin"] == "premade", f"{s['stage']} {s['origin']}")
         shot("2_plan", 2000)
+        call("POST", "/api/back")
+        check("계획에서 뒤로: 장소 확인", call("GET", "/api/status")["stage"] == "place")
+        call("POST", "/api/place", {"emd": "대정읍"})
+        wait({"ready", "stopped"})
         call("POST", "/api/files/example")
         check("파일 넣은 뒤 외부 연결 잠김", call("GET", "/api/status")["locked"])
         call("POST", "/api/calculate")
@@ -122,6 +129,14 @@ try:
                 png = fetch(name)
                 check(f"그림 {name}", png.startswith(b"\x89PNG"), f"{len(png)} bytes")
             print("결과 문장:", summary.get("sentence"))
+        call("POST", "/api/back")
+        s = call("GET", "/api/status")
+        check("보고서에서 뒤로: 잠긴 채 파일 단계", s["stage"] == "ready" and s["locked"], s["stage"])
+        try:
+            call("POST", "/api/back")
+            check("잠긴 뒤에는 장소 확인으로 못 감", False)
+        except urllib.error.HTTPError as e:
+            check("잠긴 뒤에는 장소 확인으로 못 감", e.code == 409)
         again = bat("run.bat", 120)
         check("두 번째 run.bat은 이미 실행 중 안내", "이미 실행 중" in again, again.strip()[:80])
         try:

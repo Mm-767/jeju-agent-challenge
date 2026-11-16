@@ -296,6 +296,24 @@ async def change_settings(request: Request):
     return settings
 
 
+@app.post("/api/back")
+def back():
+    """한 단계 뒤로. 센터 파일을 넣은 뒤에는 장소 확인(AI 단계)으로 돌아가지 않는다."""
+    stage = state["stage"]
+    if stage == "place":
+        _guard()
+        reset()
+    elif stage in ("ready", "stopped"):
+        _guard()
+        state.update({"stage": "place", "bundle": None, "origin": None})
+    elif stage == "done":
+        _guard(locked_ok=True)
+        state.update({"stage": "ready", "summary": None})
+    else:
+        raise HTTPException(409, "지금은 뒤로 갈 수 없습니다.")
+    return {"ok": True}
+
+
 @app.post("/api/reset")
 def finish():
     if state["busy"]:
