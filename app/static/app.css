@@ -38,9 +38,9 @@ h4 { font-size: var(--text-md); }
 .block { display: grid; gap: var(--space-sm); }
 
 /* ---- 첫 화면 ---- */
-.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--space-xl); align-items: center; padding-block: var(--space-lg) var(--space-md); }
+.hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--space-xl); align-items: center; padding-block: var(--space-lg) var(--space-md); }
 .hero-text { display: grid; gap: var(--space-lg); align-content: center; }
-.hero h1 { font-size: clamp(var(--text-2xl), 3.2vw, 3rem); line-height: 1.25; letter-spacing: -0.03em; }
+.hero h1 { font-size: clamp(var(--text-2xl), 2.9vw, 2.6rem); line-height: 1.25; letter-spacing: -0.03em; }
 .hero-fig { margin: 0; }
 .hero-fig svg { display: block; width: 100%; height: auto; }
 .hero-fig .event-line { stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 1.4s 0.3s var(--ease-out) forwards; }
