@@ -231,7 +231,6 @@ async function sendFiles(list) {
 }
 
 $("btn-example").onclick = async () => { await loadEvents(); await api("POST", "/api/run", { example: "effect" }); poll(); };
-$("btn-example-none").onclick = async (ev) => { ev.preventDefault(); await loadEvents(); await api("POST", "/api/run", { example: "none" }); poll(); };
 $("btn-direct").onclick = async () => { $("events-wrap").hidden = false; await loadEvents(); $("ev-q").focus(); };
 $("only-ok").onchange = drawEvents;
 $("ev-q").oninput = drawEvents;

@@ -207,8 +207,7 @@ def example_files():
     if state["stage"] not in ("ready", "files"):
         raise HTTPException(409, "계산 계획이 준비된 뒤에 파일을 넣을 수 있습니다.")
     egress.lock()
-    variant = "card_none" if state["example"] == "none" else "card_effect"
-    state["files"] = [(f.name, f.read_bytes()) for f in sorted((BASE / "data" / "dummy" / variant).glob("*.csv"))]
+    state["files"] = [(f.name, f.read_bytes()) for f in sorted((BASE / "data" / "dummy" / "card_effect").glob("*.csv"))]
     state["example"] = state["example"] or "effect"
     state["stage"] = "files"
     log("잠금", f"동봉한 가상 데이터 {len(state['files'])}개월을 넣고 외부 연결을 잠갔습니다.")

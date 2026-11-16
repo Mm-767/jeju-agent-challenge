@@ -36,7 +36,7 @@ MAX_REL_PATH = 170
 INCLUDE = [
     "*.py", ".env.example", "requirements-lock.txt", "prompts/*", "static/*", "spec/card_v02.json",
     "data/hub/events.csv", "data/hub/places.json", "data/hub/population/*.csv", "data/premade/*.json",
-    "data/dummy/card_effect/*.csv", "data/dummy/card_none/*.csv", "data/dummy/card_rehearsal/*.csv",
+    "data/dummy/card_effect/*.csv", "data/dummy/card_rehearsal/*.csv",
     "tests/*.py", "tools/*.py",
 ]
 
