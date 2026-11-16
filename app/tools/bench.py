@@ -202,5 +202,20 @@ def answer_key():
     print(f"{path} 시험 행사 {len(key['test_events'])}건, 장소 표본 {len(sample)}건")
 
 
+def premade(event_id="363", emd="대정읍"):
+    """AI를 쓸 수 없을 때의 대체 계획을 지금 코드로 한 번 실제 실행해 data/premade에 다시 만든다."""
+    import pipeline
+
+    event = next(e for e in hub.load_events() if e["event_id"] == event_id)
+    egress.unlock()
+    origin, bundle, why = pipeline.public_stage(event, emd, metered, lambda k, t: print(k, t), rehearsal_table())
+    if origin != "ai":
+        raise SystemExit(f"AI 실행 실패: {why}")
+    path = pipeline.PREMADE / f"plan_{event_id}.json"
+    path.write_text(json.dumps(bundle, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"{path.name} {bundle['plan']['biz_bundle']}, 비교 {bundle['kept']}")
+
+
 if __name__ == "__main__":
-    {"places": places, "judge": judge, "plan": plan, "measure": measure, "answer_key": answer_key}[sys.argv[1]](*sys.argv[2:])
+    {"places": places, "judge": judge, "plan": plan, "measure": measure, "answer_key": answer_key,
+     "premade": premade}[sys.argv[1]](*sys.argv[2:])
