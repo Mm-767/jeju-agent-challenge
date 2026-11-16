@@ -39,12 +39,13 @@
   <section id="a-start" class="area">
     <div class="hero">
       <div class="hero-text">
-        <h1>축제가 열린 읍면의 관광 소비,<br>비교 읍면보다 더 늘었을까</h1>
-        <p class="lede">행사 전에는 비슷하게 움직이던 두 읍면이 행사 달에 얼마나 벌어졌는지 봅니다. AI는 공개 자료로 계획만 세우고, 센터 카드 파일은 이 PC에서만 계산합니다.</p>
+        <h1>축제가 열린 달,<br>관광객이 그 동네에서 돈을 더 썼을까요?</h1>
+        <p class="lede">제주 읍면에서 열린 축제를 하나 고르면, 축제가 열린 읍면과 축제가 없던 비슷한 읍면의 관광객 카드 사용액을 비교합니다. 축제 달에 얼마나 차이가 났는지 보고서로 만들어 드립니다.</p>
         <div class="row">
           <button id="btn-example" class="btn btn--primary" type="button">예시로 해 보기</button>
           <button id="btn-direct" class="btn" type="button">직접 분석하기</button>
         </div>
+        <p class="small">카드 파일이 아직 없으면 「예시로 해 보기」를 누르세요. 지어낸 연습용 데이터로 처음부터 끝까지 해 볼 수 있습니다.</p>
       </div>
       <figure class="hero-fig">
         <svg viewBox="0 0 560 320" role="img" aria-label="행사 전에는 나란히 움직이던 축제 읍면과 비교 읍면의 선이 행사 달에 벌어지는 그림">
@@ -66,11 +67,19 @@
         </svg>
       </figure>
     </div>
-    <dl class="trio">
-      <div><dt>밖으로 보내는 것</dt><dd>행사 이름과 날짜, 공개 유동인구, 같은 시기 행사 목록입니다. 센터 카드 값은 보내지 않습니다. 보낸 내용은 위쪽 「외부 전송」에서 볼 수 있습니다.</dd></div>
-      <div><dt>잠기는 때</dt><dd>센터 카드 파일을 넣는 순간 외부 연결이 잠깁니다. 그 뒤 계산은 이 PC에서만 합니다.</dd></div>
-      <div><dt>걸리는 시간</dt><dd>AI 계획은 30초~1분, 계산은 몇 초면 끝납니다.</dd></div>
-    </dl>
+    <div class="block">
+      <h2>이렇게 진행됩니다</h2>
+      <ol class="how">
+        <li><strong>축제를 고릅니다</strong><span>목록에서 축제를 고르고, 축제가 열린 읍면이 맞는지 확인합니다.</span></li>
+        <li><strong>AI가 비교할 읍면을 찾습니다</strong><span>평소 방문객 흐름이 축제 읍면과 비슷한 읍면을 고릅니다. 30초~1분 걸립니다.</span></li>
+        <li><strong>카드 파일을 넣습니다</strong><span>제주빅데이터센터에서 받는 「카드 이용 현황(읍면동)」 CSV 파일입니다. 한 달에 파일 하나이고, 어느 달이 필요한지는 화면에서 알려 드립니다.</span></li>
+        <li><strong>보고서를 받습니다</strong><span>결과를 그림과 함께 PDF로 만들고, 센터에 반출을 신청할 때 쓸 문장도 함께 드립니다.</span></li>
+      </ol>
+    </div>
+    <div class="well">
+      <strong>카드 파일은 이 컴퓨터 밖으로 나가지 않습니다</strong>
+      <p>AI에게는 축제 이름과 날짜, 누구나 볼 수 있는 공개 방문객 통계만 보냅니다. 카드 파일을 넣는 순간 AI와의 연결을 끊고, 계산은 이 컴퓨터 안에서만 합니다. AI에게 보낸 내용은 위쪽 「외부 전송」을 누르면 그대로 볼 수 있습니다.</p>
+    </div>
     <div id="events-wrap" class="block" hidden>
       <h2>행사 고르기</h2>
       <div class="filter">
@@ -123,15 +132,16 @@
   <section id="a-files" class="area" hidden>
     <h2>센터 카드 파일 넣기</h2>
     <dl id="check-count" class="figs"></dl>
-    <p>센터 카드 파일은 한 달씩 받습니다. 아래 달을 운영자에게 한꺼번에 요청해 받은 파일을 모두 넣어 주세요. 첫 파일을 넣으면 외부 연결이 잠깁니다.</p>
+    <p>제주빅데이터센터 운영자에게 「카드 이용 현황(읍면동)」 파일을 요청해 주세요. 한 달에 CSV 파일 하나입니다. <strong id="files-months"></strong> 받은 파일을 모두 아래에 넣으면 됩니다.</p>
+    <p class="small">첫 파일을 넣는 순간 AI와의 연결을 끊습니다. 그 뒤 계산은 이 컴퓨터 안에서만 합니다.</p>
     <div id="drop" class="drop" tabindex="0">
-      <p>카드 이용 현황(읍면동)_v02 CSV를 여기에 끌어다 놓거나 「파일 선택」을 누르세요.</p>
+      <p>받은 CSV 파일을 여기에 끌어다 놓거나 「파일 선택」을 누르세요. 여러 개를 한꺼번에 넣어도 됩니다.</p>
       <input id="file-input" type="file" accept=".csv" multiple aria-label="센터 카드 CSV 파일 고르기">
     </div>
     <p id="files-count" class="small" aria-live="polite"></p>
     <div class="row">
       <button id="btn-calc" class="btn btn--primary" type="button" disabled>계산 시작</button>
-      <button id="btn-example-files" class="btn" type="button">동봉한 가상 데이터로 계속(시험용)</button>
+      <button id="btn-example-files" class="btn" type="button">연습용 가상 데이터 넣기</button>
     </div>
   </section>
 

@@ -47,10 +47,11 @@ h4 { font-size: var(--text-md); }
 .hero-fig .event-line { stroke-dasharray: 900; stroke-dashoffset: 900; animation: draw 1.4s 0.3s var(--ease-out) forwards; }
 @keyframes draw { to { stroke-dashoffset: 0; } }
 @media (prefers-reduced-motion: reduce) { .hero-fig .event-line { animation: none; stroke-dashoffset: 0; } }
-.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-lg); padding-top: var(--space-lg); border-top: var(--rule-hair) solid var(--color-rule); }
-.trio > div { display: grid; gap: var(--space-2xs); align-content: start; }
-.trio dt { color: var(--color-ink); font-weight: 700; }
-.trio dd { margin: 0; color: var(--color-muted); font-size: var(--text-sm); }
+.how { list-style: none; counter-reset: how; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); }
+.how li { counter-increment: how; display: grid; gap: var(--space-2xs); align-content: start; padding-top: var(--space-sm); border-top: 4px solid var(--color-rule); }
+.how li::before { content: counter(how); color: var(--color-event-ink); font-size: var(--text-xl); font-weight: 700; line-height: 1; }
+.how strong { color: var(--color-ink); }
+.how span { color: var(--color-ink-2); font-size: var(--text-sm); }
 
 /* ---- controls (eight states) ---- */
 .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: var(--space-xs); min-height: 2.75rem; padding: 0 var(--space-lg); border: var(--rule-hair) solid var(--color-rule); border-radius: var(--radius-control); background: var(--color-paper); color: var(--color-ink); font-size: var(--text-md); font-weight: 700; text-decoration: none; white-space: nowrap; cursor: pointer; transition: background-color var(--dur-short) var(--ease-out), border-color var(--dur-short) var(--ease-out), transform var(--dur-micro) var(--ease-out); }
@@ -180,6 +181,6 @@ dialog pre { max-height: 16rem; overflow: auto; padding: var(--space-sm); backgr
 @media (max-width: 40rem) {
   .bar-in, .steps ol, .wrap { padding-inline: var(--space-md); }
   .steps li > span:not(.num) { display: none; }
-  .trio { grid-template-columns: minmax(0, 1fr); }
+  .how { grid-template-columns: minmax(0, 1fr); }
   .list th:nth-child(3), .list td:nth-child(3) { display: none; }
 }

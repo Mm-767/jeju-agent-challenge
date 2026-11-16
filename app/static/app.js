@@ -112,8 +112,12 @@ function pairs(dl, rows) {
 
 function renderFiles(s) {
   const c = s.checklist;
-  if (c) pairs($("check-count"), [["필수 달", c.required.length + "개"], ["평소 흔들림 계산용", c.for_sigma.length + "개"], ["모두", c.all.length + "개월"]]);
-  $("files-count").textContent = s.files ? s.files + "개 파일을 받았습니다. 외부 연결이 잠겼습니다." : "아직 넣은 파일이 없습니다.";
+  if (c) {
+    pairs($("check-count"), [["꼭 필요한 달", c.required.length + "개"], ["있으면 결과가 더 정확해지는 달", c.for_sigma.length + "개"], ["모두", c.all.length + "개월"]]);
+    const ym = (v) => v.slice(0, 4) + "년 " + Number(v.slice(4)) + "월";
+    $("files-months").textContent = "필요한 달은 " + ym(c.all[0]) + "부터 " + ym(c.all[c.all.length - 1]) + "까지 " + c.all.length + "개월입니다.";
+  }
+  $("files-count").textContent = s.files ? s.files + "개 파일을 받았습니다. AI와의 연결을 끊었습니다." : "아직 넣은 파일이 없습니다.";
   const computing = s.stage === "computing";
   $("btn-calc").disabled = !s.files || s.busy || computing;
   $("btn-calc").setAttribute("aria-busy", computing ? "true" : "false");
