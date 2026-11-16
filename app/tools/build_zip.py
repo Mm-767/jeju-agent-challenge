@@ -290,7 +290,7 @@ def bundle(env_file):
     manifest.append(f"# files={len(files)} longest={len(longest)} {longest}")
     (app / "manifest.txt").write_text("\n".join(manifest) + "\n", encoding="utf-8")
 
-    out = BUILD / "EventEffect_test.zip"
+    out = BUILD / "EventEffect.zip"
     with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
         for p in sorted(STAGE.rglob("*")):
             if p.is_file():

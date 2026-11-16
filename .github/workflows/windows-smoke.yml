@@ -25,14 +25,14 @@ jobs:
       - name: 짧은 경로에 풀고 점검
         shell: pwsh
         run: |
-          Expand-Archive -Path build/EventEffect_test.zip -DestinationPath C:\
+          Expand-Archive -Path build/EventEffect.zip -DestinationPath C:\
           C:\EventEffect\python\python.exe -X utf8 .github/win_smoke.py C:\EventEffect smoke/short
       - name: 한글·띄어쓰기 경로에 풀고 점검
         shell: pwsh
         run: |
           $dest = Join-Path $env:USERPROFILE "바탕 화면\행사 효과 시험"
           New-Item -ItemType Directory -Force -Path $dest | Out-Null
-          Expand-Archive -Path build/EventEffect_test.zip -DestinationPath $dest
+          Expand-Archive -Path build/EventEffect.zip -DestinationPath $dest
           & (Join-Path $dest "EventEffect\python\python.exe") -X utf8 .github/win_smoke.py (Join-Path $dest "EventEffect") smoke/korean
       - uses: actions/upload-artifact@v7
         if: always()
