@@ -68,6 +68,8 @@ def check_numbers(text, field, facts):
     month_numbers = {int(m[4:]) for m in months} | {d.month for d in dates}
     days = {d.day for d in dates}
     counts = set(facts.get("counts", set()))
+    ranks = RANKS | set(facts.get("ranks", set()))
+    years = {int(m[:4]) for m in months} | {d.year for d in dates}
 
     def take(pattern, judge):
         nonlocal text
@@ -100,10 +102,12 @@ def check_numbers(text, field, facts):
     take(r"(\d{1,2})\s*일", lambda m: None if int(m.group(1)) in days else f"{_q(m.group(0))} 입력에 없는 날입니다.")
     take(r"(\d+)\s*(주|개월)", lambda m: None if (m.group(2), int(m.group(1))) in CONSTANT_SPANS
          else f"{_q(m.group(0))} 정해진 기간이 아닙니다.")
-    take(r"(\d)\s*순위", lambda m: None if int(m.group(1)) in RANKS else f"{_q(m.group(0))} 없는 순위입니다.")
+    take(r"(\d{1,2})\s*순위", lambda m: None if int(m.group(1)) in ranks else f"{_q(m.group(0))} 없는 순위입니다.")
     take(rf"(\d+)\s*({COUNT_UNITS})", lambda m: None if int(m.group(1)) in counts else f"{_q(m.group(0))} 입력에 없는 개수입니다.")
     take(r"(\d{4})-(\d{2})-(\d{2})", lambda m: None if any(
         x.isoformat() == m.group(0) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
+    take(r"(?<!\d)(20\d{2})(0[1-9]|1[0-2])(?!\d)", lambda m: None if m.group(0) in months else f"{_q(m.group(0))} 입력에 없는 달입니다.")
+    take(r"(20\d{2})\s*년", lambda m: None if int(m.group(1)) in years else f"{_q(m.group(0))} 입력에 없는 해입니다.")
     take(r"(\d{4})-(\d{2})", lambda m: None if m.group(1) + m.group(2) in months else f"{_q(m.group(0))} 입력에 없는 달입니다.")
     take(r"(?<![\d-])(\d{1,2})-(\d{1,2})(?![\d-])", lambda m: None if any(
         x.month == int(m.group(1)) and x.day == int(m.group(2)) for x in dates) else f"{_q(m.group(0))} 입력에 없는 날짜입니다.")
@@ -116,6 +120,6 @@ def check_numbers(text, field, facts):
     for m in re.finditer(r"\d+(?:\.\d+)?", text):
         if m.group(0) in facts.get("ids", set()):
             continue
-        if not (m.group(0).isdigit() and int(m.group(0)) in counts | CONSTANT_NUMBERS | RANKS):
+        if not (m.group(0).isdigit() and int(m.group(0)) in counts | CONSTANT_NUMBERS | ranks):
             problems.append(f"숫자 '{m.group(0)}'의 근거가 입력에 없습니다. 빈칸을 쓰세요.")
     return problems

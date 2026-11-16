@@ -11,6 +11,12 @@ from pathlib import Path
 
 import config
 
+# 화면(app/static/tokens.css)의 ink 테마 색을 그림과 PDF용 RGB로 옮긴 값
+INK, INK_2, MUTED, RULE = "#0d0d0d", "#292929", "#525252", "#dbdbd8"
+PAPER_2, PAPER_3, ACCENT, ACCENT_SOFT, ACCENT_SOFT_INK = "#f6f5f2", "#ecebe7", "#00746d", "#c3f3ef", "#022d2b"
+OUTCOME_LABEL = {"higher": "평소엔 드문 차이", "lower": "평소엔 드문 차이",
+                 "no_difference": "평소에도 생기는 차이", "not_computed": "계산하지 못함"}
+
 LIMITS = [
     "이 결과는 비교 읍면 대비 차이이며, 행사가 소비를 늘렸다는 인과 효과를 증명하지 않는다.",
     "카드 자료가 월 단위라 행사 기간이 짧으면 효과가 한 달 합계에 묻힐 수 있다.",
@@ -127,6 +133,13 @@ def _plt():
     return plt
 
 
+def _quiet_axes(ax):
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.spines[["left", "bottom"]].set_color(RULE)
+    ax.tick_params(colors=MUTED, labelsize=8)
+    ax.yaxis.label.set_color(MUTED)
+
+
 def index_chart(t, c, months, emd, comp, path, example):
     """두 읍면의 달별 지수(기준 기간 평균 = 100). 원래 금액은 그리지 않는다."""
     plt = _plt()
@@ -137,17 +150,17 @@ def index_chart(t, c, months, emd, comp, path, example):
     fig, ax = plt.subplots(figsize=(7, 3.2), dpi=150)
     for m in months["event"]:
         i = shown.index(m)
-        ax.axvspan(i - 0.5, i + 0.5, color="#1f6273", alpha=0.10, lw=0)
-    ax.plot(labels, [t[m] / base_t * 100 for m in shown], color="#1f6273", lw=2.2, marker="o", ms=4, label=f"{emd}(행사 읍면)")
-    ax.plot(labels, [c[m] / base_c * 100 for m in shown], color="#7a8288", lw=1.6, marker="o", ms=3, label=f"{comp}(비교 읍면)")
-    ax.axhline(100, color="#c9d0d4", lw=1)
+        ax.axvspan(i - 0.5, i + 0.5, color=PAPER_3, lw=0)
+    ax.plot(labels, [t[m] / base_t * 100 for m in shown], color=ACCENT, lw=2.2, marker="o", ms=4, label=f"{emd}(행사 읍면)")
+    ax.plot(labels, [c[m] / base_c * 100 for m in shown], color=MUTED, lw=1.6, marker="o", ms=3, label=f"{comp}(비교 읍면)")
+    ax.axhline(100, color=RULE, lw=1)
     ax.set_ylabel("지수(기준 기간 평균 = 100)")
     # 범례는 그림 테두리 위 왼쪽: 그림 안에 두면 첫 달의 점이나 선을 가린다
     ax.legend(frameon=False, fontsize=8, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, borderaxespad=0.2)
-    ax.spines[["top", "right"]].set_visible(False)
+    _quiet_axes(ax)
     if example:
         # 그림 테두리 위에 두어 어떤 행사의 꺾은선과도 겹치지 않게 한다
-        ax.text(1.0, 1.01, "예시(가상 데이터)", transform=ax.transAxes, ha="right", va="bottom", fontsize=9, color="#a2421f")
+        ax.text(1.0, 1.01, "예시(가상 데이터)", transform=ax.transAxes, ha="right", va="bottom", fontsize=9, color=MUTED)
     fig.tight_layout()
     fig.savefig(path)
     plt.close(fig)
@@ -165,15 +178,15 @@ def visit_chart(days_t, days_c, start, end, emd, comp, path):
         return [days[d] / mean * 100 if d in days else None for d in dates]
 
     fig, ax = plt.subplots(figsize=(7, 3.2), dpi=150)
-    ax.axvspan(start, end, color="#1f6273", alpha=0.10, lw=0)
-    ax.plot(dates, index(days_t), color="#1f6273", lw=2, label=f"{emd}(행사 읍면)")
+    ax.axvspan(start, end, color=PAPER_3, lw=0)
+    ax.plot(dates, index(days_t), color=ACCENT, lw=2, label=f"{emd}(행사 읍면)")
     if days_c:
-        ax.plot(dates, index(days_c), color="#7a8288", lw=1.4, label=f"{comp}(비교 읍면)")
-    ax.axhline(100, color="#c9d0d4", lw=1)
+        ax.plot(dates, index(days_c), color=MUTED, lw=1.4, label=f"{comp}(비교 읍면)")
+    ax.axhline(100, color=RULE, lw=1)
     ax.set_ylabel("방문 지수(직전 4주 평균 = 100)")
     # 범례는 그림 테두리 위 왼쪽: 그림 안에 두면 첫 달의 점이나 선을 가린다
     ax.legend(frameon=False, fontsize=8, loc="lower left", bbox_to_anchor=(0, 1.0), ncol=2, borderaxespad=0.2)
-    ax.spines[["top", "right"]].set_visible(False)
+    _quiet_axes(ax)
     import matplotlib.dates as mdates
 
     # %-m은 윈도우 strftime에서 쓸 수 없어 직접 만든다
@@ -197,37 +210,193 @@ def evidence_rows(result, biz_size):
     ]
 
 
-def pdf(path, title, sentence, images, rows, ai_rows, limits):
+def _j(word, with_final, without):
+    return word + (with_final if _has_final(word) else without)
+
+
+def headline(emd, result):
+    """결론 한 줄. 숫자는 계산 결과에서만 채운다."""
+    comp, out = result.get("emd"), result["outcome"]
+    if out == "not_computed":
+        return f"{NOT_COMPUTED.get(result.get('reason'), '계산 조건을 채우지 못해')} 계산하지 못했다"
+    size = f"{abs(result['E']) * 100:.1f}%"
+    if out == "higher":
+        return f"{emd}의 관광 소비가 {comp}보다 {size} 더 늘었다"
+    if out == "lower":
+        return f"{emd}의 관광 소비가 {comp}보다 {size} 덜 늘었다"
+    return f"{_j(emd, '과', '와')} {comp}의 차이는 평소에도 생기는 크기였다"
+
+
+def key_figures(result):
+    if result["outcome"] == "not_computed":
+        return []
+    return [("상대 효과", pct(result["E"])), ("p값", f"{result['p']:.3f}"),
+            ("행사 없던 달 가운데 이번보다 큰 차이", f"{result['n']}번 / {result['J']}개 달")]
+
+
+def method_steps(result, months, emd):
+    comp = result.get("emd")
+    if result["outcome"] == "not_computed":
+        tried = ", ".join(x["emd"] for x in result.get("tried", [])) or "없음"
+        return [("시도한 비교 읍면", f"{tried}. {NOT_COMPUTED.get(result.get('reason'), '계산 조건을 채우지 못해')} 결과를 내지 않았다.")]
+    ok = "기준 안이었다" if abs(result["L"]) <= 2 * result["sigma"] else "기준 밖이었다"
+    strong = "기준 0.1 이하" if result["p"] <= 0.1 else "기준 0.1보다 큼"
+    return [
+        ("증가율 비교", f"행사 달({month_span(months['event'])}) 관광 소비를 기준 기간({month_span(months['base'])}) 평균과 견줘 "
+                    f"증가율을 구했다. {emd} {pct(result['g_t'])}, {comp} {pct(result['g_c'])}, 상대 효과 {pct(result['E'])}."),
+        ("행사 전 흐름 확인", f"행사 전 3개월({month_span(months['pretrend'])})에도 같은 계산을 해 두 읍면이 나란히 움직였는지 봤다. "
+                       f"차이 {pct(result['L'])}로 평소 흔들림의 2배(±{result['sigma'] * 200:.1f}%) {ok}."),
+        ("평소 차이 확인", f"행사가 없던 {result['J']}개 달을 가짜 행사 달로 두고 같은 계산을 했다. "
+                     f"이번보다 큰 차이는 {result['n']}번, p값 {result['p']:.3f}({strong})."),
+    ]
+
+
+def build_report(event, emd, result, months, bundle, sentence, evidence, ai_rows, biz_size):
+    """화면과 PDF가 같은 순서로 쓰는 보고서: 결론, 상황, 과제, 방법, 결과, 한계와 활용."""
+    plan, comp = bundle["plan"], result.get("emd")
+    planned = len(plan["biz_codes"]) or 42
+    biz = f"{plan.get('biz_bundle') or 'AI가 고른 업종'}({planned}개 업종)"
+    if biz_size and biz_size != planned:
+        biz += f", 10 미만 칸 때문에 {biz_size}개로 넓힘"
+    visit, judged = bundle.get("visit_summary") or {}, bundle["judgement"]["visit"]["judgement"]
+    if visit.get("R_T") is not None and visit.get("R_C") is not None:
+        judged += f"(행사 읍면 {pct(visit['R_T'])}, 비교 후보 가운데 값 {pct(visit['R_C'])})"
+    return {
+        "outcome": result["outcome"], "label": OUTCOME_LABEL[result["outcome"]],
+        "headline": headline(emd, result), "sentence": sentence, "figures": key_figures(result),
+        "situation": [("행사", event["name"]), ("기간", period(event["start"], event["end"])), ("개최 읍면", emd),
+                      ("공개 방문 인구", judged)],
+        "task": [("물음", f"행사 기간에 {emd}의 관광객 카드 소비가 비교 읍면보다 더 늘었는가"),
+                 ("비교 읍면", comp or "정하지 못함"), ("기준 기간", month_span(months["base"])),
+                 ("행사 달", month_span(months["event"])), ("업종", biz)],
+        "method_ai": bundle["texts"]["method"], "steps": method_steps(result, months, emd),
+        "ai": ai_rows, "evidence": evidence,
+        "limits_event": bundle["texts"]["extra_limits"], "limits_common": LIMITS,
+    }
+
+
+def _rgb(hexcode):
+    return tuple(int(hexcode[i:i + 2], 16) for i in (1, 3, 5))
+
+
+def pdf(path, title, rep, images, usage):
+    """결론 먼저 + STAR 순서의 보고서 PDF. 표는 가로 괘선만 쓴다(ink 테마)."""
     from fpdf import FPDF
+    from fpdf.fonts import FontFace
 
     font = next((f for f in FONT_FILES if f.exists()), None)
     if font is None:
         raise RuntimeError("no_korean_font")
-    doc = FPDF(format="A4")
+    bold = font.with_name("malgunbd.ttf")
+
+    class Doc(FPDF):
+        def footer(self):
+            self.set_y(-12)
+            self.set_font("K", size=8)
+            self.set_text_color(*_rgb(MUTED))
+            self.cell(0, 5, f"행사 효과 나란히 분석 보고서   {self.page_no()}/{{nb}}", align="R")
+
+    doc = Doc(format="A4")
     doc.set_margins(18, 16, 18)
-    doc.add_page()
+    doc.set_auto_page_break(True, 18)
     doc.add_font("K", fname=str(font))
-    doc.set_font("K", size=16)
-    doc.multi_cell(0, 9, title, new_x="LMARGIN", new_y="NEXT")
+    doc.add_font("K", style="B", fname=str(bold if bold.exists() else font))
+    doc.add_page()
+    width = doc.w - doc.l_margin - doc.r_margin
+
+    def text(size, value, color=INK_2, style="", h=None):
+        doc.set_font("K", style, size)
+        doc.set_text_color(*_rgb(color))
+        doc.multi_cell(0, h or size * 0.55, value, new_x="LMARGIN", new_y="NEXT")
+
+    def rule(color=INK, w=0.3):
+        doc.set_draw_color(*_rgb(color))
+        doc.set_line_width(w)
+        doc.line(doc.l_margin, doc.get_y(), doc.l_margin + width, doc.get_y())
+
+    def heading(value):
+        doc.ln(5)
+        text(12.5, value, INK, "B", 7)
+        rule()
+        doc.ln(1.5)
+
+    def table(rows, first=44):
+        doc.set_fill_color(255, 255, 255)  # 판정 표시의 채우기 색이 표 칸에 번지지 않게
+        doc.set_font("K", size=9.5)
+        doc.set_text_color(*_rgb(INK_2))
+        doc.set_draw_color(*_rgb(RULE))
+        doc.set_line_width(0.2)
+        with doc.table(col_widths=(first, width - first), first_row_as_headings=False, borders_layout="HORIZONTAL_LINES",
+                       line_height=5.4, padding=(1.6, 1.5), text_align="LEFT") as t:
+            for k, v in rows:
+                row = t.row()
+                row.cell(k, style=FontFace(color=_rgb(MUTED)))
+                row.cell(str(v))
+
+    def bullets(lines, size=9.5, color=INK_2):
+        for line in lines:
+            text(size, f"- {line}", color, h=size * 0.55)
+
+    text(9, "행사 효과 나란히 분석 보고서", MUTED)
+    doc.ln(1)
+    text(16, title, INK, "B", 8.5)
+
+    heading("1. 결론")
+    label_fill = {"higher": ACCENT_SOFT, "lower": ACCENT_SOFT, "no_difference": PAPER_3}.get(rep["outcome"])
+    doc.set_font("K", "B", 9)
+    pad = doc.get_string_width(rep["label"]) + 6
+    doc.set_text_color(*_rgb(ACCENT_SOFT_INK if label_fill == ACCENT_SOFT else INK))
+    if label_fill:
+        doc.set_fill_color(*_rgb(label_fill))
+        doc.cell(pad, 6, rep["label"], fill=True, align="C", new_x="LMARGIN", new_y="NEXT")
+    else:
+        doc.set_draw_color(*_rgb(RULE))
+        doc.cell(pad, 6, rep["label"], border=1, align="C", new_x="LMARGIN", new_y="NEXT")
     doc.ln(2)
-    doc.set_font("K", size=11)
-    doc.multi_cell(0, 6.5, sentence, new_x="LMARGIN", new_y="NEXT")
+    text(14, rep["headline"], INK, "B", 7.5)
+    doc.ln(1)
+    text(10, rep["sentence"], INK_2, h=5.6)
+    if rep["figures"]:
+        doc.ln(3)
+        col = width / len(rep["figures"])
+        y = doc.get_y()
+        for i, (label, value) in enumerate(rep["figures"]):
+            doc.set_xy(doc.l_margin + i * col, y)
+            doc.set_font("K", size=8.5)
+            doc.set_text_color(*_rgb(MUTED))
+            doc.cell(col, 4.5, label)
+            doc.set_xy(doc.l_margin + i * col, y + 5)
+            doc.set_font("K", "B", 15)
+            doc.set_text_color(*_rgb(INK))
+            doc.cell(col, 8, value)
+        doc.set_xy(doc.l_margin, y + 15)
+
+    heading("2. 상황")
+    table(rep["situation"])
+    heading("3. 과제")
+    table(rep["task"])
+    heading("4. 방법")
+    text(9.5, rep["method_ai"], INK_2, h=5.3)
+    doc.ln(1.5)
+    table([(f"{i}. {k}", v) for i, (k, v) in enumerate(rep["steps"], 1)])
+    doc.ln(2)
+    text(10, "AI가 정한 것과 이유", INK, "B", 6)
+    table(rep["ai"])
+    heading("5. 결과")
+    table(rep["evidence"])
     for img in images:
+        doc.ln(3)
+        doc.image(str(img), w=width)
+    heading("6. 한계와 활용")
+    if rep["limits_event"]:
+        text(10, "이 행사에서 주의할 점", INK, "B", 6)
+        bullets(rep["limits_event"])
         doc.ln(2)
-        doc.image(str(img), w=170)
-    doc.ln(3)
-    for heading, table in (("계산 근거", rows), ("AI가 정한 것과 이유", ai_rows)):
-        doc.set_font("K", size=12)
-        doc.multi_cell(0, 8, heading, new_x="LMARGIN", new_y="NEXT")
-        doc.set_font("K", size=9)
-        for k, v in table:
-            doc.multi_cell(0, 5.5, f"· {k}: {v}", new_x="LMARGIN", new_y="NEXT")
-        doc.ln(2)
-    doc.set_font("K", size=12)
-    doc.multi_cell(0, 8, "한계", new_x="LMARGIN", new_y="NEXT")
-    doc.set_font("K", size=9)
-    for line in limits:
-        doc.multi_cell(0, 5.5, f"· {line}", new_x="LMARGIN", new_y="NEXT")
+    text(10, "모든 결과에 공통인 한계", INK, "B", 6)
+    bullets(rep["limits_common"], 8.5, MUTED)
+    doc.ln(2)
+    text(10, "반출 신청 활용 사유", INK, "B", 6)
+    text(9, usage, INK_2, h=5)
     doc.output(str(path))
 
 

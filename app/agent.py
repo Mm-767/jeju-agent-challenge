@@ -187,9 +187,11 @@ def judge_facts(ctx, seen=frozenset()):
     return {
         "dates": dates,
         "months": set(m["event"] + m["excluded"] + m["base"] + m["pretrend"]),
-        "counts": {len(ctx["ranked"]), len(ctx["rule_excluded"]), len(ctx["other_events"]), 2, 9, 11, 12, 42},
+        # 남긴 비교 읍면 수는 후보 수 이하 어느 값이든 될 수 있다(「세 곳을 남겼다」)
+        "counts": set(range(1, len(ctx["ranked"]) + 1)) | {len(ctx["rule_excluded"]), len(ctx["other_events"]), 2, 9, 11, 12, 42},
         "names": names,
         "codes": set(),
+        "ranks": set(range(1, len(ctx["ranked"]) + 1)),
         "blanks": VISIT_BLANKS,
         "ids": {o["event_id"] for o in ctx["other_events"]},
     }

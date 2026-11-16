@@ -28,6 +28,15 @@ EXAMPLE_EMD = "대정읍"
 app = FastAPI(title="행사 효과 나란히")
 app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
 
+
+@app.middleware("http")
+async def revalidate_screen(request: Request, call_next):
+    # 프로그램을 새 판으로 바꿔 풀었을 때 브라우저가 예전 화면 파일을 쓰지 않게 매번 확인시킨다
+    response = await call_next(request)
+    if request.url.path == "/" or request.url.path.startswith("/static/"):
+        response.headers["Cache-Control"] = "no-cache"
+    return response
+
 _lock = threading.Lock()
 state = {}
 

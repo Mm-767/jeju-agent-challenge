@@ -70,6 +70,15 @@ class NumbersTest(unittest.TestCase):
         self.assertTrue(check_numbers("244명이 왔다", "reason", facts))
         self.assertIn("'두어'는", check_numbers("두어 곳", "reason", facts)[0])
 
+    def test_ranks_month_codes_and_years_from_input(self):
+        facts = dict(FACTS, ranks={1, 2, 3, 4})
+        # 11/16 가파도 실행: 후보 4곳, 계획 단계 method에 연월 코드와 연도
+        self.assertEqual(check_numbers("구좌읍은 4순위 후보다", "reason", facts), [])
+        self.assertEqual(check_numbers("기준 기간 202401~202403과 2023년 말을 본다", "method", facts), [])
+        self.assertTrue(check_numbers("5순위 후보", "reason", facts))
+        self.assertTrue(check_numbers("202405에 늘었다", "method", facts))
+        self.assertTrue(check_numbers("2019년에 늘었다", "method", facts))
+
     def test_method_allows_two_times_rule(self):
         self.assertEqual(check_numbers("평소 흔들림의 2배 안이면 통과", "method", FACTS), [])
 

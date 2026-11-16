@@ -59,14 +59,18 @@ def center_stage(bundle, files, out_dir=None, example=False, target="결과보�
     ai_rows += [(f"추가로 뺀 비교 후보 {x['emd']}", x["reason"]) for x in bundle["judgement"]["extra_excluded"]]
     limits = report.LIMITS + bundle["texts"]["extra_limits"]
     title = f"{ev['name']} 관광객 카드 소비 비교" + (" (예시, 가상 데이터)" if example else "")
-    report.pdf(out_dir / "result.pdf", title, sentence, images, rows, ai_rows, limits)
+    event = {"name": ev["name"], "start": start, "end": end}
+    rep = report.build_report(event, emd, result, months, bundle, sentence, rows, ai_rows, len(widened.get(comp) or []))
+    usage = report.usage_reason(event, need["all"], target)
+    report.pdf(out_dir / "result.pdf", title, rep, images, usage)
     saved, finger = report.save_bundle(bundle) if out_dir == config.OUT / "report" else (None, None)
     return {
+        "report": rep,
         "files": [{k: f[k] for k in ("name", "ok", "message", "months")} for f in checked],
         "coverage": coverage, "outcome": result["outcome"], "sentence": sentence,
         "method": bundle["texts"]["method"], "evidence": rows, "ai": ai_rows, "limits": limits,
         "images": [p.name for p in images], "pdf": "result.pdf",
-        "usage_reason": report.usage_reason({"name": ev["name"], "start": start, "end": end}, need["all"], target),
+        "usage_reason": usage,
         "bundle_file": saved.name if saved else None, "fingerprint": finger,
     }
 

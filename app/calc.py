@@ -295,6 +295,8 @@ def analyze_pairs(pairs, months):
         "emd": chosen["emd"],
         "E": e,
         "delta": delta,
+        "g_t": growth(chosen["t"], months["event"], months["base"]),
+        "g_c": growth(chosen["series"], months["event"], months["base"]),
         "L": chosen["L"],
         "sigma": sigma(chosen["Q"]),
         "J": len(chosen["Q"]),

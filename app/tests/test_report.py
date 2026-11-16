@@ -49,8 +49,15 @@ class ReportTest(unittest.TestCase):
             report.index_chart(t, c, self.months, "대정읍", self.result["emd"], out / "index.png", example=True)
             report.visit_chart(days, days, *GAPADO, "대정읍", self.result["emd"], out / "visit.png")
             rows = report.evidence_rows(self.result, len(biz))
-            report.pdf(out / "result.pdf", "가파도청보리축제 관광객 카드 소비 비교", "예시 문장입니다.",
-                       [out / "index.png", out / "visit.png"], rows, [("업종 범위 이유", "꽃 축제")], report.LIMITS)
+            bundle = {"plan": {"biz_bundle": "관광 소비 전체", "biz_codes": biz, "biz_reason": "꽃 축제"},
+                      "judgement": {"visit": {"judgement": "증가 약함"}}, "visit_summary": {"R_T": 0.2, "R_C": 0.1},
+                      "texts": {"method": "방법 설명.", "extra_limits": ["이 행사만의 한계."]}}
+            rep = report.build_report(self.event, "대정읍", self.result, self.months, bundle, "예시 문장입니다.", rows,
+                                      [("업종 범위 이유", "꽃 축제")], len(biz))
+            self.assertTrue(rep["headline"].startswith("대정읍의 관광 소비가"))
+            self.assertEqual([k for k, _ in rep["steps"]], ["증가율 비교", "행사 전 흐름 확인", "평소 차이 확인"])
+            report.pdf(out / "result.pdf", "가파도청보리축제 관광객 카드 소비 비교", rep,
+                       [out / "index.png", out / "visit.png"], "활용 사유 문안.")
             self.assertTrue((out / "result.pdf").read_bytes().startswith(b"%PDF"))
             self.assertEqual(report.export_check(out), [])
             (out / "notes.txt").write_text("x")
