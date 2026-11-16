@@ -3,56 +3,55 @@
 <head>
 <meta charset="utf-8">
 <title>행사 효과 나란히 기획서</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
-@page { size: A4; margin: 14mm 15mm 15mm;
-  @bottom-left { content: "행사 효과 나란히"; font: 7.5pt "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #5e666d; }
-  @bottom-right { content: counter(page) " / " counter(pages); font: 7.5pt "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; color: #5e666d; } }
-:root { --ink: #2f353b; --ink2: #3e454c; --muted: #5e666d; --rule: #dde0e3; --paper2: #f4f5f6; --paper3: #e9ebed; --accent: #b85a0e; --event: #ee7f1b; --soft: #fdebdb; --softink: #7a3a06; }
+@page { size: A4; margin: 13mm 16mm 13mm;
+  @bottom-right { content: counter(page); font: 8pt "Pretendard", "Apple SD Gothic Neo", sans-serif; color: #6d7079; } }
+:root { --ink: #15161a; --ink2: #24262b; --muted: #6d7079; --rule: #dfe1e6; --accent: #b85a0e; --accent-light: #f0c59b; }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-body { margin: 0; font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 9.2pt; line-height: 1.58; color: var(--ink2); background: #fff; word-break: keep-all; overflow-wrap: break-word; }
+body { margin: 0; font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 9.2pt; line-height: 1.6; color: var(--ink2); background: #fff; word-break: keep-all; overflow-wrap: break-word; }
 .page { break-after: page; }
 .page:last-child { break-after: auto; }
-.eyebrow { font-size: 8pt; font-weight: 700; color: var(--accent); letter-spacing: .02em; margin: 0 0 1mm; }
-h2 { font-size: 16pt; line-height: 1.3; color: var(--ink); margin: 0 0 3mm; padding-bottom: 2mm; border-bottom: 1.5px solid var(--ink); }
-h3 { font-size: 10.5pt; color: var(--ink); margin: 4mm 0 1.5mm; }
+.chap { font-size: 19pt; font-weight: 900; letter-spacing: -0.035em; line-height: 1.25; color: var(--ink); margin: 0 0 4mm; }
+.chap .no { color: var(--accent-light); margin-right: 2.5mm; }
+.chap .sub { display: block; font-size: 12pt; font-weight: 800; letter-spacing: -0.02em; color: var(--accent); margin-top: .5mm; }
+h3 { font-size: 10.8pt; font-weight: 800; letter-spacing: -0.01em; color: var(--ink); margin: 4mm 0 1.5mm; break-after: avoid; }
 p { margin: 0 0 2mm; }
 .lead { font-size: 10pt; color: var(--ink); }
 .muted, .cap { color: var(--muted); }
 .cap { font-size: 7.8pt; line-height: 1.45; margin-top: 1mm; }
+.q { font-size: 11.5pt; font-weight: 800; letter-spacing: -0.02em; line-height: 1.5; color: var(--ink); margin: 1mm 0 3mm; }
+.quote { margin: 2mm 0 3mm 4mm; color: var(--ink); }
 ul, ol { margin: 0 0 2mm; padding-left: 4.5mm; }
 li { margin: 0 0 .8mm; }
-strong { color: var(--ink); }
+li::marker { color: var(--accent); }
+strong { color: var(--ink); font-weight: 700; }
 table { width: 100%; border-collapse: collapse; margin: 1mm 0 2.5mm; font-size: 8.4pt; line-height: 1.45; }
-th { text-align: left; font-weight: 700; color: var(--ink); border-bottom: 1px solid var(--ink); padding: 1.2mm 1.5mm; vertical-align: bottom; }
+th { text-align: left; font-weight: 800; color: var(--ink); border-bottom: 2px solid var(--ink); padding: 1.2mm 1.5mm; vertical-align: bottom; }
 td { border-bottom: 1px solid var(--rule); padding: 1.2mm 1.5mm; vertical-align: top; }
 td.num, th.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .shot { display: block; width: 100%; border: 1px solid var(--rule); }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
-.side { display: grid; grid-template-columns: 1fr 62mm; gap: 5mm; align-items: start; }
-.tag { display: inline-block; font-size: 7.2pt; font-weight: 700; padding: .3mm 1.8mm; border-radius: 99px; background: var(--paper3); color: var(--ink); vertical-align: 1px; }
-.tag--real { background: var(--soft); color: var(--softink); }
-.figs { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--ink); margin: 3mm 0; }
-.figs div { padding: 2mm 2mm 1.5mm 0; border-bottom: 1px solid var(--rule); }
-.figs b { display: block; font-size: 13pt; color: var(--ink); line-height: 1.25; }
-.figs span { font-size: 7.6pt; color: var(--muted); }
-.band { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; margin-top: 4mm; }
-.band div { border-top: 3px solid var(--event); padding-top: 2mm; }
-.band b { display: block; font-size: 12.5pt; color: var(--ink); margin-bottom: 1mm; }
-.well { background: var(--paper2); padding: 2.5mm 3.5mm; margin: 2mm 0 3mm; }
-.formula { font-family: "Apple SD Gothic Neo", sans-serif; background: var(--paper2); padding: 2mm 3.5mm; margin: 1.5mm 0 2.5mm; color: var(--ink); }
+img[src$="index.png"], img[src$="visit.png"] { border: 0; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 5mm; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
+.side { display: grid; grid-template-columns: 1fr 62mm; gap: 6mm; align-items: start; }
+.figs { display: flex; gap: 9mm; margin: 5mm 0 2mm; }
+.figs b { display: block; font-size: 16pt; font-weight: 900; letter-spacing: -0.03em; color: var(--ink); line-height: 1.2; }
+.figs span { font-size: 7.8pt; color: var(--muted); }
+.band { display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; margin-top: 4mm; }
+.band b { display: block; font-size: 11.5pt; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin-bottom: .8mm; }
+.formula { margin: 1.5mm 0 2.5mm 4mm; color: var(--ink); font-weight: 600; }
 .steps { counter-reset: s; list-style: none; padding: 0; }
-.steps > li { counter-increment: s; position: relative; padding: 0 0 2mm 7mm; border-bottom: 1px solid var(--rule); margin-bottom: 2mm; }
-.steps > li::before { content: counter(s); position: absolute; left: 0; top: -.4mm; font-size: 11pt; font-weight: 800; color: var(--accent); }
+.steps > li { counter-increment: s; position: relative; padding: 0 0 0 7mm; margin-bottom: 2.6mm; }
+.steps > li::before { content: counter(s); position: absolute; left: 0; top: -.5mm; font-size: 11pt; font-weight: 900; color: var(--accent-light); }
 .thumb figcaption { font-size: 7.8pt; line-height: 1.45; margin-top: 1mm; }
 .thumb figcaption b { color: var(--ink); }
 figure { margin: 0; }
-.todo { background: #fde9a6; }
-.cover-title { font-size: 30pt; line-height: 1.15; color: var(--ink); margin: 2mm 0 2mm; letter-spacing: -.01em; }
-.cover-def { font-size: 11.5pt; line-height: 1.55; color: var(--ink); margin: 0 0 4mm; }
-.kicker { font-size: 8pt; color: var(--muted); margin: 0; }
-svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
+.cover-title { font-size: 40pt; font-weight: 900; letter-spacing: -0.04em; line-height: 1.1; color: var(--ink); margin: 3mm 0 3mm; }
+.cover-def { font-size: 12.5pt; font-weight: 700; letter-spacing: -0.02em; line-height: 1.5; color: var(--accent); margin: 0 0 5mm; }
+.kicker { font-size: 9.5pt; color: var(--muted); margin: 0; }
+svg text { font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 </style>
 </head>
 <body>
@@ -65,8 +64,8 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
   <img class="shot" src="img/p1-result.png" alt="예시 행사 결과 화면의 결론 부분">
   <p class="cap">예시 행사 「가파도청보리축제」의 결과 화면. 카드 숫자는 센터 명세서 구조를 따른 가상 데이터로 계산했다.</p>
   <div class="grid2" style="margin-top:3mm">
-    <figure><img class="shot" src="img/index.png" alt="달별 관광 소비 지수"><p class="cap"><span class="tag">가상 데이터</span> 달별 관광 소비 지수. 대정읍과 비교 읍면 성산읍이 행사 전에는 나란히 움직이다 행사 달에 벌어진다.</p></figure>
-    <figure><img class="shot" src="img/visit.png" alt="날짜별 공개 방문 인구 지수"><p class="cap"><span class="tag tag--real">실제 공개 데이터</span> 날짜별 방문 인구 지수. 행사 기간 대정읍 방문은 직전 4주 같은 요일보다 +20.7%, 비교 후보 가운데 값은 +13.6%였다.</p></figure>
+    <figure><img class="shot" src="img/index.png" alt="달별 관광 소비 지수"><p class="cap">가상 데이터로 그린 달별 관광 소비 지수. 대정읍과 비교 읍면 성산읍이 행사 전에는 나란히 움직이다 행사 달에 벌어진다.</p></figure>
+    <figure><img class="shot" src="img/visit.png" alt="날짜별 공개 방문 인구 지수"><p class="cap">실제 공개 데이터로 그린 날짜별 방문 인구 지수. 행사 기간 대정읍 방문은 직전 4주 같은 요일보다 +20.7%, 비교 후보 가운데 값은 +13.6%였다.</p></figure>
   </div>
   <div class="figs">
     <div><b>읍면 12곳</b><span>카드와 유동인구가 같은 이름으로 맞는 범위</span></div>
@@ -82,8 +81,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 2 -->
 <section class="page">
-  <p class="eyebrow">1. 구현목표</p>
-  <h2>"축제가 지역 소비를 늘렸나"에 답할 수 있게</h2>
+  <h2 class="chap"><span class="no">1</span>구현목표<span class="sub">"축제가 지역 소비를 늘렸나"에 답할 수 있게</span></h2>
   <p class="lead">읍면 축제를 맡은 담당자는 결과보고서와 다음 해 예산 자료에 축제가 지역 소비에 준 영향을 적어야 합니다. 센터 카드 데이터에는 그 답이 들어 있지만, 흔히 쓰는 "작년 같은 달과 비교"로는 축제의 몫을 가려낼 수 없습니다.</p>
   <h3>작년 같은 달과 비교하면 생기는 문제</h3>
   <p>동봉한 공개 유동인구로 직접 계산한 값입니다. 연평균을 1로 두었습니다.</p>
@@ -99,7 +97,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
   </table>
   <p>그래서 이 Agent는 같은 계절과 같은 관광 경기를 함께 겪은 <strong>비교 읍면</strong>을 고르고, 행사 직전 3개월 대비 증가율을 두 읍면에서 나란히 계산합니다.</p>
   <h3>분석 주제</h3>
-  <div class="well"><strong>행사 기간에 개최 읍면의 관광객 카드 소비가, 행사 전 흐름이 나란했던 비교 읍면보다 더 늘었는가.</strong></div>
+  <p class="q">행사 기간에 개최 읍면의 관광객 카드 소비가, 행사 전 흐름이 나란했던 비교 읍면보다 더 늘었는가.</p>
   <h3>AI로 하는 데이터 분석 목표</h3>
   <ol>
     <li>AI가 공개 유동인구를 직접 조회해 행사 기간 방문이 늘었는지 판단하고, 비교를 흐릴 행사가 따로 열린 읍면을 찾아 이유와 함께 뺍니다.</li>
@@ -121,8 +119,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 3 -->
 <section class="page">
-  <p class="eyebrow">2. 서비스 제안</p>
-  <h2>데이터 탐색부터 보고서까지 다섯 화면</h2>
+  <h2 class="chap"><span class="no">2</span>서비스 제안<span class="sub">데이터 탐색부터 보고서까지 다섯 화면</span></h2>
   <h3>데이터 활용 개요</h3>
   <table>
     <thead><tr><th>데이터</th><th>어디서</th><th>무엇에 쓰나</th></tr></thead>
@@ -159,8 +156,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 4 -->
 <section class="page">
-  <p class="eyebrow">2. 서비스 제안 · 사용 장면</p>
-  <h2>예시: 가파도청보리축제(2024년 4월 6일~28일)</h2>
+  <h2 class="chap"><span class="no">2</span>서비스 제안<span class="sub">예시: 가파도청보리축제(2024년 4월 6일~28일)</span></h2>
   <p>2026년 11월 16일 오후에 실제 AI로 실행한 기록입니다. 장소를 확인한 뒤 계획이 나오기까지 1분이 걸리지 않았습니다.</p>
   <div class="side">
     <ol class="steps">
@@ -183,8 +179,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 5 -->
 <section class="page">
-  <p class="eyebrow">4. 데이터 활용 계획</p>
-  <h2>필수 데이터</h2>
+  <h2 class="chap"><span class="no">4</span>데이터 활용 계획<span class="sub">필수 데이터</span></h2>
   <table>
     <thead><tr><th>데이터</th><th>출처</th><th>기간·단위</th><th>활용 항목</th></tr></thead>
     <tbody>
@@ -218,8 +213,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 6 -->
 <section class="page">
-  <p class="eyebrow">4. 데이터 활용 계획</p>
-  <h2>결합과 전처리</h2>
+  <h2 class="chap"><span class="no">4</span>데이터 활용 계획<span class="sub">결합과 전처리</span></h2>
   <p class="lead">카드 데이터와 유동인구는 읍면 이름으로 잇습니다. 카드 데이터의 법정동에서 읍면 12곳은 읍면 이름 그대로 나오고, 유동인구의 읍면 이름도 같습니다. 동 지역은 법정동과 행정동이 달라 맞출 수 없으므로 범위에서 뺐습니다.</p>
   <h3>카드 데이터 전처리 (이 PC 안)</h3>
   <ul>
@@ -255,8 +249,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 7 -->
 <section class="page">
-  <p class="eyebrow">4. 데이터 활용 계획</p>
-  <h2>분석 방법</h2>
+  <h2 class="chap"><span class="no">4</span>데이터 활용 계획<span class="sub">분석 방법</span></h2>
   <h3>계산</h3>
   <div class="formula">증가율 g = 행사 달 평균 ÷ 기준 기간 평균 − 1 &nbsp;&nbsp;(행사 읍면 g<sub>T</sub>, 비교 읍면 g<sub>C</sub>)<br>상대 효과 E = (1 + g<sub>T</sub>) ÷ (1 + g<sub>C</sub>) − 1</div>
   <p>주 숫자는 상대 효과 E입니다. 증가율의 퍼센트포인트 차이는 성수기에 효과를 부풀려 보조로만 보입니다. 작년 같은 달은 쓰지 않습니다. 매년 열리는 축제는 작년 같은 달에도 효과가 있고, 카드 자료가 2023년 8월부터라 2024년 7월 이전은 작년 값이 없기 때문입니다.</p>
@@ -289,13 +282,12 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 8 -->
 <section class="page">
-  <p class="eyebrow">3. Agent 개발 구성</p>
-  <h2>센터 데이터를 볼 수 없는 상태에서 계획하는 AI</h2>
-  <p class="lead">이 Agent의 AI는 센터 카드 값을 한 번도 보지 않습니다. 공개 정보로 계산 계획을 세우고, 코드가 그 계획을 검사한 뒤, 잠긴 PC 안에서 코드만 계산합니다. "AI가 쓴 결과 숫자 0개"와 "센터 값 외부 전송 0건"은 같은 구조에서 나옵니다.</p>
+  <h2 class="chap"><span class="no">3</span>Agent 개발 구성<span class="sub">센터 데이터를 볼 수 없는 상태에서 계획하는 AI</span></h2>
+  <p class="lead">이 Agent의 AI는 센터 카드 값을 한 번도 보지 않습니다. 공개 정보로 계산 계획을 세우고, 코드가 그 계획을 검사한 뒤, 잠긴 PC 안에서 코드만 계산합니다. 결과 숫자를 코드가 계산하는 것과 센터 값이 밖으로 나가지 않는 것은 같은 구조에서 나옵니다.</p>
   <svg viewBox="0 0 680 252" width="100%" role="img" aria-label="AI 줄과 코드 줄, 잠금 선">
     <defs><marker id="ar" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#3e454c"/></marker></defs>
-    <text x="60" y="14" font-size="10" font-weight="700" fill="#b85a0e">공개 단계 · 외부 연결 열림</text>
-    <text x="452" y="14" font-size="10" font-weight="700" fill="#b85a0e">센터 단계 · 외부 연결 잠김</text>
+    <text x="60" y="14" font-size="10" font-weight="700" fill="#b85a0e">공개 단계, 외부 연결 열림</text>
+    <text x="452" y="14" font-size="10" font-weight="700" fill="#b85a0e">센터 단계, 외부 연결 잠김</text>
     <text x="4" y="72" font-size="11" font-weight="800" fill="#2f353b">AI</text>
     <text x="4" y="186" font-size="11" font-weight="800" fill="#2f353b">코드</text>
     <line x1="0" y1="124" x2="680" y2="124" stroke="#dde0e3"/>
@@ -358,8 +350,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 9 -->
 <section class="page">
-  <p class="eyebrow">3. Agent 개발 구성</p>
-  <h2>판단 및 자율 수행 범위</h2>
+  <h2 class="chap"><span class="no">3</span>Agent 개발 구성<span class="sub">판단 및 자율 수행 범위</span></h2>
   <table>
     <thead><tr><th>단계</th><th>AI가 판단</th><th>코드가 검사·계산</th><th>사람이 확인</th></tr></thead>
     <tbody>
@@ -394,8 +385,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 10 -->
 <section class="page">
-  <p class="eyebrow">5. 개발·탑재 계획</p>
-  <h2>외부 전송 경계</h2>
+  <h2 class="chap"><span class="no">5</span>개발·탑재 계획<span class="sub">외부 전송 경계</span></h2>
   <div class="side">
     <div>
       <ul>
@@ -441,8 +431,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 11 -->
 <section class="page">
-  <p class="eyebrow">5. 개발·탑재 계획</p>
-  <h2>결과물과 반출</h2>
+  <h2 class="chap"><span class="no">5</span>개발·탑재 계획<span class="sub">결과물과 반출</span></h2>
   <p>결과물은 보고서 PDF 한 개와 그림 png 두 장입니다. PDF는 화면과 같은 순서(결론, 상황, 과제, 방법, 결과, 한계와 활용)로, 담당자가 첫 쪽만 읽어도 결론과 그 근거 숫자를 알 수 있게 썼습니다.</p>
   <div class="grid2">
     <figure><img class="shot" src="img/p11-pdf1.png" alt="보고서 PDF 1쪽"><p class="cap">보고서 PDF 1쪽 윗부분. 결론과 상황.</p></figure>
@@ -461,13 +450,12 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
     </tbody>
   </table>
   <p>화면에는 "반출 신청 가능(사전 점검 기준)"으로만 표시합니다. 실제 반출 승인은 센터 심사자가 합니다.</p>
-  <div class="well">활용 사유 문안은 이렇게 나옵니다. AI Agent 「행사 효과 나란히」(Python)의 이중차분 분석으로 분석 후, 읍면별 관광객 카드 이용 증가율 산출과 인원·건수 10 미만 칸의 업종 묶음(범주처리)으로 가공하여, 가파도청보리축제(2024년 4월 6일~4월 28일) 개최 읍면과 비교 읍면의 관광객 카드 이용 증가율 차이에 관한 보고서 작성 및 결과보고서에 활용. 출처: 제주빅데이터센터, 카드 이용 현황(읍면동)_v02(2023년 10월~2026년 8월), 파일 구분: 분석결과</div>
+  <div class="quote">활용 사유 문안은 이렇게 나옵니다. AI Agent 「행사 효과 나란히」(Python)의 이중차분 분석으로 분석 후, 읍면별 관광객 카드 이용 증가율 산출과 인원·건수 10 미만 칸의 업종 묶음(범주처리)으로 가공하여, 가파도청보리축제(2024년 4월 6일~4월 28일) 개최 읍면과 비교 읍면의 관광객 카드 이용 증가율 차이에 관한 보고서 작성 및 결과보고서에 활용. 출처: 제주빅데이터센터, 카드 이용 현황(읍면동)_v02(2023년 10월~2026년 8월), 파일 구분: 분석결과</div>
 </section>
 
 <!-- 12 -->
 <section class="page">
-  <p class="eyebrow">5. 개발·탑재 계획</p>
-  <h2>검증과 한계</h2>
+  <h2 class="chap"><span class="no">5</span>개발·탑재 계획<span class="sub">검증과 한계</span></h2>
   <h3>가상 데이터 두 판으로 계산 검증</h3>
   <p>센터 명세서 구조를 따른 가상 카드 데이터를 두 판 만들었습니다. 한 판은 시험 행사의 행사 달에 효과를 심었고, 다른 판은 심지 않았습니다. 비교 후보는 규칙 순위 그대로 두고 업종 묶음 두 가지로 계산했습니다.</p>
   <table>
@@ -514,8 +502,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 13 -->
 <section class="page">
-  <p class="eyebrow">5. 개발·탑재 계획</p>
-  <h2>기술 환경, 설치, 구현 범위</h2>
+  <h2 class="chap"><span class="no">5</span>개발·탑재 계획<span class="sub">기술 환경, 설치, 구현 범위</span></h2>
   <table>
     <thead><tr><th>항목</th><th>내용</th></tr></thead>
     <tbody>
@@ -556,8 +543,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 14 -->
 <section class="page">
-  <p class="eyebrow">5. 개발·탑재 계획</p>
-  <h2>센터 운영과 확장</h2>
+  <h2 class="chap"><span class="no">5</span>개발·탑재 계획<span class="sub">센터 운영과 확장</span></h2>
   <h3>운영 순서</h3>
   <ol class="steps">
     <li>센터 담당자가 ZIP을 풀고 install.bat을 한 번 실행합니다. 환경변수 ANTHROPIC_API_KEY에 센터 키를 넣습니다.</li>
@@ -598,8 +584,7 @@ svg text { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; }
 
 <!-- 15 -->
 <section class="page">
-  <p class="eyebrow">사용 내역과 출처</p>
-  <h2>AI, API, 데이터, 오픈소스</h2>
+  <h2 class="chap"><span class="no"></span>사용 내역과 출처<span class="sub">AI, API, 데이터, 오픈소스</span></h2>
   <h3>AI 사용</h3>
   <table>
     <thead><tr><th>이름</th><th>쓰는 곳</th><th>보는 것</th><th>보지 않는 것</th></tr></thead>

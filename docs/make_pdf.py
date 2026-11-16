@@ -14,26 +14,30 @@ import markdown
 DOCS = Path(__file__).resolve().parent
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 CSS = """
-@page { size: A4; margin: 18mm 16mm; }
-body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 10pt; line-height: 1.6; color: #1a1a1a; }
-h1 { font-size: 18pt; margin: 0 0 4pt; }
-h1 + p { color: #555; margin-top: 0; }
-h2 { font-size: 13pt; border-bottom: 1px solid #999; padding-bottom: 2pt; margin-top: 18pt; break-after: avoid; }
-h3 { font-size: 11pt; margin-top: 12pt; break-after: avoid; }
-table { border-collapse: collapse; width: 100%; margin: 6pt 0; font-size: 9pt; break-inside: auto; }
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css");
+@page { size: A4; margin: 18mm 17mm; }
+body { font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; font-size: 10pt; line-height: 1.62; color: #24262b; word-break: keep-all; }
+h1 { font-size: 26pt; font-weight: 900; letter-spacing: -0.035em; line-height: 1.2; color: #15161a; margin: 0 0 3mm; }
+h1 + p { color: #6d7079; margin-top: 0; }
+h2 { font-size: 16pt; font-weight: 900; letter-spacing: -0.03em; color: #15161a; margin: 10mm 0 3mm; break-after: avoid; }
+h3 { font-size: 11.5pt; font-weight: 800; color: #15161a; margin: 6mm 0 2mm; break-after: avoid; }
+strong { color: #15161a; }
+li::marker { color: #b85a0e; }
+table { border-collapse: collapse; width: 100%; margin: 2mm 0 4mm; font-size: 9pt; break-inside: auto; }
 tr { break-inside: avoid; }
-th, td { border: 1px solid #bbb; padding: 3pt 5pt; vertical-align: top; text-align: left; }
-th { background: #eee; white-space: nowrap; }
+th, td { padding: 2mm 2.5mm; vertical-align: top; text-align: left; border-bottom: 1px solid #dfe1e6; }
+th { font-weight: 800; color: #15161a; border-bottom: 2px solid #15161a; white-space: nowrap; }
 td:first-child { min-width: 3.5em; }
 code, pre { font-family: Menlo, Consolas, monospace; font-size: 8.5pt; }
-pre { background: #f4f4f4; padding: 6pt 8pt; white-space: pre-wrap; }
+pre { margin-left: 4mm; white-space: pre-wrap; }
 """
 # 개인 경로, 키 모양 문자열이 PDF에 들어가면 안 된다
 LEAKS = re.compile(r"/Users/|/private/|sk-ant-|mh_02")
 
 
 def print_pdf(page, out):
-    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer",
+    # 글꼴(Pretendard)을 인터넷에서 받으므로 다 받을 때까지 기다린다
+    subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", "--virtual-time-budget=15000",
                     f"--print-to-pdf={out}", page.as_uri()], check=True, capture_output=True)
 
 
