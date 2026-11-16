@@ -39,7 +39,7 @@
     <div class="hero">
       <div class="hero-text">
         <h1>축제가 열린 읍면의 관광 소비,<br>비교 읍면보다 더 늘었을까</h1>
-        <p class="lede">행사 전에는 나란히 움직이던 두 읍면이 행사 달에 얼마나 벌어지는지 계산합니다. AI는 공개 자료로 계획만 세우고, 센터 카드 파일은 이 PC 안에서만 계산해 반출 신청용 보고서로 만듭니다.</p>
+        <p class="lede">행사 전에는 비슷하게 움직이던 두 읍면이 행사 달에 얼마나 벌어졌는지 봅니다. AI는 공개 자료로 계획만 세우고, 센터 카드 파일은 이 PC에서만 계산합니다.</p>
         <div class="row">
           <button id="btn-example" class="btn btn--primary" type="button">예시로 해 보기</button>
           <button id="btn-direct" class="btn" type="button">직접 분석하기</button>
@@ -67,9 +67,9 @@
       </figure>
     </div>
     <dl class="trio">
-      <div><dt>밖으로 보내는 것</dt><dd>행사 이름과 날짜, 공개 유동인구, 같은 시기 행사 목록 같은 공개 정보뿐입니다. 센터 카드 값은 보내지 않고, 보낸 본문은 위쪽 「외부 전송」에서 볼 수 있습니다.</dd></div>
-      <div><dt>잠기는 때</dt><dd>센터 카드 파일을 넣는 순간 외부 연결이 잠기고, 계산은 이 PC 안에서만 합니다.</dd></div>
-      <div><dt>걸리는 시간</dt><dd>AI 계산 계획 30초에서 1분, 계산은 몇 초입니다.</dd></div>
+      <div><dt>밖으로 보내는 것</dt><dd>행사 이름과 날짜, 공개 유동인구, 같은 시기 행사 목록입니다. 센터 카드 값은 보내지 않습니다. 보낸 내용은 위쪽 「외부 전송」에서 볼 수 있습니다.</dd></div>
+      <div><dt>잠기는 때</dt><dd>센터 카드 파일을 넣는 순간 외부 연결이 잠깁니다. 그 뒤 계산은 이 PC에서만 합니다.</dd></div>
+      <div><dt>걸리는 시간</dt><dd>AI 계획은 30초~1분, 계산은 몇 초면 끝납니다.</dd></div>
     </dl>
     <div id="events-wrap" class="block" hidden>
       <h2>행사 고르기</h2>
@@ -81,7 +81,7 @@
         <thead><tr><th>행사</th><th>기간</th><th>AI 장소 짐작</th><th>볼 수 있나</th><th><span class="sr">고르기</span></th></tr></thead>
         <tbody id="events"></tbody>
       </table></div>
-      <p id="events-empty" class="small" hidden>찾는 이름의 행사가 없습니다. 「볼 수 있는 행사만」을 끄면 계산할 수 없는 행사도 보입니다.</p>
+      <p id="events-empty" class="small" hidden>찾는 행사가 없습니다. 「볼 수 있는 행사만」을 끄면 계산할 수 없는 행사까지 보입니다.</p>
     </div>
   </section>
 
@@ -92,7 +92,7 @@
       <span class="tag">AI 짐작</span>
       <p id="place-guess" class="big"></p>
       <p id="place-reason"></p>
-      <p class="small">행사 파일에 장소 열이 없어 행사 이름과 주관·주최로 짐작했습니다. 틀릴 수 있으니 실제 개최 읍면을 골라 주세요.</p>
+      <p class="small">행사 파일에 장소가 없어 행사 이름과 주최를 보고 짐작한 읍면입니다. 틀릴 수 있으니 실제 개최 읍면을 골라 주세요.</p>
     </div>
     <div class="field"><label for="place-emd">실제 개최 읍면</label><select id="place-emd" name="emd"></select></div>
     <div class="row"><button id="btn-place" class="btn btn--primary" type="button">장소 확인</button></div>
@@ -101,21 +101,21 @@
   <section id="a-plan" class="area" hidden>
     <h2>AI 계산 계획</h2>
     <div id="plan-wait" class="loading">
-      <p class="lede">AI가 공개 유동인구를 조회하며 계획을 세우고 있습니다. 30초에서 1분쯤 걸립니다.</p>
+      <p class="lede">AI가 공개 유동인구를 살펴보며 계획을 세우는 중입니다. 30초~1분쯤 걸립니다.</p>
       <p id="plan-latest" class="small" aria-live="polite"></p>
       <div class="skeleton" aria-hidden="true"><span></span><span></span><span></span></div>
     </div>
     <div id="plan-body" class="area" hidden>
       <div class="row"><span id="plan-origin" class="tag"></span><span id="plan-judgement" class="tag tag--on"></span></div>
       <div class="block"><h3>방문 판단</h3><p id="plan-reason"></p></div>
-      <div class="block"><h3>비교 순서</h3><p class="small">코드가 행사 전 12개월 공개 유동인구 흐름이 행사 읍면과 가까운 순서로 정했습니다.</p><ol id="plan-kept" class="ruled"></ol></div>
+      <div class="block"><h3>비교 순서</h3><p class="small">행사 전 12개월 동안 유동인구 흐름이 행사 읍면과 비슷했던 순서입니다.</p><ol id="plan-kept" class="ruled"></ol></div>
       <div class="block"><h3>뺀 읍면</h3><ul id="plan-excluded" class="ruled"></ul></div>
       <div class="block"><h3>업종 묶음</h3><p id="plan-biz"></p></div>
       <div class="row"><button id="btn-to-files" class="btn btn--primary" type="button">이 계획으로 센터 파일 넣기</button></div>
     </div>
     <div id="plan-stopped" class="notice" hidden>
       <h3>계산 계획을 세우지 못했습니다</h3>
-      <p>오른쪽 작업 기록에서 이유를 확인하고, 「끝내기」 뒤 다른 행사를 골라 주세요.</p>
+      <p>오른쪽 작업 기록에서 이유를 보고, 「끝내기」를 누른 뒤 다른 행사를 골라 주세요.</p>
       <div class="row"><button id="btn-stop-finish" class="btn" type="button">끝내기</button></div>
     </div>
   </section>
@@ -123,9 +123,9 @@
   <section id="a-files" class="area" hidden>
     <h2>센터 카드 파일 넣기</h2>
     <dl id="check-count" class="figs"></dl>
-    <p>센터에서는 한 번에 한 달씩 받습니다. 필요한 달을 운영자에게 한 번에 요청해 받은 파일을 모두 넣어 주세요. 첫 파일을 넣는 순간 외부 연결이 잠깁니다.</p>
+    <p>센터 카드 파일은 한 달씩 받습니다. 아래 달을 운영자에게 한꺼번에 요청해 받은 파일을 모두 넣어 주세요. 첫 파일을 넣으면 외부 연결이 잠깁니다.</p>
     <div id="drop" class="drop" tabindex="0">
-      <p>카드 이용 현황(읍면동)_v02 CSV를 여기에 끌어다 놓거나 고릅니다.</p>
+      <p>카드 이용 현황(읍면동)_v02 CSV를 여기에 끌어다 놓거나 「파일 선택」을 누르세요.</p>
       <input id="file-input" type="file" accept=".csv" multiple aria-label="센터 카드 CSV 파일 고르기">
     </div>
     <p id="files-count" class="small" aria-live="polite"></p>
@@ -170,8 +170,8 @@
       <h3 id="h-r5">5. 결과</h3>
       <table class="kv-table"><tbody id="r-evidence"></tbody></table>
       <div class="figures">
-        <figure><img id="r-index" width="1050" height="480" alt="행사 읍면과 비교 읍면의 달별 관광 소비 지수"><figcaption>달별 관광 소비 지수. 기준 기간 평균을 100으로 두었습니다. 주황 선이 행사 읍면, 회색 점선이 비교 읍면, 노란 띠가 행사 달입니다.</figcaption></figure>
-        <figure><img id="r-visit" width="1050" height="480" alt="행사 읍면과 비교 읍면의 날짜별 공개 방문 인구 지수"><figcaption>공개 방문 인구 지수. 행사 직전 4주 평균을 100으로 두었습니다. 노란 띠가 행사 기간입니다.</figcaption></figure>
+        <figure><img id="r-index" width="1050" height="480" alt="행사 읍면과 비교 읍면의 달별 관광 소비 지수"><figcaption>달별 관광 소비 지수(기준 기간 평균 = 100). 주황 실선이 행사 읍면, 회색 점선이 비교 읍면, 노란 띠가 행사 달입니다.</figcaption></figure>
+        <figure><img id="r-visit" width="1050" height="480" alt="행사 읍면과 비교 읍면의 날짜별 공개 방문 인구 지수"><figcaption>날짜별 공개 방문 인구 지수(행사 직전 4주 평균 = 100). 노란 띠가 행사 기간입니다.</figcaption></figure>
       </div>
     </section>
 
@@ -182,7 +182,7 @@
       <div class="block">
         <h4>반출 신청</h4>
         <p><span class="tag tag--in">반출 신청 가능(사전 점검 기준)</span></p>
-        <p class="small">결과물에는 증가율, 상대 효과, 지수, 개수만 들어 있고 원래 금액·건수·인원은 없습니다. 실제 반출 승인은 센터가 합니다.</p>
+        <p class="small">결과물에는 증가율, 상대 효과, 지수만 들어 있고 금액·건수·인원은 없습니다. 반출 승인은 센터가 합니다.</p>
         <label for="r-usage">활용 사유 문안</label>
         <textarea id="r-usage" rows="4" readonly></textarea>
         <div class="row">
@@ -198,14 +198,14 @@
 
 <aside class="log-wrap" aria-labelledby="h-log">
   <h2 id="h-log">작업 기록</h2>
-  <p class="small">AI가 무엇을 왜 조회했는지, 코드가 무엇을 검사하고 계산했는지 최근 것부터 쌓입니다.</p>
+  <p class="small">AI가 조회한 것, 코드가 검사하고 계산한 것이 최근 순으로 쌓입니다.</p>
   <ol id="log" class="log ruled"></ol>
 </aside>
 </div>
 
 <dialog id="d-sent" aria-labelledby="h-sent">
   <h2 id="h-sent">외부 전송 기록</h2>
-  <p class="small">이 프로그램이 밖으로 보낸 요청은 공개 자료와 계산 계획뿐이며, 모두 여기에 남습니다.</p>
+  <p class="small">밖으로 보낸 요청은 모두 여기에 남습니다. 공개 자료와 계산 계획만 보냅니다.</p>
   <ol id="sent-list" class="sent ruled small"></ol>
   <div class="row"><button id="btn-selfcheck" class="btn" type="button">자가 점검</button><button id="btn-close-sent" class="btn btn--primary" type="button">닫기</button></div>
   <ul id="selfcheck-rows" class="ruled small"></ul>
@@ -213,7 +213,7 @@
 
 <dialog id="d-finish" aria-labelledby="h-finish">
   <h2 id="h-finish">끝내기</h2>
-  <p id="finish-text">작업 기록, 메모리의 센터 집계, 결과 폴더의 그림과 PDF를 지우고 처음 화면으로 돌아갑니다.</p>
+  <p id="finish-text">작업 기록, 메모리에 있는 센터 집계, 결과 그림과 PDF를 지우고 처음으로 돌아갑니다.</p>
   <div class="row"><button id="btn-finish-ok" class="btn btn--primary" type="button">지우고 끝내기</button><button id="btn-finish-cancel" class="btn" type="button">돌아가기</button></div>
 </dialog>
 

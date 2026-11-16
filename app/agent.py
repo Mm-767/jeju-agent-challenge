@@ -288,7 +288,9 @@ def run_stage(purpose, messages, tools, submit_name, validate, call, log):
                 if problems:
                     more = f" 외 {len(problems) - 1}건" if len(problems) > 1 else ""
                     stage = {"judge": "방문 판단", "plan": "계산 계획"}[purpose]
-                    log("검사", f"{stage} {submits}번째 제출을 돌려보냈습니다: {problems[0]}{more}")
+                    # 화면에는 칸 이름("kept 조천읍:")과 AI에게 하는 말("빈칸을 쓰세요")을 빼고 이유 한 문장만
+                    reason = problems[0].split(": ", 1)[-1].split(". ")[0].rstrip(".")
+                    log("검사", f"{stage} 답을 돌려보냈습니다({submits}번째): {reason}{more}")
                     return " ".join(problems) + f" 고쳐서 다시 제출하세요(남은 제출 기회 {SUBMIT_TRIES - submits}번).", True
                 state["passed"] = block["input"]
                 return "통과", False

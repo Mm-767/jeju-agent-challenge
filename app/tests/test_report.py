@@ -74,6 +74,13 @@ class JosaTest(unittest.TestCase):
         self.assertEqual(report.fill("{{행사_이름}}으로", vals), "가파도청보리축제로")
         self.assertEqual(report.fill("{{행사_읍면}}로", vals), "대정읍으로")
 
+    def test_copula_is_not_subject_particle(self):
+        # 11/16 화면: "변화는 {{visit.R_T}}이고"가 "+20.7%가고"로 나왔다
+        vals = {"r": "+20.7%", "e": "성산읍"}
+        self.assertEqual(report.fill("변화는 {{r}}이고 비교는 {{e}}이다", vals), "변화는 +20.7%고 비교는 성산읍이다")
+        self.assertEqual(report.fill("{{r}}이며 {{e}}이므로", vals), "+20.7%며 성산읍이므로")
+        self.assertEqual(report.fill("{{r}}이 늘었고 {{e}}이 다르다", vals), "+20.7%가 늘었고 성산읍이 다르다")
+
 
 if __name__ == "__main__":
     unittest.main()

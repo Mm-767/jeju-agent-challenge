@@ -19,15 +19,15 @@ OUTCOME_LABEL = {"higher": "평소엔 드문 차이", "lower": "평소엔 드문
                  "no_difference": "평소에도 생기는 차이", "not_computed": "계산하지 못함"}
 
 LIMITS = [
-    "이 결과는 비교 읍면 대비 차이이며, 행사가 소비를 늘렸다는 인과 효과를 증명하지 않는다.",
-    "카드 자료가 월 단위라 행사 기간이 짧으면 효과가 한 달 합계에 묻힐 수 있다.",
-    "카드 이용 현황은 특정 카드사 자료와 실소유자 기준 집계라 전체 소비를 대표하지 않을 수 있다.",
-    "이 결과는 공식 통계가 아니라 분석 참고 자료다.",
-    "매년 열리는 축제는 작년 같은 달에도 효과가 있어, 전년 같은 달 대신 행사 직전 3개월을 기준으로 삼았다.",
-    "행사 방문객이 옆 읍면에서도 소비하면 비교 읍면도 함께 늘어 차이가 작게 나올 수 있다.",
-    "공개 방문 인구는 내국인의 시간대별 인구를 더한 연인원이라 실제 방문자 수와 다르다.",
-    "행사 전 3개월의 흐름이 나란했다는 것이 행사 뒤에도 나란했으리라는 보장은 아니다.",
-    "같은 시기 다른 행사의 제외와 기준 기간 오염 판정은 행사 파일에 있는 행사만 본다.",
+    "비교 읍면과의 차이일 뿐, 행사가 소비를 늘렸다는 증명은 아니다.",
+    "카드 자료가 월 단위라 짧은 행사는 효과가 한 달 합계에 묻힐 수 있다.",
+    "카드 자료는 일부 카드사의 실소유자 기준 집계라 전체 소비와 다를 수 있다.",
+    "공식 통계가 아니라 참고 자료다.",
+    "매년 열리는 축제는 작년 같은 달에도 효과가 있어, 작년 대신 행사 직전 3개월과 비교했다.",
+    "행사 방문객이 옆 읍면에서도 쓰면 비교 읍면도 함께 늘어 차이가 작게 나온다.",
+    "공개 방문 인구는 시간대별 인구를 더한 연인원이라 실제 방문자 수가 아니다.",
+    "행사 전에 나란히 움직였다고 행사 뒤에도 그랬으리라는 보장은 없다.",
+    "같은 시기 다른 행사는 행사 파일에 있는 것만 살폈다.",
 ]
 NOT_COMPUTED = {
     "no_comparison": "행사 전 흐름이 나란한 비교 읍면을 찾지 못해",
@@ -75,7 +75,8 @@ JOSA = {"이": ("이", "가"), "가": ("이", "가"), "은": ("은", "는"), "�
         "를": ("을", "를"), "과": ("과", "와"), "와": ("과", "와"), "으로": ("으로", "로"), "로": ("으로", "로")}
 # 숫자는 읽는 소리의 받침으로: 영·일·삼·육·칠·팔은 받침이 있다
 DIGIT_FINAL = {"0": True, "1": True, "2": False, "3": True, "4": False, "5": False, "6": True, "7": True, "8": True, "9": False}
-BLANK_JOSA = re.compile(r"\{\{([^}]*)\}\}(으로|이|가|은|는|을|를|과|와|로)?")
+# "이다·이고·이며"의 "이"는 조사가 아니라 서술격이라, 받침이 없으면 빠진다(+20.7%고, 성산읍이고)
+BLANK_JOSA = re.compile(r"\{\{([^}]*)\}\}(?:(이)(?=[다고며므지어었라니면])|(으로|이|가|은|는|을|를|과|와|로))?")
 
 
 def _has_final(text):
@@ -89,7 +90,9 @@ def fill(template, vals):
     """빈칸을 채우고, 빈칸 바로 뒤 조사를 채운 값의 받침에 맞춘다(가파도청보리축제가, 성산읍이)."""
     def sub(m):
         value = str(vals[m.group(1)])
-        josa = m.group(2)
+        if m.group(2):
+            return value + ("이" if _has_final(value) else "")
+        josa = m.group(3)
         if not josa:
             return value
         with_final, without = JOSA[josa]
@@ -262,7 +265,7 @@ def build_report(event, emd, result, months, bundle, sentence, evidence, ai_rows
         biz += f", 10 미만 칸 때문에 {biz_size}개로 넓힘"
     visit, judged = bundle.get("visit_summary") or {}, bundle["judgement"]["visit"]["judgement"]
     if visit.get("R_T") is not None and visit.get("R_C") is not None:
-        judged += f"(행사 읍면 {pct(visit['R_T'])}, 비교 후보 가운데 값 {pct(visit['R_C'])})"
+        judged += f"({emd} {pct(visit['R_T'])}, 비교 읍면들 {pct(visit['R_C'])})"
     return {
         "outcome": result["outcome"], "label": OUTCOME_LABEL[result["outcome"]],
         "headline": headline(emd, result), "sentence": sentence, "figures": key_figures(result),

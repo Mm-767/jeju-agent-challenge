@@ -24,6 +24,10 @@ BASE = Path(__file__).parent
 PORTS = range(18501, 18511)
 EXAMPLE_EVENT = "363"  # 가파도청보리축제(대정읍), 미리 만든 계획이 있는 예시 행사
 EXAMPLE_EMD = "대정읍"
+# 대체 경로로 간 이유(그 밖의 값은 SDK 오류 이름이라 "AI에 연결하지 못해"로 보인다)
+WHY_TEXT = {"no_key": "AI 키가 없어", "checks_failed": "AI 답이 검사를 세 번 통과하지 못해", "no_submit": "AI가 계획을 제출하지 않아",
+            "too_few_candidates": "비교할 읍면이 2곳보다 적어", "max_tokens": "AI 답이 너무 길어 끊겨", "Locked": "외부 연결이 잠겨",
+            "CallLimit": "AI 호출 한도를 넘어", "CallTimeout": "AI 응답이 늦어"}
 
 app = FastAPI(title="행사 효과 나란히")
 app.mount("/static", StaticFiles(directory=BASE / "static"), name="static")
@@ -137,7 +141,7 @@ async def run(request: Request):
     reset()
     state.update({"stage": "place", "event": event, "example": example})
     p = hub.load_places().get(event_id, {})
-    log("AI 짐작", f"장소 추정표: {p.get('place', '모름')}({p.get('spot', '')}, 확신도 {p.get('confidence', '낮음')})")
+    log("AI 짐작", f"개최 장소를 {p.get('place', '모름')}({p.get('spot', '')})로 짐작했습니다. 확신도 {p.get('confidence', '낮음')}.")
     return {"ok": True}
 
 
@@ -158,12 +162,13 @@ async def place(request: Request):
             origin, bundle, why = "premade", pipeline.premade(event["event_id"], emd), "no_key"
         else:
             origin, bundle, why = pipeline.public_stage(event, emd, egress.call_llm, log, _rehearsal_table())
+        reason = WHY_TEXT.get(why, "AI에 연결하지 못해")
         if bundle is None:
             state["stage"] = "stopped"
-            log("멈춤", f"계산 계획을 세우지 못했습니다({why}). 이 행사와 읍면으로 미리 만든 계획도 없습니다.")
+            log("멈춤", f"{reason} 계산 계획을 세우지 못했습니다. 이 행사와 읍면으로 미리 만든 계획도 없습니다.")
             return
         if origin == "premade":
-            log("대체 경로", f"미리 만든 계획을 씁니다({why}). 모델 {bundle['model']}, 만든 날 {bundle['created_at'][:10]}.")
+            log("대체 경로", f"{reason} 미리 만든 계획({bundle['created_at'][:10]})을 씁니다.")
         state.update({"bundle": bundle, "origin": origin, "stage": "ready"})
 
     _background(work)

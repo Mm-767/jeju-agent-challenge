@@ -1,334 +1,334 @@
 {
-  "submit_place_table": {
-    "name": "submit_place_table",
-    "description": "행사 목록의 개최 장소 추정을 제출한다. 목록의 모든 event_id를 한 번씩 넣는다.",
-    "strict": true,
-    "input_schema": {
+ "submit_place_table": {
+  "name": "submit_place_table",
+  "description": "행사 목록의 개최 장소 추정을 제출한다. 목록의 모든 event_id를 한 번씩 넣는다.",
+  "strict": true,
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "places"
+   ],
+   "properties": {
+    "places": {
+     "type": "array",
+     "items": {
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "places"
+       "event_id",
+       "place",
+       "spot",
+       "kind",
+       "confidence",
+       "reason"
       ],
       "properties": {
-        "places": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "event_id",
-              "place",
-              "spot",
-              "kind",
-              "confidence",
-              "reason"
-            ],
-            "properties": {
-              "event_id": {
-                "type": "string"
-              },
-              "place": {
-                "type": "string",
-                "enum": [
-                  "한림읍",
-                  "애월읍",
-                  "구좌읍",
-                  "조천읍",
-                  "한경면",
-                  "추자면",
-                  "우도면",
-                  "대정읍",
-                  "남원읍",
-                  "성산읍",
-                  "안덕면",
-                  "표선면",
-                  "동 지역",
-                  "여러 곳",
-                  "도 전역",
-                  "모름"
-                ]
-              },
-              "spot": {
-                "type": "string"
-              },
-              "kind": {
-                "type": "string",
-                "enum": [
-                  "축제",
-                  "공연·전시",
-                  "상시·장기 운영",
-                  "기타"
-                ]
-              },
-              "confidence": {
-                "type": "string",
-                "enum": [
-                  "높음",
-                  "중간",
-                  "낮음"
-                ]
-              },
-              "reason": {
-                "type": "string"
-              }
-            }
-          }
-        }
+       "event_id": {
+        "type": "string"
+       },
+       "place": {
+        "type": "string",
+        "enum": [
+         "한림읍",
+         "애월읍",
+         "구좌읍",
+         "조천읍",
+         "한경면",
+         "추자면",
+         "우도면",
+         "대정읍",
+         "남원읍",
+         "성산읍",
+         "안덕면",
+         "표선면",
+         "동 지역",
+         "여러 곳",
+         "도 전역",
+         "모름"
+        ]
+       },
+       "spot": {
+        "type": "string"
+       },
+       "kind": {
+        "type": "string",
+        "enum": [
+         "축제",
+         "공연·전시",
+         "상시·장기 운영",
+         "기타"
+        ]
+       },
+       "confidence": {
+        "type": "string",
+        "enum": [
+         "높음",
+         "중간",
+         "낮음"
+        ]
+       },
+       "reason": {
+        "type": "string"
+       }
       }
+     }
     }
-  },
-  "get_visit_series": {
-    "name": "get_visit_series",
-    "description": "제주데이터허브 공개 데이터 「읍면동 단위 내국인 유동인구」에서 읍면 하나의 날짜별 방문 인구(visitPop을 성별·연령대에 걸쳐 더한 연인원)를 돌려준다. 이 PC에 저장한 스냅샷에서 읽으며 범위는 2023-08-01부터 2026-08-31까지, 한 번에 최대 120일이다.",
-    "strict": true,
-    "input_schema": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "emd",
-        "start_date",
-        "end_date",
-        "why"
-      ],
-      "properties": {
-        "emd": {
-          "type": "string",
-          "enum": [
-            "한림읍",
-            "애월읍",
-            "구좌읍",
-            "조천읍",
-            "한경면",
-            "추자면",
-            "우도면",
-            "대정읍",
-            "남원읍",
-            "성산읍",
-            "안덕면",
-            "표선면"
-          ]
-        },
-        "start_date": {
-          "type": "string",
-          "description": "YYYY-MM-DD"
-        },
-        "end_date": {
-          "type": "string",
-          "description": "YYYY-MM-DD"
-        },
-        "why": {
-          "type": "string",
-          "description": "이 조회가 왜 필요한지 한 문장. 작업 기록에 보인다. 숫자를 쓰지 않는다."
-        }
-      }
-    }
-  },
-  "submit_judgement": {
-    "name": "submit_judgement",
-    "description": "판단 단계의 결과를 한 번에 제출한다. kept와 extra_excluded를 합치면 남은 후보 전부가 한 번씩 들어가야 한다.",
-    "strict": true,
-    "input_schema": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "visit",
-        "extra_excluded",
-        "kept",
-        "treated_month_other_events"
-      ],
-      "properties": {
-        "visit": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "judgement",
-            "evidence",
-            "reason",
-            "caution"
-          ],
-          "properties": {
-            "judgement": {
-              "type": "string",
-              "enum": [
-                "증가 뚜렷",
-                "증가 약함",
-                "증가 없음",
-                "판단 불가"
-              ]
-            },
-            "evidence": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "enum": [
-                  "visit.R_T",
-                  "visit.R_C",
-                  "visit.V"
-                ]
-              }
-            },
-            "reason": {
-              "type": "string"
-            },
-            "caution": {
-              "type": "string"
-            }
-          }
-        },
-        "extra_excluded": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "emd",
-              "event_id",
-              "reason"
-            ],
-            "properties": {
-              "emd": {
-                "type": "string",
-                "enum": [
-                  "한림읍",
-                  "애월읍",
-                  "구좌읍",
-                  "조천읍",
-                  "한경면",
-                  "추자면",
-                  "우도면",
-                  "대정읍",
-                  "남원읍",
-                  "성산읍",
-                  "안덕면",
-                  "표선면"
-                ]
-              },
-              "event_id": {
-                "type": "string"
-              },
-              "reason": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "kept": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "emd",
-              "reason"
-            ],
-            "properties": {
-              "emd": {
-                "type": "string",
-                "enum": [
-                  "한림읍",
-                  "애월읍",
-                  "구좌읍",
-                  "조천읍",
-                  "한경면",
-                  "추자면",
-                  "우도면",
-                  "대정읍",
-                  "남원읍",
-                  "성산읍",
-                  "안덕면",
-                  "표선면"
-                ]
-              },
-              "reason": {
-                "type": "string"
-              }
-            }
-          }
-        },
-        "treated_month_other_events": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "event_id",
-              "note"
-            ],
-            "properties": {
-              "event_id": {
-                "type": "string"
-              },
-              "note": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "submit_plan": {
-    "name": "submit_plan",
-    "description": "계획 단계의 결과를 제출한다. 업종 범위, 경우별 결과 문장 틀 4가지, 방법 문단, 이 행사만의 한계.",
-    "strict": true,
-    "input_schema": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "biz_bundle",
-        "biz_reason",
-        "result_sentences",
-        "method",
-        "extra_limits"
-      ],
-      "properties": {
-        "biz_bundle": {
-          "type": "string",
-          "enum": [
-            "관광 소비 전체",
-            "먹거리·음료 중심",
-            "숙박·체류 중심",
-            "42개 전체"
-          ],
-          "description": "업종 묶음 하나. 묶음별 업종은 입력의 biz_bundles에 있다."
-        },
-        "biz_reason": {
-          "type": "string"
-        },
-        "result_sentences": {
-          "type": "object",
-          "additionalProperties": false,
-          "required": [
-            "higher",
-            "lower",
-            "no_difference",
-            "not_computed"
-          ],
-          "properties": {
-            "higher": {
-              "type": "string"
-            },
-            "lower": {
-              "type": "string"
-            },
-            "no_difference": {
-              "type": "string"
-            },
-            "not_computed": {
-              "type": "string"
-            }
-          }
-        },
-        "method": {
-          "type": "string"
-        },
-        "extra_limits": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    }
+   }
   }
+ },
+ "get_visit_series": {
+  "name": "get_visit_series",
+  "description": "제주데이터허브 공개 데이터 「읍면동 단위 내국인 유동인구」에서 읍면 하나의 날짜별 방문 인구(visitPop을 성별·연령대에 걸쳐 더한 연인원)를 돌려준다. 이 PC에 저장한 스냅샷에서 읽으며 범위는 2023-08-01부터 2026-08-31까지, 한 번에 최대 120일이다.",
+  "strict": true,
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "emd",
+    "start_date",
+    "end_date",
+    "why"
+   ],
+   "properties": {
+    "emd": {
+     "type": "string",
+     "enum": [
+      "한림읍",
+      "애월읍",
+      "구좌읍",
+      "조천읍",
+      "한경면",
+      "추자면",
+      "우도면",
+      "대정읍",
+      "남원읍",
+      "성산읍",
+      "안덕면",
+      "표선면"
+     ]
+    },
+    "start_date": {
+     "type": "string",
+     "description": "YYYY-MM-DD"
+    },
+    "end_date": {
+     "type": "string",
+     "description": "YYYY-MM-DD"
+    },
+    "why": {
+     "type": "string",
+     "description": "무엇을 보려는 조회인지 짧은 명사구로(20자 안팎, 예: 대정읍 행사 기간 방문 흐름). 작업 기록에 보인다. 숫자를 쓰지 않는다."
+    }
+   }
+  }
+ },
+ "submit_judgement": {
+  "name": "submit_judgement",
+  "description": "판단 단계의 결과를 한 번에 제출한다. kept와 extra_excluded를 합치면 남은 후보 전부가 한 번씩 들어가야 한다.",
+  "strict": true,
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "visit",
+    "extra_excluded",
+    "kept",
+    "treated_month_other_events"
+   ],
+   "properties": {
+    "visit": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "judgement",
+      "evidence",
+      "reason",
+      "caution"
+     ],
+     "properties": {
+      "judgement": {
+       "type": "string",
+       "enum": [
+        "증가 뚜렷",
+        "증가 약함",
+        "증가 없음",
+        "판단 불가"
+       ]
+      },
+      "evidence": {
+       "type": "array",
+       "items": {
+        "type": "string",
+        "enum": [
+         "visit.R_T",
+         "visit.R_C",
+         "visit.V"
+        ]
+       }
+      },
+      "reason": {
+       "type": "string"
+      },
+      "caution": {
+       "type": "string"
+      }
+     }
+    },
+    "extra_excluded": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "emd",
+       "event_id",
+       "reason"
+      ],
+      "properties": {
+       "emd": {
+        "type": "string",
+        "enum": [
+         "한림읍",
+         "애월읍",
+         "구좌읍",
+         "조천읍",
+         "한경면",
+         "추자면",
+         "우도면",
+         "대정읍",
+         "남원읍",
+         "성산읍",
+         "안덕면",
+         "표선면"
+        ]
+       },
+       "event_id": {
+        "type": "string"
+       },
+       "reason": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "kept": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "emd",
+       "reason"
+      ],
+      "properties": {
+       "emd": {
+        "type": "string",
+        "enum": [
+         "한림읍",
+         "애월읍",
+         "구좌읍",
+         "조천읍",
+         "한경면",
+         "추자면",
+         "우도면",
+         "대정읍",
+         "남원읍",
+         "성산읍",
+         "안덕면",
+         "표선면"
+        ]
+       },
+       "reason": {
+        "type": "string"
+       }
+      }
+     }
+    },
+    "treated_month_other_events": {
+     "type": "array",
+     "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+       "event_id",
+       "note"
+      ],
+      "properties": {
+       "event_id": {
+        "type": "string"
+       },
+       "note": {
+        "type": "string"
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "submit_plan": {
+  "name": "submit_plan",
+  "description": "계획 단계의 결과를 제출한다. 업종 범위, 경우별 결과 문장 틀 4가지, 방법 문단, 이 행사만의 한계.",
+  "strict": true,
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "biz_bundle",
+    "biz_reason",
+    "result_sentences",
+    "method",
+    "extra_limits"
+   ],
+   "properties": {
+    "biz_bundle": {
+     "type": "string",
+     "enum": [
+      "관광 소비 전체",
+      "먹거리·음료 중심",
+      "숙박·체류 중심",
+      "42개 전체"
+     ],
+     "description": "업종 묶음 하나. 묶음별 업종은 입력의 biz_bundles에 있다."
+    },
+    "biz_reason": {
+     "type": "string"
+    },
+    "result_sentences": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "higher",
+      "lower",
+      "no_difference",
+      "not_computed"
+     ],
+     "properties": {
+      "higher": {
+       "type": "string"
+      },
+      "lower": {
+       "type": "string"
+      },
+      "no_difference": {
+       "type": "string"
+      },
+      "not_computed": {
+       "type": "string"
+      }
+     }
+    },
+    "method": {
+     "type": "string"
+    },
+    "extra_limits": {
+     "type": "array",
+     "items": {
+      "type": "string"
+     }
+    }
+   }
+  }
+ }
 }

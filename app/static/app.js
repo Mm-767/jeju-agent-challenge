@@ -48,7 +48,7 @@ function setStep(n) {
 function renderLog(log) {
   const ol = $("log");
   ol.textContent = "";
-  if (!log.length) { const li = el("li"); li.append(el("span", "empty", "아직 기록이 없습니다. 「예시로 해 보기」나 「직접 분석하기」로 시작하세요.")); ol.append(li); return; }
+  if (!log.length) { const li = el("li"); li.append(el("span", "empty", "아직 기록이 없습니다.")); ol.append(li); return; }
   for (const e of log.slice().reverse()) ol.append(logItem(e.time, e.kind, e.text));
 }
 
@@ -61,8 +61,8 @@ function renderBand(s) {
   $("b-delete").dataset.on = s.auto_delete ? "1" : "";
   $("b-delete").setAttribute("aria-pressed", s.auto_delete ? "true" : "false");
   $("finish-text").textContent = s.auto_delete
-    ? "작업 기록, 메모리의 센터 집계, 결과 폴더의 그림과 PDF를 지우고 처음 화면으로 돌아갑니다."
-    : "작업 기록과 메모리의 센터 집계를 지웁니다. 결과 자동 삭제가 꺼져 있어 결과 폴더(app\\out\\report)의 그림과 PDF는 남깁니다.";
+    ? "작업 기록, 메모리에 있는 센터 집계, 결과 그림과 PDF를 지우고 처음으로 돌아갑니다."
+    : "작업 기록과 메모리에 있는 센터 집계를 지웁니다. 결과 자동 삭제가 꺼져 있어 결과 그림과 PDF(app\\out\\report)는 남겨 둡니다.";
 }
 
 function renderPlace(s) {
@@ -262,7 +262,7 @@ $("btn-selfcheck").onclick = async () => {
   ul.append(el("li", "", "점검 중…"));
   let data;
   try { data = await api("POST", "/api/selfcheck"); }
-  catch (e) { ul.textContent = ""; ul.append(el("li", "", "지금은 점검할 수 없습니다. 계획·계산 중이거나 센터 파일을 넣은 상태라면 「끝내기」 뒤에 눌러 주세요.")); return; }
+  catch (e) { ul.textContent = ""; ul.append(el("li", "", "지금은 점검할 수 없습니다. 「끝내기」를 누른 뒤 다시 눌러 주세요.")); return; }
   ul.textContent = "";
   for (const r of data.rows) { const li = el("li"); li.append(tag(r.ok ? "tag--in" : "tag--on", r.ok ? "통과" : "실패"), document.createTextNode(" " + r.item + ": " + r.detail)); ul.append(li); }
 };
