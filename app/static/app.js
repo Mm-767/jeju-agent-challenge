@@ -23,7 +23,6 @@ async function api(method, path, body, raw) {
 
 function el(name, cls, text) { const e = document.createElement(name); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; }
 function tag(kind, text) { return el("span", "tag " + (kind || ""), text); }
-function pct(x) { return (x >= 0 ? "+" : "") + (x * 100).toFixed(1) + "%"; }
 function show(id) { for (const a of document.querySelectorAll("main > .area")) a.hidden = a.id !== id; }
 function cell(text) { return el("td", "", text); }
 
@@ -37,9 +36,6 @@ function logItem(time, kind, text) {
 
 function alertLine(text) { $("log").prepend(logItem("지금", "안내", text)); }
 
-function fillVisit(text, v) {
-  return text.replace(/\{\{visit\.(R_T|R_C|V)\}\}/g, (_, k) => (v && v[k] !== null && v[k] !== undefined ? pct(v[k]) : "값 없음"));
-}
 
 function setStep(n) {
   for (const li of document.querySelectorAll("#steps li")) {
@@ -95,7 +91,7 @@ function renderPlan(s) {
   $("plan-origin").textContent = s.origin === "premade" ? "미리 만든 계획, " + p.model + ", " + p.created_at.slice(0, 10) : "AI가 방금 세운 계획, " + p.model;
   $("plan-origin").className = "tag " + (s.origin === "premade" ? "tag--out" : "");
   $("plan-judgement").textContent = "방문 판단 " + p.judgement.visit.judgement;
-  $("plan-reason").textContent = fillVisit(p.judgement.visit.reason, p.visit_summary);
+  $("plan-reason").textContent = p.judgement.visit.reason;
   const kept = $("plan-kept"); kept.textContent = "";
   p.kept.forEach((k, i) => {
     const why = (p.judgement.kept.find((x) => x.emd === k) || {}).reason || "";
@@ -245,7 +241,9 @@ $("b-sent").onclick = async () => {
   const ol = $("sent-list"); ol.textContent = "";
   for (const e of data.entries) {
     const li = el("li");
-    const head = el("span"); head.append(document.createTextNode(new Date(e.time * 1000).toLocaleTimeString() + " " + e.purpose + " "), tag(e.status === "sent" ? "" : "tag--out", e.status));
+    const purpose = { judge: "방문 판단", plan: "계산 계획", selfcheck: "자가 점검의 잠금 확인 호출" }[e.purpose] || e.purpose;
+    const status = e.status === "sent" ? "보냄" : e.status === "blocked" ? "잠겨서 막음" : e.status.replace("failed", "실패");
+    const head = el("span"); head.append(document.createTextNode(new Date(e.time * 1000).toLocaleTimeString() + " " + purpose + " "), tag(e.status === "sent" ? "" : "tag--out", status));
     li.append(head);
     if (e.request) {
       const d = el("details"); d.append(el("summary", "", "보낸 본문 펼치기"), el("pre", "", JSON.stringify(e.request, null, 1).slice(0, 4000)));

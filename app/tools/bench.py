@@ -158,7 +158,8 @@ def measure(runs="3", model=None):
             rec = {"event": name, "emd": emd, "run": n + 1, "origin": origin, "why": why,
                    "cost": round(spent() - before, 4), "seconds": round(time.time() - started, 1),
                    "reads": sum(1 for k, _ in log if k == "조회"),
-                   "rejected": sum(1 for k, _ in log if k == "검사")}
+                   "rejected": sum(1 for k, _ in log if k == "검사"),
+                   "rejections": [t for k, t in log if k == "검사"]}
             if origin == "ai":
                 rec.update({"kept": bundle["kept"], "extra": sorted(x["emd"] for x in bundle["judgement"]["extra_excluded"]),
                             "biz": sorted(bundle["plan"]["biz_codes"]), "visit": bundle["judgement"]["visit"]["judgement"],

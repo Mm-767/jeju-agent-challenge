@@ -1,4 +1,5 @@
 """센터 단계: 잠금 뒤 카드 파일을 읽고 계획 묶음대로 계산해 결과물을 만든다. 외부 연결은 처음에 잠근다."""
+import copy
 import datetime as dt
 from pathlib import Path
 
@@ -80,11 +81,30 @@ def center_stage(bundle, files, out_dir=None, example=False, target="결과보�
 PREMADE = config.APP / "data" / "premade"
 
 
+def fill_known(ctx, judgement, inp):
+    """결과 문장 틀이 아닌 AI 글의 빈칸을 계획 때 아는 값으로 채운다. 이 글들은 화면과 보고서에 그대로 나간다."""
+    ev, visit = ctx["event"], ctx["visit"]
+    vals = {"행사_이름": ev["name"], "행사_읍면": ev["emd"],
+            "행사_기간": report.period(dt.date.fromisoformat(ev["start"]), dt.date.fromisoformat(ev["end"])),
+            "기준_기간": report.month_span(ctx["months"]["base"])}
+    vals |= {f"visit.{k}": report.pct(visit[k]) if visit.get(k) is not None else "값 없음" for k in ("R_T", "R_C", "V")}
+    j = copy.deepcopy(judgement)
+    j["visit"]["reason"] = report.fill(j["visit"]["reason"], vals)
+    j["visit"]["caution"] = report.fill(j["visit"]["caution"], vals)
+    for x in j["kept"] + j["extra_excluded"]:
+        x["reason"] = report.fill(x["reason"], vals)
+    for x in j["treated_month_other_events"]:
+        x["note"] = report.fill(x["note"], vals)
+    p = dict(inp, biz_reason=report.fill(inp["biz_reason"], vals), method=report.fill(inp["method"], vals),
+             extra_limits=[report.fill(t, vals) for t in inp["extra_limits"]])
+    return j, p
+
+
 def build_bundle(ctx, judgement, plan_result, kept, origin="ai"):
     import agent
 
     m = ctx["months"]
-    inp = plan_result["input"]
+    judged, inp = fill_known(ctx, judgement["input"], plan_result["input"])
     return {
         "bundle_version": 1, "origin": origin, "model": config.MODEL,
         "created_at": dt.datetime.now().isoformat(timespec="seconds"),
@@ -92,7 +112,7 @@ def build_bundle(ctx, judgement, plan_result, kept, origin="ai"):
         "months": {k: m[k] for k in ("event", "excluded", "base", "pretrend")},
         "festival_months": {k: sorted(v) for k, v in ctx["festival_months"].items()},
         "ranked": ctx["ranked"], "rule_excluded": ctx["rule_excluded"], "visit_summary": ctx["visit"],
-        "judgement": judgement["input"], "kept": kept,
+        "judgement": judged, "kept": kept,
         "plan": {"biz_bundle": inp["biz_bundle"], "biz_codes": agent.BIZ_BUNDLES[inp["biz_bundle"]], "biz_reason": inp["biz_reason"]},
         "texts": {"result_sentences": inp["result_sentences"], "method": inp["method"], "extra_limits": inp["extra_limits"]},
         "attempts": {"judge": judgement["submits"], "plan": plan_result["submits"]},

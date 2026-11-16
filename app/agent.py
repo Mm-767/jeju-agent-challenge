@@ -310,6 +310,7 @@ def judge(ctx, call, log):
 
 PLAN_PROMPT = (config.PROMPTS / "plan.txt").read_text(encoding="utf-8")
 PLAN_BLANKS = {"행사_이름", "행사_읍면", "비교_읍면", "차이", "행사_기간", "기준_기간", "계산_못한_이유"}
+KNOWN_BLANKS = {"행사_이름", "행사_읍면", "행사_기간", "기준_기간"}  # 계획 묶음을 만들 때 채운다
 REQUIRED_BLANKS = {"higher": {"차이", "비교_읍면"}, "lower": {"차이", "비교_읍면"},
                    "no_difference": {"비교_읍면"}, "not_computed": {"계산_못한_이유"}}
 CAUSAL = re.compile(r"입증|증명|덕분|기여했|기여한")
@@ -342,10 +343,11 @@ def validate_plan(inp, ctx, seen, rehearse):
     texts = [(f"result_sentences.{k}", v, "result") for k, v in inp["result_sentences"].items()]
     texts += [("method", inp["method"], "method"), ("biz_reason", inp["biz_reason"], "reason")]
     texts += [(f"extra_limits {i + 1}", t, "reason") for i, t in enumerate(inp["extra_limits"])]
+    plain = dict(facts, blanks=KNOWN_BLANKS)  # 계산 뒤에야 아는 빈칸은 결과 문장 틀에만
     for where, text, field in texts:
         if field == "result" and (m := CAUSAL.search(text)):
             problems.append(f"{where}에 인과를 단정하는 말 '{m.group(0)}'이 있습니다. 결과는 비교 읍면 대비 차이입니다.")
-        problems += [f"{where}: {p}" for p in check_numbers(text, field, facts)]
+        problems += [f"{where}: {p}" for p in check_numbers(text, field, facts if field == "result" else plain)]
     if not problems:
         problems += rehearse(inp)
     return problems

@@ -156,6 +156,34 @@ class PlanStageTest(unittest.TestCase):
         problems = agent.validate_plan(bad, plan_ctx(), set(), lambda i: [])
         self.assertTrue(any("인과" in p for p in problems))
 
+    def test_blanks_known_after_calculation_only_in_result_sentences(self):
+        ok = dict(good_plan(), biz_reason="{{행사_이름}}은 꽃 축제라 음식점 소비를 본다.",
+                  extra_limits=["{{행사_기간}}에 연휴가 겹쳤다."])
+        self.assertEqual(agent.validate_plan(ok, plan_ctx(), set(), lambda i: []), [])
+        bad = dict(good_plan(), method="{{비교_읍면}}과 증가율을 견줬다.")
+        problems = agent.validate_plan(bad, plan_ctx(), set(), lambda i: [])
+        self.assertTrue(problems and problems[0].startswith("method"), problems)
+
+    def test_bundle_fills_blanks_outside_result_sentences(self):
+        # 11/15 보롬왓 측정 실행: biz_reason에 쓴 {{행사_이름}}이 화면과 보고서에 그대로 보였다
+        import pipeline
+
+        ctx = dict(plan_ctx(), visit={"R_T": 0.207, "R_C": 0.136, "V": None, "missing_days": 0})
+        judgement = {"visit": {"judgement": "증가 약함", "evidence": ["R_T"], "reason": "변화는 {{visit.R_T}}다.", "caution": "{{visit.V}}"},
+                     "kept": [{"emd": "한경면", "reason": "{{행사_읍면}}과 흐름이 비슷하다."}],
+                     "extra_excluded": [{"emd": "구좌읍", "event_id": "", "reason": "방문이 {{visit.R_C}} 움직였다."}],
+                     "treated_month_other_events": []}
+        plan = dict(good_plan(), biz_reason="{{행사_이름}}은 꽃 축제다.", extra_limits=["{{행사_기간}}에 연휴가 있다."])
+        j, p = pipeline.fill_known(ctx, judgement, plan)
+        self.assertEqual(j["visit"]["reason"], "변화는 +20.7%다.")
+        self.assertEqual(j["visit"]["caution"], "값 없음")
+        self.assertEqual(j["kept"][0]["reason"], "대정읍과 흐름이 비슷하다.")
+        self.assertEqual(j["extra_excluded"][0]["reason"], "방문이 +13.6% 움직였다.")
+        self.assertEqual(p["biz_reason"], "가파도청보리축제는 꽃 축제다.")
+        self.assertEqual(p["extra_limits"], ["2024년 4월 6일~4월 28일에 연휴가 있다."])
+        self.assertEqual(p["result_sentences"], good_plan()["result_sentences"])
+        self.assertIn("{{", judgement["visit"]["reason"])
+
     def test_rehearsal_problem_returned(self):
         problems = agent.validate_plan(good_plan(), plan_ctx(), set(), lambda i: ["리허설 실패"])
         self.assertEqual(problems, ["리허설 실패"])
