@@ -11,9 +11,10 @@ from pathlib import Path
 
 import config
 
-# 화면(app/static/tokens.css)의 ink 테마 색을 그림과 PDF용 RGB로 옮긴 값
-INK, INK_2, MUTED, RULE = "#0d0d0d", "#292929", "#525252", "#dbdbd8"
-PAPER_2, PAPER_3, ACCENT, ACCENT_SOFT, ACCENT_SOFT_INK = "#f6f5f2", "#ecebe7", "#00746d", "#c3f3ef", "#022d2b"
+# 화면(app/static/tokens.css)과 같은 색: 행사 읍면은 감귤, 비교 읍면은 돌 회색, 행사 달은 유채 띠(ADR-171)
+INK, INK_2, MUTED, RULE = "#2f353b", "#3e454c", "#5e666d", "#dde0e3"
+PAPER_2, PAPER_3, ACCENT, ACCENT_SOFT, ACCENT_SOFT_INK = "#f4f5f6", "#e9ebed", "#b85a0e", "#fdebdb", "#7a3a06"
+EVENT, COMPARE, CANOLA_SOFT = "#ee7f1b", "#8a939a", "#fcf1c6"
 OUTCOME_LABEL = {"higher": "평소엔 드문 차이", "lower": "평소엔 드문 차이",
                  "no_difference": "평소에도 생기는 차이", "not_computed": "계산하지 못함"}
 
@@ -150,9 +151,10 @@ def index_chart(t, c, months, emd, comp, path, example):
     fig, ax = plt.subplots(figsize=(7, 3.2), dpi=150)
     for m in months["event"]:
         i = shown.index(m)
-        ax.axvspan(i - 0.5, i + 0.5, color=PAPER_3, lw=0)
-    ax.plot(labels, [t[m] / base_t * 100 for m in shown], color=ACCENT, lw=2.2, marker="o", ms=4, label=f"{emd}(행사 읍면)")
-    ax.plot(labels, [c[m] / base_c * 100 for m in shown], color=MUTED, lw=1.6, marker="o", ms=3, label=f"{comp}(비교 읍면)")
+        ax.axvspan(i - 0.5, i + 0.5, color=CANOLA_SOFT, lw=0)
+    # 색을 못 가려도 구분되게 비교 읍면은 점선
+    ax.plot(labels, [t[m] / base_t * 100 for m in shown], color=EVENT, lw=2.6, marker="o", ms=4.5, label=f"{emd}(행사 읍면)")
+    ax.plot(labels, [c[m] / base_c * 100 for m in shown], color=COMPARE, lw=1.8, ls="--", marker="o", ms=3.5, label=f"{comp}(비교 읍면)")
     ax.axhline(100, color=RULE, lw=1)
     ax.set_ylabel("지수(기준 기간 평균 = 100)")
     # 범례는 그림 테두리 위 왼쪽: 그림 안에 두면 첫 달의 점이나 선을 가린다
@@ -178,10 +180,10 @@ def visit_chart(days_t, days_c, start, end, emd, comp, path):
         return [days[d] / mean * 100 if d in days else None for d in dates]
 
     fig, ax = plt.subplots(figsize=(7, 3.2), dpi=150)
-    ax.axvspan(start, end, color=PAPER_3, lw=0)
-    ax.plot(dates, index(days_t), color=ACCENT, lw=2, label=f"{emd}(행사 읍면)")
+    ax.axvspan(start, end, color=CANOLA_SOFT, lw=0)
+    ax.plot(dates, index(days_t), color=EVENT, lw=2.2, label=f"{emd}(행사 읍면)")
     if days_c:
-        ax.plot(dates, index(days_c), color=MUTED, lw=1.4, label=f"{comp}(비교 읍면)")
+        ax.plot(dates, index(days_c), color=COMPARE, lw=1.4, ls="--", label=f"{comp}(비교 읍면)")
     ax.axhline(100, color=RULE, lw=1)
     ax.set_ylabel("방문 지수(직전 4주 평균 = 100)")
     # 범례는 그림 테두리 위 왼쪽: 그림 안에 두면 첫 달의 점이나 선을 가린다
@@ -367,7 +369,7 @@ def pdf(path, title, rep, images, usage):
             doc.cell(col, 4.5, label)
             doc.set_xy(doc.l_margin + i * col, y + 5)
             doc.set_font("K", "B", 15)
-            doc.set_text_color(*_rgb(INK))
+            doc.set_text_color(*_rgb(ACCENT if i == 0 else INK))  # 첫 숫자(상대 효과)는 행사 읍면 몫이라 감귤, 화면과 같게
             doc.cell(col, 8, value)
         doc.set_xy(doc.l_margin, y + 15)
 

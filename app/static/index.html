@@ -10,11 +10,11 @@
 <link rel="stylesheet" href="/static/base.css">
 <link rel="stylesheet" href="/static/app.css">
 </head>
-<body>
+<body data-stage="start">
 <a class="skip" href="#work">본문으로 건너뛰기</a>
 <header class="bar">
   <div class="bar-in">
-    <strong class="brand">행사 효과 나란히</strong>
+    <strong class="brand"><svg viewBox="0 0 28 20" aria-hidden="true"><path d="M2 15 L10 13 L18 14 L26 12" fill="none" stroke="#8a939a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12 L10 10 L18 11 L26 3" fill="none" stroke="#ee7f1b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>행사 효과 나란히</strong>
     <div class="bar-state">
       <span id="b-example" class="tag tag--out" hidden>예시, 가상 데이터</span>
       <span id="b-ai" class="tag tag--in">외부 AI 연결 열림</span>
@@ -36,15 +36,38 @@
 <div class="wrap">
 <main id="work">
   <section id="a-start" class="area">
-    <h1>축제 효과를 비교 읍면과 나란히 계산합니다</h1>
-    <p class="lede">행사를 고르면 AI가 공개 자료로 계산 계획을 세우고, 센터 카드 파일은 이 PC 안에서만 계산해 반출 신청용 보고서로 만듭니다.</p>
-    <div class="row">
-      <button id="btn-example" class="btn btn--primary" type="button">예시로 해 보기</button>
-      <button id="btn-direct" class="btn" type="button">직접 분석하기</button>
-      <a id="btn-example-none" href="#" class="small">효과를 심지 않은 가상 데이터로 해 보기</a>
+    <div class="hero">
+      <div class="hero-text">
+        <h1>축제가 열린 읍면의 관광 소비, 비교 읍면보다 더 늘었을까</h1>
+        <p class="lede">행사 전에는 나란히 움직이던 두 읍면이 행사 달에 얼마나 벌어지는지 계산합니다. AI는 공개 자료로 계획만 세우고, 센터 카드 파일은 이 PC 안에서만 계산해 반출 신청용 보고서로 만듭니다.</p>
+        <div class="row">
+          <button id="btn-example" class="btn btn--primary" type="button">예시로 해 보기</button>
+          <button id="btn-direct" class="btn" type="button">직접 분석하기</button>
+        </div>
+        <a id="btn-example-none" href="#" class="small">효과를 심지 않은 가상 데이터로 해 보기</a>
+      </div>
+      <figure class="hero-fig">
+        <svg viewBox="0 0 560 320" role="img" aria-label="행사 전에는 나란히 움직이던 축제 읍면과 비교 읍면의 선이 행사 달에 벌어지는 그림">
+          <rect x="440" y="16" width="80" height="256" rx="6" fill="#fcf1c6"/>
+          <g stroke="#eceef0" stroke-width="1"><line x1="24" y1="80" x2="536" y2="80"/><line x1="24" y1="144" x2="536" y2="144"/><line x1="24" y1="208" x2="536" y2="208"/></g>
+          <line x1="24" y1="272" x2="536" y2="272" stroke="#dde0e3" stroke-width="1.5"/>
+          <path d="M40 196 L110 181 L180 205 L250 190 L320 176 L390 186 L480 171" fill="none" stroke="#8a939a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="10 7"/>
+          <path class="event-line" d="M40 184 L110 169 L180 192 L250 178 L320 163 L390 173 L480 72" fill="none" stroke="#ee7f1b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="480" cy="171" r="7" fill="#8a939a"/>
+          <circle cx="480" cy="72" r="8" fill="#ee7f1b"/>
+          <g stroke="#2f353b" stroke-width="1.5" fill="none"><path d="M502 76 V167"/><path d="M497 76 H507"/><path d="M497 167 H507"/></g>
+          <g font-size="15" font-weight="700">
+            <text x="466" y="52" text-anchor="end" fill="#b85a0e">축제가 열린 읍면</text>
+            <text x="466" y="210" text-anchor="end" fill="#5e666d">비교 읍면</text>
+            <text x="512" y="126" fill="#2f353b">차이</text>
+            <text x="480" y="300" text-anchor="middle" fill="#2f353b">행사 달</text>
+          </g>
+          <text x="40" y="300" font-size="14" fill="#5e666d">행사 전에는 나란히</text>
+        </svg>
+      </figure>
     </div>
-    <dl class="facts ruled">
-      <div><dt>밖으로 보내는 것</dt><dd>행사 이름과 날짜, 공개 유동인구 요약과 계산 계획뿐입니다. 보낸 본문은 위쪽 「외부 전송」에서 볼 수 있습니다.</dd></div>
+    <dl class="trio">
+      <div><dt>밖으로 보내는 것</dt><dd>행사 이름과 날짜, 공개 유동인구 요약, 계산 계획뿐입니다. 보낸 본문은 위쪽 「외부 전송」에서 볼 수 있습니다.</dd></div>
       <div><dt>잠기는 때</dt><dd>센터 카드 파일을 넣는 순간 외부 연결이 잠기고, 계산은 이 PC 안에서만 합니다.</dd></div>
       <div><dt>걸리는 시간</dt><dd>AI 계산 계획 30초에서 1분, 계산은 몇 초입니다.</dd></div>
     </dl>
@@ -147,8 +170,8 @@
       <h3 id="h-r5">5. 결과</h3>
       <table class="kv-table"><tbody id="r-evidence"></tbody></table>
       <div class="figures">
-        <figure><img id="r-index" width="1050" height="480" alt="행사 읍면과 비교 읍면의 달별 관광 소비 지수"><figcaption>달별 관광 소비 지수. 기준 기간 평균을 100으로 두었고, 회색 띠가 행사 달입니다.</figcaption></figure>
-        <figure><img id="r-visit" width="1050" height="480" alt="행사 읍면과 비교 읍면의 날짜별 공개 방문 인구 지수"><figcaption>공개 방문 인구 지수. 행사 직전 4주 평균을 100으로 두었고, 회색 띠가 행사 기간입니다.</figcaption></figure>
+        <figure><img id="r-index" width="1050" height="480" alt="행사 읍면과 비교 읍면의 달별 관광 소비 지수"><figcaption>달별 관광 소비 지수. 기준 기간 평균을 100으로 두었습니다. 주황 선이 행사 읍면, 회색 점선이 비교 읍면, 노란 띠가 행사 달입니다.</figcaption></figure>
+        <figure><img id="r-visit" width="1050" height="480" alt="행사 읍면과 비교 읍면의 날짜별 공개 방문 인구 지수"><figcaption>공개 방문 인구 지수. 행사 직전 4주 평균을 100으로 두었습니다. 노란 띠가 행사 기간입니다.</figcaption></figure>
       </div>
     </section>
 

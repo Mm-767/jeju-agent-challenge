@@ -4,7 +4,7 @@ const $ = (id) => document.getElementById(id);
 const EMDS = ["한림읍", "애월읍", "구좌읍", "조천읍", "한경면", "추자면", "우도면", "대정읍", "남원읍", "성산읍", "안덕면", "표선면"];
 const WHY = { no_date: "날짜 없음", bad_date: "날짜 오류", long_event: "92일 넘는 장기 행사", short_event: "한 달 합계에 묻히는 짧은 행사",
   before_data: "행사 전 카드 자료 부족", diluted: "희석 주의" };
-// 작업 기록 표시: AI가 한 일은 기본, 코드가 한 일은 테두리, 주의는 먹색(ink 테마는 두 번째 색을 쓰지 않는다)
+// 작업 기록 표시: AI가 한 일은 기본, 코드가 한 일은 테두리, 주의는 먹색(감귤은 행사 읍면에만 쓴다)
 const KIND = { "AI 짐작": "", "조회": "", "검사": "tag--out", "계산": "tag--out", "잠금": "tag--out", "확인": "tag--out",
   "대체 경로": "tag--on", "멈춤": "tag--on", "오류": "tag--on", "안내": "tag--on" };
 let last = null;
@@ -55,7 +55,7 @@ function renderLog(log) {
 function renderBand(s) {
   $("b-example").hidden = !s.example;
   $("b-ai").textContent = s.locked ? "외부 AI 연결 잠김" : "외부 AI 연결 열림";
-  $("b-ai").className = "tag " + (s.locked ? "tag--on" : "tag--in");
+  $("b-ai").className = "tag " + (s.locked ? "tag--on" : "");
   $("b-sent").textContent = "외부 전송 " + s.sent + "건";
   $("b-delete").textContent = "결과 자동 삭제 " + (s.auto_delete ? "켜짐" : "꺼짐");
   $("b-delete").dataset.on = s.auto_delete ? "1" : "";
@@ -161,6 +161,7 @@ function renderResult(s) {
 }
 
 function render(s) {
+  document.body.dataset.stage = s.stage;
   renderBand(s); renderLog(s.log);
   const key = s.stage + "|" + s.files + "|" + (s.summary ? 1 : 0) + "|" + (s.plan ? 1 : 0) + "|" + s.busy + "|" + s.log.length + "|" + wantFiles;
   if (last === key) return;

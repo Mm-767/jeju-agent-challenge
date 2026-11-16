@@ -1,19 +1,25 @@
-/* Hallmark · tokens · theme: ink (by request) · ink: paper · deal: manual · scope: app */
+/* 두 선(ADR-171): 행사 읍면은 감귤, 비교 읍면은 돌 회색. 화면·결과 그림(report.py)·PDF가 같은 색을 쓴다 */
 :root {
-  --color-paper: oklch(99.5% 0.003 100);
-  --color-paper-2: oklch(97% 0.004 100);
-  --color-paper-3: oklch(94% 0.006 100);
-  --color-ink: oklch(16% 0 0);
-  --color-ink-2: oklch(28% 0 0);
-  --color-muted: oklch(44% 0 0);
-  --color-rule: oklch(89% 0.004 100);
-  --color-rule-2: oklch(93.5% 0.003 100);
-  --color-accent: oklch(50% 0.095 188);
-  --color-accent-ink: oklch(99.5% 0.003 100);
-  --color-accent-soft: oklch(93% 0.05 190);
-  --color-accent-soft-ink: oklch(27% 0.045 190);
-  --color-focus: oklch(50% 0.095 188);
-  --color-scrim: oklch(16% 0 0 / 0.36);
+  --color-paper: #ffffff;
+  --color-paper-2: #f4f5f6;
+  --color-paper-3: #e9ebed;
+  --color-ink: #2f353b;       /* 현무암 */
+  --color-ink-2: #3e454c;
+  --color-muted: #5e666d;
+  --color-rule: #dde0e3;
+  --color-rule-2: #eceef0;
+  --color-event: #ee7f1b;     /* 감귤: 행사 읍면, 그림과 띠에만(흰 바탕 글씨로는 대비 부족) */
+  --color-event-ink: #b85a0e; /* 감귤 글씨 */
+  --color-event-soft: #fdebdb;
+  --color-compare: #8a939a;   /* 돌 회색: 비교 읍면 */
+  --color-canola: #f3c843;    /* 유채: 행사 달 띠 */
+  --color-canola-soft: #fcf1c6;
+  --color-accent: var(--color-event-ink);
+  --color-accent-ink: #ffffff;
+  --color-accent-soft: var(--color-event-soft);
+  --color-accent-soft-ink: #7a3a06;
+  --color-focus: var(--color-event-ink);
+  --color-scrim: rgb(47 53 59 / 0.4);
 
   /* 센터 PC는 인터넷 글꼴을 부르지 않는다: 윈도우 맑은 고딕, 맥 개발 PC는 애플 SD 고딕 */
   --font-body: "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
